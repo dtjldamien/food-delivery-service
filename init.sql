@@ -1,15 +1,5 @@
-CREATE TABLE RestaurantStaffs(
-	rsid INTEGER,
-	rid INTEGER,
-	email VARCHAR(100) NOT NULL,
-	password VARCHAR(100) NOT NULL,
-	name VARCHAR(100) NOT NULL,
-	salary INTEGER NOT NULL,
-	PRIMARY KEY (rsid),
-	FOREIGN KEY (rid) REFERENCES Restaurants
-);
-
 -- is there a need for salary? (is still in ER diagram)
+-- i think doesnt matter for restaurant staff, will remove
 
 CREATE TABLE Restaurants(
 	rid INTEGER,
@@ -19,15 +9,31 @@ CREATE TABLE Restaurants(
 	PRIMARY KEY (rid)
 );
 
+CREATE TABLE RestaurantStaffs(
+	rid INTEGER,
+	email VARCHAR(100) NOT NULL,
+	password VARCHAR(100) NOT NULL,
+	name VARCHAR(100) NOT NULL,
+	PRIMARY KEY (email),
+	FOREIGN KEY (rid) REFERENCES Restaurants
+);
+
+-- belongs category weak entity, how to do?
+
+CREATE TABLE Category (
+	catid INTEGER,
+	PRIMARY KEY (catid)
+);
+
 CREATE TABLE FoodItems(
 	fid INTEGER,
 	fname VARCHAR(100) NOT NULL,
 	description VARCHAR(250),
 	price NUMERIC NOT NULL,
-	PRIMARY KEY (fid)
+	catid INTEGER NOT NULL,
+	PRIMARY KEY (fid),
+	FOREIGN KEY (catid) REFERENCES Category
 );
-
--- belongs category weak entity, how to do?
 
 CREATE TABLE Sells(
 	rid INTEGER,
@@ -41,24 +47,28 @@ CREATE TABLE Sells(
 
 CREATE TABLE RestaurantPromotions(
 	fid INTEGER,
-	rsid INTEGER,
-	type VARCHAR(32),
+	email VARCHAR(100),
+	type INTEGER NOT NULL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
+	currentCount INTEGER NOT NULL,
 	promotionLimit INTEGER NOT NULL,
 	priceDiscount NUMERIC,
 	percentageDiscount NUMERIC,
-	PRIMARY KEY (fid, rsid),
+	PRIMARY KEY (fid, email),
 	FOREIGN KEY (fid) REFERENCES FoodItems,
-	FOREIGN KEY (rsid) REFERENCES RestaurantStaffs
+	FOREIGN KEY (email) REFERENCES RestaurantStaffs
 );
 
 -- what to store type as?
+-- store type as integers
+-- added time 
 
 CREATE TABLE Orders(
 	oid INTEGER,
 	address VARCHAR(100) NOT NULL,
-	dateTime DATE NOT NULL,
+	date DATE NOT NULL,
+	time TIME NOT NULL,
 	deliveryFee NUMERIC NOT NULL,
 	totalCost NUMERIC NOT NULL,
 	PRIMARY KEY (oid)
@@ -67,14 +77,13 @@ CREATE TABLE Orders(
 -- oid not included in ER diagram
 
 CREATE TABLE Customers(
-	cid INTEGER,
 	name VARCHAR(100) NOT NULL,
 	email VARCHAR(100) NOT NULL,
 	password VARCHAR(100) NOT NULL,
 	address VARCHAR(100) NOT NULL,
 	creditCard VARCHAR(100) NOT NULL,
 	rewardPoints NUMERIC NOT NULL,
-	PRIMARY KEY (cid)
+	PRIMARY KEY (email)
 );
 
 CREATE TABLE Contains(
@@ -85,3 +94,113 @@ CREATE TABLE Contains(
 	FOREIGN KEY (oid) REFERENCES Orders,
 	FOREIGN KEY (fid) REFERENCES FoodItems
 );
+
+CREATE TABLE FDSPromotions(
+	pcid INTEGER,
+	startDate DATE NOT NULL,
+	endDate DATE NOT NULL,
+	redeemLimit INTEGER NOT NULL,
+	currentCount INTEGER NOT NULL,
+	type INTEGER NOT NULL,
+	priceDiscount NUMERIC,
+	percentageDiscount NUMERIC,
+	PRIMARY KEY (pcid)
+);
+
+CREATE TABLE FDSManagers(
+	username VARCHAR(100) NOT NULL,
+	password VARCHAR(100) NOT NULL,
+	PRIMARY KEY (username)
+);
+
+CREATE TABLE FDSLaunch(
+	pcid INTEGER,
+	username VARCHAR(100),
+	PRIMARY KEY (pcid, username),
+	FOREIGN KEY (pcid) REFERENCES FDSPromotions,
+	FOREIGN KEY (username) REFERENCES FDSManagers
+);
+
+CREATE TABLE Shifts (
+	shiftId INTEGER,
+	shiftNo INTEGER NOT NULL,
+	date DATE NOT NULL,
+	startAMTime TIME NOT NULL,
+	endAMTime TIME NOT NULL,
+	startPMTime TIME NOT NULL,
+	endPMTime TIME NOT NULL,
+	PRIMARY KEY(shiftId)
+);
+
+CREATE TABLE DeliveryRiders (
+	email VARCHAR(100),
+	name VARCHAR(100) NOT NULL,
+	vehicle VARCHAR(100) NOT NULL,
+	bankAccount INTEGER NOT NULL,
+	password VARCHAR(100) NOT NULL,
+	PRIMARY KEY (email)
+);
+
+CREATE TABLE Schedules (
+	email VARCHAR(100),
+	PRIMARY KEY (email),
+	FOREIGN KEY (email) REFERENCES DeliveryRiders
+);
+
+CREATE TABLE ScheduleContains (
+	email VARCHAR(100),
+	shiftId INTEGER,
+	workHours INTEGER NOT NULL,
+	PRIMARY KEY (email, shiftId),
+	FOREIGN KEY (email) REFERENCES Schedules,
+	FOREIGN KEY	(shiftId) REFERENCES Shifts
+);
+
+CREATE TABLE PartTime (
+	email VARCHAR(100),
+	weeklySalary NUMERIC NOT NULL,
+	FOREIGN KEY (email) REFERENCES DeliveryRiders
+);
+
+CREATE TABLE FullTime (
+	email VARCHAR(100),
+	monthlySalary NUMERIC NOT NULL,
+	FOREIGN KEY (email) REFERENCES DeliveryRiders
+);
+
+CREATE TABLE Assigned (
+	oid INTEGER,
+	email VARCHAR(100),
+	serviceReview INTEGER,
+	assignedDate DATE NOT NULL,
+	assignedTime TIME NOT NULL,
+	deliveredDate DATE,
+	deliveredTime TIME,
+	PRIMARY KEY (oid, email),
+	FOREIGN KEY (oid) REFERENCES Orders,
+	FOREIGN KEY (email) REFERENCES DeliveryRiders
+);
+
+CREATE TABLE Apply (
+	oid INTEGER,
+	pcid INTEGER,
+	PRIMARY KEY (oid, pcid),
+	FOREIGN KEY (oid) REFERENCES Orders,
+	FOREIGN KEY (pcid) REFERENCES FDSPromotions
+);
+
+CREATE TABLE Request (
+	oid INTEGER,
+	email VARCHAR(100),
+	payment VARCHAR(100),
+	foodReview INTEGER,
+	PRIMARY KEY (oid, email),
+	FOREIGN KEY (oid) REFERENCES Orders,
+	FOREIGN KEY (email) REFERENCES Customers
+);
+
+
+
+
+
+
