@@ -21,8 +21,8 @@ CREATE TABLE RestaurantStaffs(
 -- belongs category weak entity, how to do?
 
 CREATE TABLE Category (
-	catid INTEGER,
-	PRIMARY KEY (catid)
+	name VARCHAR(100),
+	PRIMARY KEY (name)
 );
 
 CREATE TABLE FoodItems(
@@ -30,7 +30,7 @@ CREATE TABLE FoodItems(
 	fname VARCHAR(100) NOT NULL,
 	description VARCHAR(250),
 	price NUMERIC NOT NULL,
-	catid INTEGER NOT NULL,
+	catid VARCHAR(100) NOT NULL,
 	PRIMARY KEY (fid),
 	FOREIGN KEY (catid) REFERENCES Category
 );
@@ -46,18 +46,32 @@ CREATE TABLE Sells(
 );
 
 CREATE TABLE RestaurantPromotions(
-	fid INTEGER,
-	email VARCHAR(100),
-	type INTEGER NOT NULL,
+	rpid INTEGER,
+	email VARCHAR(100) NOT NULL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
 	currentCount INTEGER NOT NULL,
 	promotionLimit INTEGER NOT NULL,
-	priceDiscount NUMERIC,
-	percentageDiscount NUMERIC,
-	PRIMARY KEY (fid, email),
-	FOREIGN KEY (fid) REFERENCES FoodItems,
+	PRIMARY KEY (rpid),
 	FOREIGN KEY (email) REFERENCES RestaurantStaffs
+);
+
+CREATE TABLE RestaurantPriceDiscount (
+	rpid INTEGER,
+	priceDiscount NUMERIC NOT NULL,
+	FOREIGN KEY (rpid) REFERENCES RestaurantPromotions
+);
+
+CREATE TABLE RestaurantPercentageDiscount (
+	rpid INTEGER,
+	PercentageDiscount NUMERIC NOT NULL,
+	FOREIGN KEY (rpid) REFERENCES RestaurantPromotions
+);
+
+CREATE TABLE Discounts (
+	rpid INTEGER,
+	fid INTEGER,
+	PRIMARY KEY (rpid, fid)
 );
 
 -- what to store type as?
@@ -102,10 +116,21 @@ CREATE TABLE FDSPromotions(
 	endDate DATE NOT NULL,
 	redeemLimit INTEGER NOT NULL,
 	currentCount INTEGER NOT NULL,
-	type INTEGER NOT NULL,
-	priceDiscount NUMERIC,
-	percentageDiscount NUMERIC,
 	PRIMARY KEY (pcid)
+);
+
+CREATE TABLE FDSPercentageDiscount (
+	pcid INTEGER,
+	percentageDiscount NUMERIC NOT NULL,
+	PRIMARY KEY (pcid),
+	FOREIGN KEY (pcid) REFERENCES FDSPromotions
+);
+
+CREATE TABLE FDSPriceDiscount (
+	pcid INTEGER,
+	priceDiscount NUMERIC NOT NULL,
+	PRIMARY KEY (pcid),
+	FOREIGN KEY (pcid) REFERENCES FDSPromotions
 );
 
 CREATE TABLE FDSManagers(
