@@ -90,6 +90,7 @@ CREATE TABLE Contains(
 	oid INTEGER,
 	fid INTEGER,
 	quantity INTEGER NOT NULL,
+	price NUMERIC NOT NULL,
 	PRIMARY KEY (fid, oid),
 	FOREIGN KEY (oid) REFERENCES Orders,
 	FOREIGN KEY (fid) REFERENCES FoodItems
