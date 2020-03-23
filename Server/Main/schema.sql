@@ -38,17 +38,17 @@ CREATE TABLE Sells(
 	PRIMARY KEY (rid, fid),
 	FOREIGN KEY (rid) REFERENCES Restaurants,
 	FOREIGN KEY (fid) REFERENCES FoodItems
+		on delete cascade
+		on update cascade
 );
 
 CREATE TABLE RestaurantPromotions(
 	rpid INTEGER,
-	email VARCHAR(100) NOT NULL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
 	currentCount INTEGER NOT NULL,
 	promotionLimit INTEGER NOT NULL,
 	PRIMARY KEY (rpid),
-	FOREIGN KEY (email) REFERENCES RestaurantStaffs
 );
 
 CREATE TABLE RestaurantPriceDiscount (
@@ -97,6 +97,8 @@ CREATE TABLE Contains(
 	PRIMARY KEY (fid, oid),
 	FOREIGN KEY (oid) REFERENCES Orders,
 	FOREIGN KEY (fid) REFERENCES FoodItems
+		on delete no action
+		on update cascade
 );
 
 CREATE TABLE FDSPromotions(
@@ -134,6 +136,8 @@ CREATE TABLE FDSLaunch(
 	PRIMARY KEY (pcid, username),
 	FOREIGN KEY (pcid) REFERENCES FDSPromotions,
 	FOREIGN KEY (username) REFERENCES FDSManagers
+		on delete set null
+		on update cascade
 );
 
 CREATE TABLE Shifts (
@@ -160,6 +164,8 @@ CREATE TABLE Schedules (
 	email VARCHAR(100),
 	PRIMARY KEY (email),
 	FOREIGN KEY (email) REFERENCES DeliveryRiders
+		on delete cascade
+		on update cascade
 );
 
 CREATE TABLE ScheduleContains (
@@ -175,12 +181,16 @@ CREATE TABLE PartTime (
 	email VARCHAR(100),
 	weeklySalary NUMERIC NOT NULL,
 	FOREIGN KEY (email) REFERENCES DeliveryRiders
+		on delete cascade
+		on update cascade
 );
 
 CREATE TABLE FullTime (
 	email VARCHAR(100),
 	monthlySalary NUMERIC NOT NULL,
 	FOREIGN KEY (email) REFERENCES DeliveryRiders
+		on delete cascade
+		on update cascade
 );
 
 CREATE TABLE Assigned (
@@ -194,6 +204,8 @@ CREATE TABLE Assigned (
 	PRIMARY KEY (oid, email),
 	FOREIGN KEY (oid) REFERENCES Orders,
 	FOREIGN KEY (email) REFERENCES DeliveryRiders
+		on delete set null
+		on update cascade
 );
 
 CREATE TABLE Apply (
