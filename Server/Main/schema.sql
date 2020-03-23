@@ -72,7 +72,7 @@ CREATE TABLE Discounts (
 CREATE TABLE Orders(
 	oid INTEGER,
 	address VARCHAR(100) NOT NULL,
-	dateTime DATE NOT NULL,
+	orderDateTime DATE NOT NULL,
 	deliveryFee NUMERIC NOT NULL,
 	totalCost NUMERIC NOT NULL,
 	PRIMARY KEY (oid)
