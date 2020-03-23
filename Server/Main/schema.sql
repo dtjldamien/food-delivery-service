@@ -1,6 +1,3 @@
--- is there a need for salary? (is still in ER diagram)
--- i think doesnt matter for restaurant staff, will remove
-
 CREATE TABLE Restaurants(
 	rid INTEGER,
 	rname VARCHAR(100) NOT NULL,
@@ -17,8 +14,6 @@ CREATE TABLE RestaurantStaffs(
 	PRIMARY KEY (email),
 	FOREIGN KEY (rid) REFERENCES Restaurants
 );
-
--- belongs category weak entity, how to do?
 
 CREATE TABLE Category (
 	name VARCHAR(100),
@@ -74,10 +69,6 @@ CREATE TABLE Discounts (
 	PRIMARY KEY (rpid, fid)
 );
 
--- what to store type as?
--- store type as integers
--- added time 
-
 CREATE TABLE Orders(
 	oid INTEGER,
 	address VARCHAR(100) NOT NULL,
@@ -87,8 +78,6 @@ CREATE TABLE Orders(
 	totalCost NUMERIC NOT NULL,
 	PRIMARY KEY (oid)
 );
-
--- oid not included in ER diagram
 
 CREATE TABLE Customers(
 	name VARCHAR(100) NOT NULL,
