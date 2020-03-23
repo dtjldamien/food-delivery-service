@@ -223,6 +223,8 @@ CREATE TABLE Request (
 	PRIMARY KEY (oid, email),
 	FOREIGN KEY (oid) REFERENCES Orders,
 	FOREIGN KEY (email) REFERENCES Customers
+		on delete cascade
+		on update cascade,
 );
 
 
