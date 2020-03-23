@@ -2,8 +2,11 @@
 
 # dependencies
 /node_modules
-/Client/node_modules
+/customer/node_modules
 /Server/node_modules
+/deliver-rider/node_modules
+/fds-manager/node_modules
+/restaurant-staff/node_modules
 
 # testing
 /coverage
