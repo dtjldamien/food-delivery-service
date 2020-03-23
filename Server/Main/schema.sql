@@ -72,8 +72,7 @@ CREATE TABLE Discounts (
 CREATE TABLE Orders(
 	oid INTEGER,
 	address VARCHAR(100) NOT NULL,
-	date DATE NOT NULL,
-	time TIME NOT NULL,
+	dateTime DATE NOT NULL,
 	deliveryFee NUMERIC NOT NULL,
 	totalCost NUMERIC NOT NULL,
 	PRIMARY KEY (oid)
@@ -86,6 +85,7 @@ CREATE TABLE Customers(
 	address VARCHAR(100) NOT NULL,
 	creditCard VARCHAR(100) NOT NULL,
 	rewardPoints NUMERIC NOT NULL,
+	registeredDate DATE NOT NULL,
 	PRIMARY KEY (email)
 );
 
