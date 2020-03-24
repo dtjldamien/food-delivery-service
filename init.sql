@@ -21,8 +21,8 @@ CREATE TABLE RestaurantStaffs(
 -- belongs category weak entity, how to do?
 
 CREATE TABLE Category (
-	name VARCHAR(100),
-	PRIMARY KEY (name)
+	catName VARCHAR(100),
+	PRIMARY KEY (catName)
 );
 
 CREATE TABLE FoodItems(
@@ -30,9 +30,9 @@ CREATE TABLE FoodItems(
 	fname VARCHAR(100) NOT NULL,
 	description VARCHAR(250),
 	price NUMERIC NOT NULL,
-	catid VARCHAR(100) NOT NULL,
+	catName VARCHAR(100) NOT NULL,
 	PRIMARY KEY (fid),
-	FOREIGN KEY (catid) REFERENCES Category
+	FOREIGN KEY (catName) REFERENCES Category
 );
 
 CREATE TABLE Sells(
