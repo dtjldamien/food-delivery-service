@@ -2,7 +2,7 @@
 -- i think doesnt matter for restaurant staff, will remove
 
 CREATE TABLE Restaurants(
-	rid INTEGER,
+	rid SERIAL,
 	rname VARCHAR(100) NOT NULL,
 	address VARCHAR (100) NOT NULL,
 	minimumSpending FLOAT NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE Restaurants(
 );
 
 CREATE TABLE RestaurantStaffs(
-	rid INTEGER,
+	rid INTEGER NOT NULL,
 	email VARCHAR(100) NOT NULL,
 	password VARCHAR(100) NOT NULL,
 	name VARCHAR(100) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE Category (
 );
 
 CREATE TABLE FoodItems(
-	fid INTEGER,
+	fid SERIAL,
 	fname VARCHAR(100) NOT NULL,
 	description VARCHAR(250),
 	price NUMERIC NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE Sells(
 );
 
 CREATE TABLE RestaurantPromotions(
-	rpid INTEGER,
+	rpid SERIAL,
 	email VARCHAR(100) NOT NULL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE Discounts (
 -- added time 
 
 CREATE TABLE Orders(
-	oid INTEGER,
+	oid SERIAL,
 	address VARCHAR(100) NOT NULL,
 	date DATE NOT NULL,
 	time TIME NOT NULL,
@@ -111,7 +111,7 @@ CREATE TABLE Contains(
 );
 
 CREATE TABLE FDSPromotions(
-	pcid INTEGER,
+	pcid SERIAL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
 	redeemLimit INTEGER NOT NULL,
@@ -148,7 +148,7 @@ CREATE TABLE FDSLaunch(
 );
 
 CREATE TABLE Shifts (
-	shiftId INTEGER,
+	shiftId SERIAL,
 	shiftNo INTEGER NOT NULL,
 	date DATE NOT NULL,
 	startAMTime TIME NOT NULL,
@@ -227,7 +227,7 @@ CREATE TABLE Request (
 );
 
 INSERT INTO Customers VALUES ('A', 'A@email.com', 'password', 'A', 'A', 0);
-INSERT INTO Restaurants VALUES (1, 'Restaurant A', 'A', 10);
+INSERT INTO Restaurants (rname, address, minimumSpending) VALUES ('Restaurant A', 'A', 10);
 INSERT INTO RestaurantStaffs VALUES (1, 'rsa@email.com', 'password', 'A');
 INSERT INTO DeliveryRiders VALUES ('dra@email.com', 'A', 'SHD2020C', 00000, 'password');
 INSERT INTO FDSManagers VALUES ('fdsma', 'password');
