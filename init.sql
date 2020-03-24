@@ -220,6 +220,7 @@ CREATE TABLE Request (
 	email VARCHAR(100),
 	payment VARCHAR(100),
 	foodReview INTEGER,
+	rating NUMERIC,
 	PRIMARY KEY (oid, email),
 	FOREIGN KEY (oid) REFERENCES Orders,
 	FOREIGN KEY (email) REFERENCES Customers
