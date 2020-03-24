@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
-
+import MenuBar from "./MenuBar"
 const Home = props => {
     useEffect(() => {
       axios.get('/api/hello')
@@ -11,7 +11,8 @@ const Home = props => {
 
   return(
     <div>
-      Home
+      <MenuBar activeItem = "Home"/>
+      <h4>Restaurant Listing</h4>
       <p>{state}</p>
     </div>
  )

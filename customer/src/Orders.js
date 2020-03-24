@@ -11,7 +11,7 @@ class Orders extends React.Component {
         return (
             <div>
                 <MenuBar activeItem = "Orders"/>
-                <div>Orders</div>
+                <h4>Past Orders</h4>
             </div>
         )
     }

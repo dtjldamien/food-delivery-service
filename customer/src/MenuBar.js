@@ -9,9 +9,9 @@ class MenuBar extends React.Component {
         super()
         this.state = {
             items: [
-                {label: 'Home', icon: 'pi pi-fw pi-home', command: (event)=> {window.location = "/home"}},
+                {label: 'Home', icon: 'pi pi-fw pi-home', command: (event)=> {window.location = "/"}},
                 {label: 'Orders', icon: 'pi pi-fw pi-calendar', command: (event) => {window.location = "/orders"}},
-                {label: 'Ratings', icon: 'pi pi-fw pi-pencil', command: (event) => {window.location = "/ratings"}},
+                {label: 'Reviews', icon: 'pi pi-fw pi-pencil', command: (event) => {window.location = "/reviews"}},
                 {label: 'Profile', icon: 'pi pi-fw pi-cog', command: (event) => {window.location = "/profile"}}
             ]
         }

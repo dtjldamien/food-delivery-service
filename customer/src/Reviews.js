@@ -1,15 +1,15 @@
 import React from "react";
 import MenuBar from "./MenuBar";
-export class Ratings extends React.Component {
+class Reviews extends React.Component {
     constructor() {
         super();
         this.state = {};
     }
     render() {
         return (<div>
-            <MenuBar activeItem="Ratings" />
-            <div>Ratings</div>
+            <MenuBar activeItem="Reviews" />
+            <h4>Reviews</h4>
         </div>);
     }
 }
-export default Ratings
+export default Reviews
