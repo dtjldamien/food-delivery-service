@@ -422,6 +422,25 @@ router.post('/api/post/createCategory', (req, res, next) => {
     )
 })
 
+/* Get all food categories */
+router.get('/api/get/getCategories', (req, res, next) => {
+    
+    pool.query(
+        `SELECT * FROM Category`,
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return done()
+            } else {
+                console.log(q_res.rows);
+                return res.json(q_res.rows);
+            }
+        }
+    )
+
+})
+
+
 /* Create Food Order */
 router.post('/api/post/createOrder', (req, res, next) => {
 

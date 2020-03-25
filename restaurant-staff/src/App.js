@@ -17,13 +17,12 @@ class App extends React.Component {
 
   componentDidMount() {
     const profile = {
-      email: "B@email.com",
-      password:"password",
-      address:"B", 
-      creditCard:32854207
+      rname:'Restaurant C',
+      address:'C',
+      minimumSpending:30
     }
 
-    axios.put('/api/put/updateCustomer', {params: profile})
+    axios.post('/api/post/createRestaurant', {params: profile})
       .then(response => console.log(response))
       .catch((err) => console.log(err))
   }
