@@ -80,12 +80,14 @@ CREATE TABLE Discounts (
 
 CREATE TABLE Orders(
 	oid SERIAL,
+	rid INTEGER,
 	address VARCHAR(100) NOT NULL,
 	date DATE NOT NULL,
 	time TIME NOT NULL,
 	deliveryFee NUMERIC NOT NULL,
 	totalCost NUMERIC NOT NULL,
-	PRIMARY KEY (oid)
+	PRIMARY KEY (oid),
+	FOREIGN KEY (rid) REFERENCES Restaurants
 );
 
 -- oid not included in ER diagram
@@ -114,8 +116,8 @@ CREATE TABLE FDSPromotions(
 	pcid SERIAL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
-	redeemLimit INTEGER NOT NULL,
 	currentCount INTEGER NOT NULL,
+	redeemLimit INTEGER NOT NULL,
 	PRIMARY KEY (pcid)
 );
 
@@ -197,11 +199,11 @@ CREATE TABLE FullTime (
 CREATE TABLE Assigned (
 	oid INTEGER,
 	email VARCHAR(100),
-	serviceReview INTEGER,
 	assignedDate DATE NOT NULL,
 	assignedTime TIME NOT NULL,
 	deliveredDate DATE,
 	deliveredTime TIME,
+	serviceReview INTEGER
 	PRIMARY KEY (oid, email),
 	FOREIGN KEY (oid) REFERENCES Orders,
 	FOREIGN KEY (email) REFERENCES DeliveryRiders
@@ -219,7 +221,7 @@ CREATE TABLE Request (
 	oid INTEGER,
 	email VARCHAR(100),
 	payment VARCHAR(100),
-	foodReview INTEGER,
+	foodReview VARCHAR(250),
 	rating NUMERIC,
 	PRIMARY KEY (oid, email),
 	FOREIGN KEY (oid) REFERENCES Orders,
