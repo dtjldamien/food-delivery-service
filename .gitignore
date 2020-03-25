@@ -7,6 +7,7 @@
 /deliver-rider/node_modules
 /fds-manager/node_modules
 /restaurant-staff/node_modules
+/Client/
 
 # testing
 /coverage
