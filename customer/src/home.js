@@ -37,7 +37,6 @@ class Home extends React.Component {
     }
     return (
       <div>
-        <MenuBar activeItem = "Home"/>
         <Categories/>
       </div>
     )

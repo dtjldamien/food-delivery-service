@@ -1,5 +1,4 @@
 import React from "react"
-
 class Restaurants extends React.Component {
     constructor() {
         super()
@@ -8,7 +7,11 @@ class Restaurants extends React.Component {
 
     render() {
         return (
-            
+            <div>
+                Hello
+                {this.props.location.state.category}
+            </div>
         )
     }
 }
+export default Restaurants 

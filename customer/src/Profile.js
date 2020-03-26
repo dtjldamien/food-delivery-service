@@ -1,5 +1,4 @@
 import React from "react"
-import MenuBar from "./MenuBar";
 class Profile extends React.Component {
     constructor() {
         super();
@@ -7,7 +6,6 @@ class Profile extends React.Component {
     }
     render() {
         return (<div>
-            <MenuBar activeItem="Profile" />
             <div>Profile</div>
         </div>);
     }
