@@ -21,8 +21,7 @@ function App() {
         <Route path = "/reviews"><Reviews/></Route>
         <Route path = "/profile"><Profile/></Route>
         <Route exact path = "/restaurants" render = {(props)=><Restaurants {...props}/>}/>
-        <Route path = "/restaurants/:catname" render = {(props)=><Restaurants{...props}/>}/>
-        
+        <Route path = "/restaurants/:catname" render = {(props)=><Restaurants {...props}/>}/>
       </Switch>
     </Router>
   );

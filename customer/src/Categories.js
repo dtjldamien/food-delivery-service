@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import axios from 'axios';
-import {Carousel} from 'primereact/carousel';
 import {Card} from 'primereact/card';
-import { Link, Route } from 'react-router-dom';
-import Restaurants from './Restaurants'
+import { Link } from 'react-router-dom';
 
 class Categories extends React.Component {
   constructor() {
@@ -15,7 +13,7 @@ class Categories extends React.Component {
 
   componentDidMount() {
     axios.get('/api/get/getCategories')
-      .then(data => data.data.map(catname => catname.catname))
+      .then(data => data.data.map(catArr => catArr.catname))
       .then(catnames => this.setState( {categories : catnames }))
       .catch(err => console.log(err))
   }
@@ -31,15 +29,19 @@ class Categories extends React.Component {
     }
 
     this.state.categories.map(catname => {
-      categories.push(  
-        <div>
-          <Link to={{pathname:`/restaurants/${catname}`,state:{catname:{catname}}}}>
+      categories.push(
+        <div style ={cardStyle}>
+          <Link to={{
+            pathname:`/restaurants/${catname}`,
+            state: {
+              catname: {catname}
+            }
+          }}>
             <Card title={catname} style={cardStyle}/>
           </Link>
         </div>
       )
     })
-
     return categories
   }
 
