@@ -440,6 +440,28 @@ router.get('/api/get/getCategories', (req, res, next) => {
 
 })
 
+/* Get restaurants based on category name */
+router.get('/api/get/getRestaurantsByCategory', (req, res, next) => {
+    
+    const category = req.query.catname
+
+    pool.query(
+        `SELECT * FROM Category NATURAL JOIN Belongs Natural JOIN Restaurants WHERE catName=$1`,
+        [category],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return done()
+            } else {
+                console.log(q_res.rows);
+                return res.json(q_res.rows);
+            }
+        }
+    )
+
+})
+
+
 
 /* Create Food Order */
 router.post('/api/post/createOrder', (req, res, next) => {
@@ -556,6 +578,8 @@ router.put('/api/put/updateFoodItem', (req, res, next) => {
     )
 
 })
+
+
 
 /* WriteReview */
 router.put('/api/put/writeReview', (req, res, next) => {
