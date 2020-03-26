@@ -20,7 +20,9 @@ function App() {
         <Route path = "/orders"><Orders/></Route>
         <Route path = "/reviews"><Reviews/></Route>
         <Route path = "/profile"><Profile/></Route>
-        <Route path = "/restaurants"><Restaurants/></Route>
+        <Route exact path = "/restaurants" render = {(props)=><Restaurants {...props}/>}/>
+        <Route path = "/restaurants/:catname" render = {(props)=><Restaurants{...props}/>}/>
+        
       </Switch>
     </Router>
   );

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import {Carousel} from 'primereact/carousel';
 import {Card} from 'primereact/card';
+import { Link, Route } from 'react-router-dom';
+import Restaurants from './Restaurants'
 
 class Categories extends React.Component {
   constructor() {
@@ -29,8 +31,12 @@ class Categories extends React.Component {
     }
 
     this.state.categories.map(catname => {
-      categories.push(
-        <Card title={catname} style={cardStyle}/>
+      categories.push(  
+        <div>
+          <Link to={{pathname:`/restaurants/${catname}`,state:{catname:{catname}}}}>
+            <Card title={catname} style={cardStyle}/>
+          </Link>
+        </div>
       )
     })
 
@@ -50,7 +56,6 @@ class Categories extends React.Component {
     return (
       <div>
         <h1>Please Choose A Category</h1>
-
           {this.createCards()}
 
       </div>
