@@ -1,12 +1,25 @@
 -- is there a need for salary? (is still in ER diagram)
 -- i think doesnt matter for restaurant staff, will remove
 
+CREATE TABLE Category (
+	catName VARCHAR(100),
+	PRIMARY KEY (catName)
+);
+
 CREATE TABLE Restaurants(
 	rid SERIAL,
 	rname VARCHAR(100) NOT NULL,
 	address VARCHAR (100) NOT NULL,
 	minimumSpending FLOAT NOT NULL,
 	PRIMARY KEY (rid)
+);
+
+CREATE TABLE Belongs(
+	catName VARCHAR(100),
+	rid INTEGER,
+	PRIMARY KEY (catName, rid),
+	FOREIGN KEY (catName) REFERENCES Category,
+	FOREIGN KEY (rid) REFERENCES Restaurants
 );
 
 CREATE TABLE RestaurantStaffs(
@@ -18,21 +31,12 @@ CREATE TABLE RestaurantStaffs(
 	FOREIGN KEY (rid) REFERENCES Restaurants
 );
 
--- belongs category weak entity, how to do?
-
-CREATE TABLE Category (
-	catName VARCHAR(100),
-	PRIMARY KEY (catName)
-);
-
 CREATE TABLE FoodItems(
 	fid SERIAL,
 	fname VARCHAR(100) NOT NULL,
 	description VARCHAR(250),
 	price NUMERIC NOT NULL,
-	catName VARCHAR(100) NOT NULL,
-	PRIMARY KEY (fid),
-	FOREIGN KEY (catName) REFERENCES Category
+	PRIMARY KEY (fid)
 );
 
 CREATE TABLE Sells(
@@ -203,7 +207,7 @@ CREATE TABLE Assigned (
 	assignedTime TIME NOT NULL,
 	deliveredDate DATE,
 	deliveredTime TIME,
-	serviceReview INTEGER
+	serviceReview INTEGER,
 	PRIMARY KEY (oid, email),
 	FOREIGN KEY (oid) REFERENCES Orders,
 	FOREIGN KEY (email) REFERENCES DeliveryRiders
@@ -229,7 +233,13 @@ CREATE TABLE Request (
 );
 
 INSERT INTO Customers VALUES ('A', 'A@email.com', 'password', 'A', 'A', 0);
-INSERT INTO Restaurants (rname, address, minimumSpending) VALUES ('Restaurant A', 'A', 10);
+
+INSERT INTO Restaurants (rname, address, minimumSpending) VALUES
+('Fish&Co', 'ABC Street', '5'),
+('Genki', 'XYZ Avenue', '5'),
+('Generic KBBQ', '123 Road', '5'),
+('McD', 'CS2102 Lane', '5');
+
 INSERT INTO RestaurantStaffs VALUES (1, 'rsa@email.com', 'password', 'A');
 INSERT INTO DeliveryRiders VALUES ('dra@email.com', 'A', 'SHD2020C', 00000, 'password');
 INSERT INTO FDSManagers VALUES ('fdsma', 'password');
