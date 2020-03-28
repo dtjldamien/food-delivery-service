@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios';
-import {Card} from 'primereact/card';
+import { Card } from 'primereact/card';
 import { Link } from 'react-router-dom';
 
 class Categories extends React.Component {
