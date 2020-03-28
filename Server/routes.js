@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router()
-var pool = require('./Main/db')
+var pool = require('./Main/db');
+const { getMaxListeners } = require('./Main/db');
 
 /* 
 	When passing into a router method,
@@ -424,7 +425,7 @@ router.post('/api/post/createCategory', (req, res, next) => {
 
 /* Get all food categories */
 router.get('/api/get/getCategories', (req, res, next) => {
-    
+
     pool.query(
         `SELECT * FROM Category`,
         (q_err, q_res) => {
@@ -442,12 +443,11 @@ router.get('/api/get/getCategories', (req, res, next) => {
 
 /* Get restaurants based on category name */
 router.get('/api/get/getRestaurantsByCategory', (req, res, next) => {
-    
+
     const category = req.query.catname
 
     pool.query(
-        `SELECT * FROM Category NATURAL JOIN Belongs Natural JOIN Restaurants WHERE catName=$1`,
-        [category],
+        `SELECT * FROM Category NATURAL JOIN Belongs Natural JOIN Restaurants WHERE catName=$1`, [category],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -748,12 +748,11 @@ router.post('/api/post/createAssignment', (req, res, next) => {
     const values = [
         req.body.params.oid,
         req.body.params.email,
-        req.body.params.assignedDate,
-        req.body.params.assignedTime,
+        req.body.params.assignedDateTime
     ]
 
     pool.query(
-        `INSERT INTO Assigned (oid, email, assignedDate, assignedTime) VALUES ($1, $2, $3, $4)`,
+        `INSERT INTO Assigned (oid, email, assignedDateTime) VALUES ($1, $2, $3)`,
         values,
         (q_err, q_res) => {
             if (q_err) {
@@ -782,7 +781,58 @@ router.get('/api/get/viewFoodItem', (req, res, next) => {
                 return res.json(q_res.rows);
             }
         })
-
 })
+
+/* View 5 most recent delivery locations */
+router.get('/api/get/viewRecentDeliveryLocations', (req, res, next) => {
+
+    const email = req.query.email;
+    console.log(req);
+    pool.query(`SELECT o.address FROM Customers C natural join Orders O natural join Request R WHERE c.email = $1 ORDER BY date desc, time desc LIMIT 5`, [email],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return done()
+            } else {
+                console.log(q_res.rows);
+                return res.json(q_res.rows);
+            }
+        })
+})
+
+/* View total number of hours worked by the rider */
+router.get('/api/get/viewTotalWorkHours', (req, res, next) => {
+
+    const email = req.query.email;
+    console.log(req);
+    pool.query(`SELECT sum(workHours) FROM ScheduleContains WHERE email = $1`, [email],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return done()
+            } else {
+                console.log(q_res.rows);
+                return res.json(q_res.rows);
+            }
+        })
+})
+
+/* View total number of orders delivered by a rider based on time range */
+router.get('/api/get/viewTotalWorkHours', (req, res, next) => {
+
+    const email = req.query.email;
+    console.log(req);
+    pool.query(`SELECT count(*) FROM Assigned A WHERE A.email = $1 AND deliveredDateTime >= $2 AND deliveredDateTime < $3`, [email],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return done()
+            } else {
+                console.log(q_res.rows);
+                return res.json(q_res.rows);
+            }
+        })
+})
+
 
 module.exports = router
