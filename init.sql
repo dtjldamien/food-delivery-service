@@ -156,11 +156,11 @@ CREATE TABLE FDSLaunch(
 CREATE TABLE Shifts (
 	shiftId SERIAL,
 	shiftNo INTEGER NOT NULL,
-	date DATE NOT NULL,
-	startAMTime TIME NOT NULL,
-	endAMTime TIME NOT NULL,
-	startPMTime TIME NOT NULL,
-	endPMTime TIME NOT NULL,
+	startDate DATE NOT NULL,
+	endDate DATE NOT NULL,
+	startTime TIME NOT NULL,
+	endTime TIME NOT NULL,
+	hours NUMERIC NOT NULL,
 	PRIMARY KEY(shiftId)
 );
 
@@ -203,10 +203,8 @@ CREATE TABLE FullTime (
 CREATE TABLE Assigned (
 	oid INTEGER,
 	email VARCHAR(100),
-	assignedDate DATE NOT NULL,
-	assignedTime TIME NOT NULL,
-	deliveredDate DATE,
-	deliveredTime TIME,
+	assignedDateTime TIMESTAMP NOT NULL,
+	deliveredDateTime TIMESTAMP,
 	serviceReview INTEGER,
 	PRIMARY KEY (oid, email),
 	FOREIGN KEY (oid) REFERENCES Orders,

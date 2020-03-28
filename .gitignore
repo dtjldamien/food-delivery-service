@@ -8,6 +8,7 @@
 /fds-manager/node_modules
 /restaurant-staff/node_modules
 /Client/
+/Server/Main/db.js
 
 # testing
 /coverage
