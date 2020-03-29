@@ -421,6 +421,27 @@ router.post('/api/post/createCategory', (req, res, next) => {
     )
 })
 
+/* Get Food Items By Restaurant ID */
+router.get('/api/get/getFoodItemsByRestaurantID', (req, res, next) => {
+
+    const rid = req.query.rid
+
+    pool.query(
+        `SELECT * FROM FoodItems NATURAL JOIN Sells NATURAL JOIN Restaurants WHERE Restaurants.rid=$1`,
+        [rid],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+
+})
+
 /* Get all food categories */
 router.get('/api/get/getCategories', (req, res, next) => {
 

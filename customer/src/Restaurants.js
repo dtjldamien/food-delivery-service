@@ -17,6 +17,7 @@ class Restaurants extends React.Component {
         }
     }
     componentDidMount() {
+        console.log(this.props)
         this.setState({categoryName: this.props.match.params.catname})
         const restaurantParam = {
             catname: this.props.match.params.catname
@@ -26,6 +27,7 @@ class Restaurants extends React.Component {
         .then(data => data.data.map(restaurant => restaurant))
         .then(restaurant=>this.setState({restaurantData:restaurant}))
     }
+    
     render() {
         return (
             <div>

@@ -8,8 +8,11 @@ import Reviews from "./Reviews";
 import Profile from "./Profile"
 import Restaurants from "./Restaurants"
 import { Card } from "primereact/card"
+import Register from "./Register"
+import { Dialog } from "primereact/dialog"
 // import logo from './logo.svg';
 import 'primereact/resources/themes/nova-light/theme.css';
+import { Button } from 'primereact/button';
 
 class App extends React.Component {
     
@@ -20,7 +23,7 @@ class App extends React.Component {
       loggedIn: false,
       email: "",
       password: "",
-      errorMessage: ''
+      visible: false
     }
     this.handleLogin = this.handleLogin.bind(this)
     this.handleChange = this.handleChange.bind(this)
@@ -33,12 +36,12 @@ class App extends React.Component {
         <MenuBar activeItem = "Restaurants"/>
         <button onClick={this.handleLogout}>Log Out</button>
         <Switch>
-          <Route exact path = "/"><Home/></Route>
-          <Route path = "/orders"><Orders/></Route>
-          <Route path = "/reviews"><Reviews/></Route>
-          <Route path = "/profile"><Profile/></Route>
-          <Route exact path = "/restaurants" render={(props) => <Restaurants {...props} />} />
-          <Route path = "/restaurants/:catname" render={(props) => <Restaurants {...props} />} />
+          <Route exact path = "/" render={(props) => <Home {...props} {...this.state}/>} />
+          <Route path = "/orders" render={(props) => <Orders {...props} {...this.state}/>} />
+          <Route path = "/reviews" render={(props) => <Reviews {...props} {...this.state}/>} />
+          <Route path = "/profile" render={(props) => <Profile {...props} {...this.state}/>} />
+          <Route exact path = "/restaurants" render={(props) => <Restaurants {...props} {...this.state}/>} />
+          <Route path = "/restaurants/:catname" render={(props) => <Restaurants {...props} {...this.state}/>} />
         </Switch>
       </Router>
     )
@@ -56,14 +59,17 @@ class App extends React.Component {
       await axios.get('/api/get/customerLogin', {params: data})
               .then(data => this.setState({customer : data.data[0]}))
               .catch(err => {
-                this.setState({errorMessage: "Invalid Credentials"})
-                console.log(err.message)
+                alert("Account Doesn't Exist")
               })
       
-        if (this.state.password === this.state.customer.password) { 
-          this.setState({loggedIn: true})
+        if (this.state.customer !== undefined) {
+          if (this.state.password === this.state.customer.password) { 
+            this.setState({loggedIn: true})
+          } else {
+            alert("Invalid Password")
+          }
         } else {
-          alert("Invalid Password")
+          alert("Account Not Found.")
         }
 
     }
@@ -73,6 +79,8 @@ class App extends React.Component {
   handleLogout() {
     this.setState({loggedIn: false})
     this.setState({customer: {}})
+    this.setState({email: ""})
+    this.setState({password: ""})
   }
 
   handleChange(event) {
@@ -82,6 +90,8 @@ class App extends React.Component {
   }
 
   loginPage() {
+
+    console.log(this.state)
 
     const inputs =  <div>
                       <label>Customer Email: <input type="text" name="email" onChange={this.handleChange}/></label>
@@ -93,21 +103,23 @@ class App extends React.Component {
 
     const header = <h3>Food Delivery Service: Customer Login</h3>
 
-    const cardStyle = {
+    const loginCardStyle = {
       display: 'inline-block',
       width: '360px',
       padding: '5px',
-      margin: '10px'
+      margin: '10px',
     }
 
     return (
       <div>
         <form onSubmit={this.handleLogin}>
           {this.state.errorMessage && <h3>{this.state.errorMessage}</h3>}
-          <Card header={header} footer={inputs} style={cardStyle}>
-            
-          </Card>
+          <Card header={header} footer={inputs} style={loginCardStyle}></Card>
         </form>
+        <Dialog header="Register" visible={this.state.visible} onHide={() => this.setState({visible: false})}>
+          <Register/>
+        </Dialog>
+        <Button label="Register" icon="pi pi-info-circle" onClick={(e) => this.setState({visible: true})}/>
       </div>
     )
   }
