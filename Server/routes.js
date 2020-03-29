@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var pool = require('./Main/db');
+const { getMaxListeners } = require('./Main/db');
 
 /* 
 	When passing into a router method,
@@ -15,14 +16,15 @@ var pool = require('./Main/db');
 router.get('/api/get/customerLogin', (req, res, next) => {
 
     const email = req.query.email;
+    console.log(req);
     pool.query(`SELECT * FROM customers WHERE email=$1`, [email],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         })
 
@@ -36,10 +38,10 @@ router.get('/api/get/deliveryRiderLogin', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         })
 
@@ -53,10 +55,10 @@ router.get('/api/get/restaurantStaffLogin', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         })
 
@@ -70,10 +72,10 @@ router.get('/api/get/fdsManagerLogin', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         })
 
@@ -96,10 +98,10 @@ router.post('/api/post/registerCustomer', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res);
-                return res.status(200).json(q_res);
+                return res.json(q_res);
             }
         })
 
@@ -113,10 +115,10 @@ router.delete('/api/delete/customer', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res);
-                return res.status(200).json(q_res);
+                return res.json(q_res);
             }
         })
 })
@@ -136,10 +138,10 @@ router.put('/api/put/updateCustomer', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -155,10 +157,10 @@ router.get('/api/get/viewPastOrders', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -179,10 +181,10 @@ router.post('/api/post/createRestaurant', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -205,10 +207,10 @@ router.post('/api/post/registerRestaurantStaff', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -225,10 +227,10 @@ router.delete('/api/delete/deleteRestaurantStaff', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -250,10 +252,10 @@ router.put('/api/put/restaurantStaff', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -279,10 +281,10 @@ router.post('/api/post/registerDeliveryRider', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -298,10 +300,10 @@ router.delete('/api/delete/deliveryRider', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -324,10 +326,10 @@ router.put('/api/put/updateDeliveryRider', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -348,10 +350,10 @@ router.post('/api/post/createFDSManager', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -368,10 +370,10 @@ router.delete('/api/delete/deleteFDSManager', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -392,10 +394,10 @@ router.put('/api/put/updateFDSManager', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -412,10 +414,10 @@ router.post('/api/post/createCategory', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -429,10 +431,10 @@ router.get('/api/get/getCategories', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -449,10 +451,10 @@ router.get('/api/get/getRestaurantsByCategory', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -478,10 +480,10 @@ router.post('/api/post/createOrder', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -497,10 +499,10 @@ router.delete('/api/delete/deleteOrder', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -522,10 +524,10 @@ router.post('/api/post/createFoodItem', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -541,10 +543,10 @@ router.delete('/api/delete/deleteFoodItem', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -567,10 +569,10 @@ router.put('/api/put/updateFoodItem', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -593,10 +595,10 @@ router.put('/api/put/writeReview', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -612,10 +614,10 @@ router.get('/api/get/viewAllReviews', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         })
 
@@ -639,10 +641,10 @@ router.post('/api/post/createRestaurantPromotion', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -665,10 +667,10 @@ router.post('/api/post/createFdsPromotion', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -683,10 +685,10 @@ router.get('/api/get/viewRewardPoints', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         })
 
@@ -706,10 +708,10 @@ router.put('/api/put/updateFoodItem', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -730,10 +732,10 @@ router.put('/api/put/rateDeliveryService', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -755,10 +757,10 @@ router.post('/api/post/createAssignment', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         }
     )
@@ -773,10 +775,10 @@ router.get('/api/get/viewFoodItem', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         })
 })
@@ -790,10 +792,10 @@ router.get('/api/get/viewRecentDeliveryLocations', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         })
 })
@@ -807,10 +809,10 @@ router.get('/api/get/viewTotalWorkHours', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         })
 })
@@ -824,10 +826,10 @@ router.get('/api/get/viewTotalWorkHours', (req, res, next) => {
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
+                return done()
             } else {
                 console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
+                return res.json(q_res.rows);
             }
         })
 })
