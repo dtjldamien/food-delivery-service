@@ -126,7 +126,7 @@ router.put('/api/put/updateCustomer', (req, res, next) => {
     const values = [
         req.body.params.password,
         req.body.params.address,
-        req.body.params.creditCard,
+        req.body.params.creditcard,
         req.body.params.email
     ]
 

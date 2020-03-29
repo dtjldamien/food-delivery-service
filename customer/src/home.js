@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Categories from './Categories';
 class Home extends React.Component {
   constructor(props) {

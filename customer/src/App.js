@@ -10,7 +10,6 @@ import Restaurants from "./Restaurants"
 import { Card } from "primereact/card"
 import Register from "./Register"
 import { Dialog } from "primereact/dialog"
-// import logo from './logo.svg';
 import 'primereact/resources/themes/nova-light/theme.css';
 import { Button } from 'primereact/button';
 
