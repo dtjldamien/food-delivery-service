@@ -11,10 +11,12 @@ class Restaurants extends React.Component {
         this.state = {
             categoryName: "All",
             restaurantData: [],
-            redirect: null
+            redirect: null,
+            selectedRestaurant: null
         }
     }
     componentDidMount() {
+        console.log(this.props)
         this.setState({categoryName: this.props.match.params.catname})
         const restaurantParam = {
             catname: this.props.match.params.catname
@@ -26,7 +28,12 @@ class Restaurants extends React.Component {
     }
     redirectOnClick() {
         if (this.state.redirect !== null) {
-            return <Redirect to={{pathname: this.state.redirect}}/>
+            return <Redirect to={{
+                pathname: this.state.redirect,
+                state: {
+                    selectedRestaurant: this.state.selectedRestaurant
+                }
+            }}/>
         }
     }
     render() {
@@ -34,7 +41,7 @@ class Restaurants extends React.Component {
             <div>
                 {this.redirectOnClick()}
                 <h1>{this.state.categoryName}</h1>
-                <DataTable value = {this.state.restaurantData} onRowClick = {(e) => this.setState({redirect: `/restaurants/${this.state.categoryName}/${e.data.rname}`})}>
+                <DataTable value = {this.state.restaurantData} onRowClick = {(e) => this.setState({selectedRestaurant: e.data, redirect: `/restaurants/${this.state.categoryName}/${e.data.rname}`})}>
                     <Column field="rid" header = "rid"/>
                     <Column field="rname" header="rname" sortable={true}/>
                     <Column field="address" header="address" sortable={true}/>

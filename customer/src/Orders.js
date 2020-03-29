@@ -1,8 +1,8 @@
 import React from "react"
 import {BrowserRouter as Router, Switch, Link, useRouteMatch, Route} from "react-router-dom"
 class Orders extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {}
     }
     render() {

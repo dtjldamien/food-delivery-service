@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import Categories from './Categories';
 class Home extends React.Component {
-  constructor() {
-      super()
+  constructor(props) {
+      super(props)
       this.state = {
       }
   }
+
+  componentDidMount() {
+    console.log(this.props)
+  }
+
   render() {
     return (
       <div>

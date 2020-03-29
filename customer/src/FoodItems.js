@@ -9,19 +9,32 @@ class FoodItems extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            restaurantData: [],
             foodData: []
         }
     }
     componentDidMount() {
-        const foodParam = {}
-        axios.get('/api/get/getRestaurantsByCategory', {params: foodParam})
+        const restaurant = this.props.location.state.selectedRestaurant
+        this.setState({restaurantData: restaurant})
+        const restaurantID = {
+            rid: restaurant.rid
+        }
+        // console.log(this.state)
+        console.log(this.props)
+        console.log(this.state)
+        axios.get('/api/get/getFoodItemsByRestaurantID', {params: restaurantID})
         .then(data => data.data.map(foodItems => foodItems))
         .then(foodItems=>this.setState({foodData:foodItems}))
     }
     render() {
         return (
             <div>
-                HI
+                 <DataTable value = {this.state.foodData}>
+                    <Column field="fid" header = "fid"/>
+                    <Column field="fname" header="fname" sortable={true}/>
+                    <Column field="description" header= "description" sortable={true}/>
+                    <Column field="price" header="price" sortable={true}/>
+                </DataTable>
             </div>
         )
     }
