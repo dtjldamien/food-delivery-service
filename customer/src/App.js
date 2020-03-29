@@ -30,9 +30,8 @@ class App extends React.Component {
   showContents() {
     return (
       <Router>
-        <h3>Food Delivery Service</h3>
-        <button onClick={this.handleLogout}>Log Out</button>
         <MenuBar activeItem = "Restaurants"/>
+        <button onClick={this.handleLogout}>Log Out</button>
         <Switch>
           <Route exact path = "/" render={() => <Home {...this.state} />}/>
           <Route path = "/orders" render={() => <Orders {...this.state} />} />
