@@ -7,6 +7,7 @@ import Orders from "./Orders"
 import Reviews from "./Reviews";
 import Profile from "./Profile"
 import Restaurants from "./Restaurants"
+import FoodItems from "./FoodItems"
 import { Card } from "primereact/card"
 import Register from "./Register"
 import { Dialog } from "primereact/dialog"
@@ -40,7 +41,8 @@ class App extends React.Component {
           <Route path = "/reviews" render={(props) => <Reviews {...props} {...this.state}/>} />
           <Route path = "/profile" render={(props) => <Profile {...props} {...this.state}/>} />
           <Route exact path = "/restaurants" render={(props) => <Restaurants {...props} {...this.state}/>} />
-          <Route path = "/restaurants/:catname" render={(props) => <Restaurants {...props} {...this.state}/>} />
+          <Route exact path = "/restaurants/:catname" render={(props) => <Restaurants {...props} {...this.state}/>} />
+          <Route exact path = "/restaurants/:catname/:rname" render={(props)=> <FoodItems {...props} {...this.state}/>}/>
         </Switch>
       </Router>
     )
@@ -129,7 +131,7 @@ class App extends React.Component {
 
         {!this.state.loggedIn && this.loginPage()} 
         {this.state.loggedIn && this.showContents()}
-
+        {/* {this.showContents()} */}
       </div>
     )
   }

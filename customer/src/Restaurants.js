@@ -1,7 +1,7 @@
 import React from "react"
 import axios from 'axios'
 import datatable, { DataTable, Column } from 'primereact/datatable'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -10,10 +10,9 @@ class Restaurants extends React.Component {
         super(props)
         this.state = {
             categoryName: "All",
-            restaurantData: [
-                {rname: 'res1', category: 'western', rid: '1'},
-                {rname: 'res2', category: 'japanese', rid: '2'}
-            ]
+            restaurantData: [],
+            redirect: null,
+            selectedRestaurant: null
         }
     }
     componentDidMount() {
@@ -27,16 +26,26 @@ class Restaurants extends React.Component {
         .then(data => data.data.map(restaurant => restaurant))
         .then(restaurant=>this.setState({restaurantData:restaurant}))
     }
-    
+    redirectOnClick() {
+        if (this.state.redirect !== null) {
+            return <Redirect to={{
+                pathname: this.state.redirect,
+                state: {
+                    selectedRestaurant: this.state.selectedRestaurant
+                }
+            }}/>
+        }
+    }
     render() {
         return (
             <div>
+                {this.redirectOnClick()}
                 <h1>{this.state.categoryName}</h1>
-                <DataTable value = {this.state.restaurantData}>
+                <DataTable value = {this.state.restaurantData} onRowClick = {(e) => this.setState({selectedRestaurant: e.data, redirect: `/restaurants/${this.state.categoryName}/${e.data.rname}`})}>
                     <Column field="rid" header = "rid"/>
-                    <Column field="rname" header="rname"/>
-                    <Column field="address" header="address"/>
-                    <Column field="minimumspending" header="minimumspending"/>
+                    <Column field="rname" header="rname" sortable={true}/>
+                    <Column field="address" header="address" sortable={true}/>
+                    <Column field="minimumspending" header="minimumspending" sortable={true}/>
                 </DataTable>
             </div>
         )
