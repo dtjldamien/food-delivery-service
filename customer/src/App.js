@@ -34,34 +34,41 @@ class App extends React.Component {
         <button onClick={this.handleLogout}>Log Out</button>
         <MenuBar activeItem = "Restaurants"/>
         <Switch>
-          <Route exact path = "/"><Home/></Route>
-          <Route path = "/orders"><Orders/></Route>
-          <Route path = "/reviews"><Reviews/></Route>
-          <Route path = "/profile"><Profile/></Route>
-          <Route exact path = "/restaurants" render = {(props)=><Restaurants {...props}/>}/>
-          <Route path = "/restaurants/:catname" render = {(props)=><Restaurants {...props}/>}/>
+          <Route exact path = "/" render={() => <Home {...this.state} />}/>
+          <Route path = "/orders" render={() => <Orders {...this.state} />} />
+          <Route path = "/reviews" render={() => <Reviews {...this.state} />} />
+          <Route path = "/profile" render={() => <Profile {...this.state} />} />
+          <Route exact path = "/restaurants" render={() => <Restaurants {...this.state} />} />
+          <Route path = "/restaurants/:catname" render={() => <Restaurants {...this.state} />} />
         </Switch>
       </Router>
     )
   }
 
-  handleLogin() {
-    const data = {
-      email: this.state.email
+  handleLogin = async (event) => {
+    
+    event.preventDefault();
+
+    if (this.state.email !== '' && this.state.password !== '') {
+      const data = {
+        email: this.state.email
+      }
+
+      await axios.get('/api/get/customerLogin', {params: data})
+              .then(data => this.setState({customer : data.data[0]}))
+              .catch(err => {
+                this.setState({errorMessage: "Invalid Credentials"})
+                console.log(err.message)
+              })
+      
+        if (this.state.password === this.state.customer.password) { 
+          this.setState({loggedIn: true})
+        } else {
+          alert("Invalid Password")
+        }
+
     }
 
-    const customer = {}
-
-    axios.get('/api/get/customerLogin', {params: data})
-      .then(data => this.setState({customer : data.data}))
-      .catch(err => {
-        this.setState({errorMessage: "Invalid Credentials"})
-        console.log(err.message)
-      })
-
-      this.setState({loggedIn: true})
-
-      console.log(customer)
   }
 
   handleLogout() {
@@ -109,10 +116,9 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        
-        {!this.state.loggedIn && this.loginPage()}
+
+        {!this.state.loggedIn && this.loginPage()} 
         {this.state.loggedIn && this.showContents()}
-        {/* {this.showContents()} */}
 
       </div>
     )
