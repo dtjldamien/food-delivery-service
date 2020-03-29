@@ -7,6 +7,7 @@ import Orders from "./Orders"
 import Reviews from "./Reviews";
 import Profile from "./Profile"
 import Restaurants from "./Restaurants"
+import FoodItems from "./FoodItems"
 import { Card } from "primereact/card"
 // import logo from './logo.svg';
 import 'primereact/resources/themes/nova-light/theme.css';
@@ -34,11 +35,12 @@ class App extends React.Component {
         <button onClick={this.handleLogout}>Log Out</button>
         <Switch>
           <Route exact path = "/"><Home/></Route>
-          <Route path = "/orders"><Orders/></Route>
-          <Route path = "/reviews"><Reviews/></Route>
-          <Route path = "/profile"><Profile/></Route>
-          <Route exact path = "/restaurants" render={(props) => <Restaurants {...props} />} />
-          <Route path = "/restaurants/:catname" render={(props) => <Restaurants {...props} />} />
+          <Route exact path = "/orders"><Orders/></Route>
+          <Route exact path = "/reviews"><Reviews/></Route>
+          <Route exact path = "/profile"><Profile/></Route>
+          <Route exact path = "/restaurants" render={(props) => <Restaurants {...props} {...this.state} />} />
+          <Route exact path = "/restaurants/:catname" render={(props) => <Restaurants {...props} {...this.state} />} />
+          <Route path = "/restaurants/:catname/:rname" render={(props)=> <FoodItems {...props} {...this.state}/>}/>
         </Switch>
       </Router>
     )
@@ -116,9 +118,9 @@ class App extends React.Component {
     return (
       <div>
 
-        {!this.state.loggedIn && this.loginPage()} 
-        {this.state.loggedIn && this.showContents()}
-
+        {/* {!this.state.loggedIn && this.loginPage()} 
+        {this.state.loggedIn && this.showContents()} */}
+        {this.showContents()}
       </div>
     )
   }
