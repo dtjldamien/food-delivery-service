@@ -1,7 +1,7 @@
 import React from 'react';
 import Home from './Home'
 import MenuBar from './MenuBar'
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom"
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 import axios from "axios";
 import Orders from "./Orders"
 import Reviews from "./Reviews";
@@ -33,12 +33,12 @@ class App extends React.Component {
         <MenuBar activeItem = "Restaurants"/>
         <button onClick={this.handleLogout}>Log Out</button>
         <Switch>
-          <Route exact path = "/" render={() => <Home {...this.state} />}/>
-          <Route path = "/orders" render={() => <Orders {...this.state} />} />
-          <Route path = "/reviews" render={() => <Reviews {...this.state} />} />
-          <Route path = "/profile" render={() => <Profile {...this.state} />} />
-          <Route exact path = "/restaurants" render={() => <Restaurants {...this.state} />} />
-          <Route path = "/restaurants/:catname" render={() => <Restaurants {...this.state} />} />
+          <Route exact path = "/"><Home/></Route>
+          <Route path = "/orders"><Orders/></Route>
+          <Route path = "/reviews"><Reviews/></Route>
+          <Route path = "/profile"><Profile/></Route>
+          <Route exact path = "/restaurants" render={(props) => <Restaurants {...props} />} />
+          <Route path = "/restaurants/:catname" render={(props) => <Restaurants {...props} />} />
         </Switch>
       </Router>
     )
