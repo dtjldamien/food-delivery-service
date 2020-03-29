@@ -36,7 +36,8 @@ class MenuBar extends React.Component {
             borderBottomWidth: '0px',
             borderRightWidth: '5px',
             borderLeftWidth: '5px',
-            alignSelf: 'center'
+            alignSelf: 'center',
+            fontWeight: 'bold'
             
         }
         return (
