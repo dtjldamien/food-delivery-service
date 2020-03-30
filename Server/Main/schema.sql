@@ -225,7 +225,7 @@ CREATE TABLE Request (
 	FOREIGN KEY (oid) REFERENCES Orders,
 	FOREIGN KEY (email) REFERENCES Customers
 		on delete cascade
-		on update cascade,
+		on update cascade
 );
 
 
