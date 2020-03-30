@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
+import Home from "./Home"
 
 class App extends React.Component {
 
@@ -30,7 +31,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h1>test</h1>
+        <Home/>
       </div>
     );
   }
