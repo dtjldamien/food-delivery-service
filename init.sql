@@ -103,6 +103,7 @@ CREATE TABLE Customers(
 	address VARCHAR(100) NOT NULL,
 	creditCard VARCHAR(100) NOT NULL,
 	rewardPoints NUMERIC NOT NULL,
+	registerDate TIMESTAMP NOT NULL,
 	PRIMARY KEY (email)
 );
 
@@ -230,7 +231,7 @@ CREATE TABLE Request (
 	FOREIGN KEY (email) REFERENCES Customers
 );
 
-INSERT INTO Customers VALUES ('A', 'A@email.com', 'password', 'A', 'A', 0);
+INSERT INTO Customers VALUES ('A', 'A@email.com', 'password', 'A', 'A', 0, '2020-03-27 19:10:25-07');
 
 INSERT INTO Restaurants (rname, address, minimumSpending) VALUES
 ('Fish&Co', 'ABC Street', '5'),
