@@ -5,6 +5,7 @@ import { Link, Redirect } from 'react-router-dom'
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
+import { Button } from 'primereact/button'
 class Restaurants extends React.Component {
     constructor(props) {
         super(props)
@@ -14,6 +15,7 @@ class Restaurants extends React.Component {
             redirect: null,
             selectedRestaurant: null
         }
+        this.selectRestaurant = this.selectRestaurant.bind(this)
     }
     componentDidMount() {
         console.log(this.props)
@@ -36,6 +38,11 @@ class Restaurants extends React.Component {
             }}/>
         }
     }
+    selectRestaurant(rowData, column) {
+        return <div>
+            <Button label="Select" onClick= {() => this.setState({selectedRestaurant: rowData, redirect: `/restaurants/${rowData.catname}/${rowData.rname}`})}/>
+        </div>
+    }
     render() {
         return (
             <div>
@@ -43,9 +50,10 @@ class Restaurants extends React.Component {
                 <h1>{this.state.categoryName}</h1>
                 <DataTable value = {this.state.restaurantData} onRowClick = {(e) => this.setState({selectedRestaurant: e.data, redirect: `/restaurants/${this.state.categoryName}/${e.data.rname}`})}>
                     <Column field="rid" header = "rid"/>
-                    <Column field="rname" header="rname" sortable={true}/>
-                    <Column field="address" header="address" sortable={true}/>
-                    <Column field="minimumspending" header="minimumspending" sortable={true}/>
+                    <Column field="rname" header="rname" />
+                    <Column field="address" header="address" />
+                    <Column field="minimumspending" header="minimumspending" />
+                    <Column field="rid" body={this.selectRestaurant}/>
                 </DataTable>
             </div>
         )

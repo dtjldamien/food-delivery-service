@@ -5,13 +5,21 @@ import { Link, Redirect } from 'react-router-dom'
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
+import { Dialog } from 'primereact/dialog'
+import { Button } from 'primereact/button'
 class FoodItems extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             restaurantData: [],
-            foodData: []
+            foodData: [],
+            visible: false,
+            cart: []
         }
+        this.viewCart = this.viewCart.bind(this)
+        this.viewCartDialog = this.viewCartDialog.bind(this)
+        this.addToCart = this.addToCart.bind(this)
+        this.handleCartAdd = this.handleCartAdd.bind(this)
     }
     componentDidMount() {
         const restaurant = this.props.location.state.selectedRestaurant
@@ -26,6 +34,45 @@ class FoodItems extends React.Component {
         .then(data => data.data.map(foodItems => foodItems))
         .then(foodItems=>this.setState({foodData:foodItems}))
     }
+    handleCartAdd(newCart) {
+        this.setState((prevState) => {return ({cart: newCart})})
+        console.log(newCart)
+        alert("Added To Cart")
+    }
+    addToCart(rowData, column) {
+        const newCart = this.state.cart.slice()
+        newCart.push(rowData)
+        return <div>
+            <Button label="Add To Cart" onClick={()=>this.handleCartAdd(newCart)}></Button>
+        </div>
+    }
+    viewCart() {
+        return (
+            <div>
+                <DataTable value = {this.state.cart}>
+                    <Column field="fid" header = "fid"/>
+                    <Column field="fname" header="fname" sortable={true}/>
+                    <Column field="description" header= "description" sortable={true}/>
+                    <Column field="price" header="price" sortable={true}/>
+                    {/* <Column field="fid" body={this.addToCart}/> */}
+                </DataTable>
+                <Button label="Checkout" onClick={()=> alert("do something")}></Button>
+            </div>
+        )
+    }
+    viewCartDialog() {
+        return (
+            <div>
+                <Dialog header="View Cart" visible={this.state.visible} onHide={() => this.setState({visible: false})}>
+                    {this.viewCart()}
+                </Dialog>
+                <Button label=" View Cart" onClick={()=> this.setState({visible: true})}></Button>
+            </div>
+        )
+    }
+    checkout() {
+    
+    }
     render() {
         return (
             <div>
@@ -34,7 +81,9 @@ class FoodItems extends React.Component {
                     <Column field="fname" header="fname" sortable={true}/>
                     <Column field="description" header= "description" sortable={true}/>
                     <Column field="price" header="price" sortable={true}/>
+                    <Column field="fid" body={this.addToCart}/>
                 </DataTable>
+                {this.viewCartDialog()}
             </div>
         )
     }
