@@ -12,7 +12,6 @@ class Orders extends React.Component {
             </div>
         )
     }
-
 }
 
 export default Orders

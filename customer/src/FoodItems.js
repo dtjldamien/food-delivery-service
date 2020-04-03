@@ -7,6 +7,7 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import { Dialog } from 'primereact/dialog'
 import { Button } from 'primereact/button'
+import {InputText} from 'primereact/inputtext';
 class FoodItems extends React.Component {
     constructor(props) {
         super(props)
@@ -14,12 +15,16 @@ class FoodItems extends React.Component {
             restaurantData: [],
             foodData: [],
             visible: false,
-            cart: []
+            cart: [],
+            newCart:[],
+            value: ''
         }
         this.viewCart = this.viewCart.bind(this)
         this.viewCartDialog = this.viewCartDialog.bind(this)
         this.addToCart = this.addToCart.bind(this)
         this.handleCartAdd = this.handleCartAdd.bind(this)
+        this.handleQuantityChange = this.handleQuantityChange.bind(this)
+        this.quantityInput = this.quantityInput.bind(this)
     }
     componentDidMount() {
         const restaurant = this.props.location.state.selectedRestaurant
@@ -39,11 +44,25 @@ class FoodItems extends React.Component {
         console.log(newCart)
         alert("Added To Cart")
     }
+    handleQuantityChange(rowData, quantity) {
+        this.setState({value: quantity})
+        rowData.quantity = quantity
+        console.log(rowData)
+        this.setState({newCart: rowData})
+    }
     addToCart(rowData, column) {
         const newCart = this.state.cart.slice()
-        newCart.push(rowData)
+        var copyCart = {}
+        Object.assign(copyCart, this.state.newCart)
+        newCart.push(copyCart)
         return <div>
-            <Button label="Add To Cart" onClick={()=>this.handleCartAdd(newCart)}></Button>
+            {/* <InputText style={{display:'inline-block', width:'50px'}} value={this.state.value} onChange={(e) => this.handleQuantityChange(rowData, e.target.value)} /> */}
+            <Button style={{display:'inline-block'}} label="Add To Cart" onClick={()=>this.handleCartAdd(newCart)}></Button>
+        </div>
+    }
+    quantityInput(rowData, column) {
+        return <div>
+            <InputText style={{display:'inline-block', width:'50px'}} value={this.state.value} onChange={(e) => this.handleQuantityChange(rowData, e.target.value)} />
         </div>
     }
     viewCart() {
@@ -54,9 +73,9 @@ class FoodItems extends React.Component {
                     <Column field="fname" header="fname" sortable={true}/>
                     <Column field="description" header= "description" sortable={true}/>
                     <Column field="price" header="price" sortable={true}/>
-                    {/* <Column field="fid" body={this.addToCart}/> */}
+                    <Column field="quantity" header="quantity" sortable={true}/>
                 </DataTable>
-                <Button label="Checkout" onClick={()=> alert("do something")}></Button>
+                <Button label="Checkout" onClick={()=> alert("pay by cash plz")}></Button>
             </div>
         )
     }
@@ -81,7 +100,9 @@ class FoodItems extends React.Component {
                     <Column field="fname" header="fname" sortable={true}/>
                     <Column field="description" header= "description" sortable={true}/>
                     <Column field="price" header="price" sortable={true}/>
+                    <Column field="fid" header="quantity" body={this.quantityInput}/>
                     <Column field="fid" body={this.addToCart}/>
+
                 </DataTable>
                 {this.viewCartDialog()}
             </div>
