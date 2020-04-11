@@ -17,6 +17,7 @@ class Restaurants extends React.Component {
         }
         this.selectRestaurant = this.selectRestaurant.bind(this)
     }
+
     componentDidMount() {
         console.log(this.props)
         this.setState({categoryName: this.props.match.params.catname})
@@ -28,6 +29,7 @@ class Restaurants extends React.Component {
         .then(data => data.data.map(restaurant => restaurant))
         .then(restaurant=>this.setState({restaurantData:restaurant}))
     }
+
     redirectOnClick() {
         if (this.state.redirect !== null) {
             return <Redirect to={{
@@ -38,11 +40,13 @@ class Restaurants extends React.Component {
             }}/>
         }
     }
+
     selectRestaurant(rowData, column) {
         return <div>
             <Button label="Select" onClick= {() => this.setState({selectedRestaurant: rowData, redirect: `/restaurants/${rowData.catname}/${rowData.rname}`})}/>
         </div>
     }
+    
     render() {
         return (
             <div>

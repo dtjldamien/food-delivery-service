@@ -29,6 +29,7 @@ class Profile extends React.Component {
             email: this.state.email
         }
 
+        /* Checks if data has been changed */
         if (data.password === this.props.customer.password &&
             data.address === this.props.customer.address &&
             data.creditcard === this.props.customer.creditcard) {

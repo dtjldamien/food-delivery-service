@@ -52,19 +52,23 @@ class App extends React.Component {
     
     event.preventDefault();
 
+    /* Ensuring input boxes are not empty */
     if (this.state.email !== '' && this.state.password !== '') {
       const data = {
         email: this.state.email
       }
 
+      /* API Call to GET customer */
       await axios.get('/api/get/customerLogin', {params: data})
               .then(data => this.setState({customer : data.data[0]}))
               .catch(err => {
                 alert("Account Doesn't Exist")
               })
       
+        /* Check if customer is GET from database */
         if (this.state.customer !== undefined) {
           if (this.state.password === this.state.customer.password) { 
+            /* Set state if customer passes authentication */
             this.setState({loggedIn: true})
           } else {
             alert("Invalid Password")
@@ -94,6 +98,7 @@ class App extends React.Component {
 
     console.log(this.state)
 
+    /* Inputs for the customer email and password */
     const inputs =  <div>
                       <label>Customer Email: <input type="text" name="email" onChange={this.handleChange}/></label>
                       <br></br>
@@ -113,14 +118,21 @@ class App extends React.Component {
 
     return (
       <div>
+        
+        {/* Login Form Handling Login */}
         <form onSubmit={this.handleLogin}>
           {this.state.errorMessage && <h3>{this.state.errorMessage}</h3>}
           <Card header={header} footer={inputs} style={loginCardStyle}></Card>
         </form>
+
+        {/* Dialog of the register card */}
         <Dialog header="Register" visible={this.state.visible} onHide={() => this.setState({visible: false})}>
           <Register/>
         </Dialog>
+
+        {/* e is the short form for events, basically make the register card visible */}
         <Button label="Register" icon="pi pi-info-circle" onClick={(e) => this.setState({visible: true})}/>
+
       </div>
     )
   }
@@ -129,9 +141,9 @@ class App extends React.Component {
     return (
       <div>
 
-        {/* {!this.state.loggedIn && this.loginPage()} 
-        {this.state.loggedIn && this.showContents()} */}
-        {this.showContents()}
+        {!this.state.loggedIn && this.loginPage()} 
+        {this.state.loggedIn && this.showContents()}
+        {/* {this.showContents()} */}
       </div>
     )
   }
