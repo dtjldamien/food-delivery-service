@@ -48,7 +48,7 @@ CREATE TABLE RestaurantPromotions(
 	endDate DATE NOT NULL,
 	currentCount INTEGER NOT NULL,
 	promotionLimit INTEGER NOT NULL,
-	PRIMARY KEY (rpid),
+	PRIMARY KEY (rpid)
 );
 
 CREATE TABLE RestaurantPriceDiscount (
