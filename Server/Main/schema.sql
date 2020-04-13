@@ -1,5 +1,5 @@
 CREATE TABLE Restaurants(
-	rid INTEGER,
+	rid SERIAL,
 	rname VARCHAR(100) NOT NULL,
 	address VARCHAR (100) NOT NULL,
 	minimumSpending FLOAT NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE Category (
 );
 
 CREATE TABLE FoodItems(
-	fid INTEGER,
+	fid SERIAL,
 	fname VARCHAR(100) NOT NULL,
 	description VARCHAR(250),
 	price NUMERIC NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE Sells(
 );
 
 CREATE TABLE RestaurantPromotions(
-	rpid INTEGER,
+	rpid SERIAL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
 	currentCount INTEGER NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE Discounts (
 );
 
 CREATE TABLE Orders(
-	oid INTEGER,
+	oid SERIAL,
 	address VARCHAR(100) NOT NULL,
 	orderDateTime DATE NOT NULL,
 	deliveryFee NUMERIC NOT NULL,
@@ -102,7 +102,7 @@ CREATE TABLE Contains(
 );
 
 CREATE TABLE FDSPromotions(
-	pcid INTEGER,
+	pcid SERIAL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
 	redeemLimit INTEGER NOT NULL,
@@ -141,7 +141,7 @@ CREATE TABLE FDSLaunch(
 );
 
 CREATE TABLE Shifts (
-	shiftId INTEGER,
+	shiftId SERIAL,
 	shiftNo INTEGER NOT NULL,
 	date DATE NOT NULL,
 	startAMTime TIME NOT NULL,
@@ -227,8 +227,6 @@ CREATE TABLE Request (
 		on delete cascade
 		on update cascade
 );
-
-
 
 
 
