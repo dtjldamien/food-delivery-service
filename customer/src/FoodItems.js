@@ -90,7 +90,7 @@ class FoodItems extends React.Component {
         )
     }
     checkout() {
-    
+        
     }
     render() {
         return (
