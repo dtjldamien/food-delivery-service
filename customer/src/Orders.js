@@ -5,6 +5,14 @@ class Orders extends React.Component {
         super(props)
         this.state = {}
     }
+    // componentDidMount() {
+    //     // console.log(this.state)
+    //     console.log(this.props)
+    //     console.log(this.state)
+    //     axios.get('/api/get/getFoodItemsByRestaurantID', {params: restaurantID})
+    //     .then(data => data.data.map(foodItems => foodItems))
+    //     .then(foodItems=>this.setState({foodData:foodItems}))
+    // }
     render() {
         return (
             <div>
