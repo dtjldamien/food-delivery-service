@@ -151,7 +151,7 @@ router.get('/api/get/viewPastOrders', (req, res, next) => {
     const email = req.query.email;
 
     pool.query(
-        `SELECT * FROM Orders O NATURAL JOIN Request R NATURAL JOIN Customers C WHERE C.email=$1 ORDER BY date desc, time desc`, [email],
+        `SELECT * FROM Orders O NATURAL JOIN Request R NATURAL JOIN Customers C WHERE C.email=$1 ORDER BY orderDateTime desc`, [email],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -483,29 +483,72 @@ router.get('/api/get/getRestaurantsByCategory', (req, res, next) => {
 
 
 /* Create Food Order */
-router.post('/api/post/createOrder', (req, res, next) => {
+router.post('/api/post/createOrder', async (req, res) => {
 
-    const values = [
-        req.body.params.address,
-        req.body.params.date,
-        req.body.params.time,
-        req.body.params.deliveryFee,
-        req.body.params.totalCost
-    ]
+    try {
 
-    pool.query(
-        `INSERT INTO Orders VALUES ($1, $2, $3, $4, $5)`,
-        values,
-        (q_err, q_res) => {
-            if (q_err) {
-                console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
-            } else {
-                console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
-            }
-        }
-    )
+        const {
+            /* To be inside Orders */
+            totalCost, deliveryFee, address, rid,
+
+            /* 
+                To be mapped to iterate through the list of foods, to Contains 
+                Should be in the following format
+                [fid, price, quantity]
+            */
+            listOfFoods,
+
+            /* To be inside Request */
+            customerEmail, creditCard
+
+        } = req.body
+
+        /* First Generate The Order Entity */
+        const order_id = (
+            await pool.query(
+                `
+                    INSERT INTO Orders (rid, address, deliveryFee, totalCost)
+                    VALUES ($1, $2, $3, $4)
+                    RETURNING oid
+                `,
+                [rid, address, deliveryFee, totalCost],
+            )).rows[0];
+        
+        /* Second, map each food item into its own Contains tuple */
+        await Promise.all(listOfFoods.map((foods) => {
+
+            const { fid, price, quantity } = foods
+
+            return pool.query(
+                `
+                    INSERT INTO Contains (oid, fid, price, quantity)
+                    VALUES ($1, $2, $3, $4)
+                `,
+                [order_id.oid, fid, price ,quantity],
+                (q_err, q_res) => {
+                    if (q_err) {
+                        console.log(q_err.stack)
+                    }
+                }
+            )
+            
+        }))
+
+        /* Finally create a Request Tuple */
+        await pool.query(   
+            `
+                INSERT INTO Request (oid, email, payment)
+                VALUES ($1, $2, $3)
+            `,
+            [order_id.oid, customerEmail, creditCard],
+        )
+        
+        res.status(200).send("Order " + order_id.oid + " Successfully Completed By " + customerEmail)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send("An Error Occured")
+    } 
+
 })
 
 /* Delete Order */
