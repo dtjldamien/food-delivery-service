@@ -85,7 +85,7 @@ CREATE TABLE Customers(
 	address VARCHAR(100) NOT NULL,
 	creditCard VARCHAR(100) NOT NULL,
 	rewardPoints NUMERIC DEFAULT (0),
-	registeredDate DATE DEFAULT GETDATE(),
+	registeredDate DATE DEFAULT NOW(),
 	PRIMARY KEY (email)
 );
 
