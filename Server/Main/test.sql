@@ -14,6 +14,12 @@ INSERT INTO Restaurants (rname, address, minimumSpending) VALUES
 ('Generic KBBQ', '123 Road', '5'),
 ('McD', 'CS2102 Lane', '5');
 
+INSERT INTO Belongs (catName, rid) VALUES 
+('Western', 1),
+('Japanese', 2),
+('Korean', 3),
+('Fast Food', 4);
+
 COMMIT;
 
 BEGIN;
