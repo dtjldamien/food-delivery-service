@@ -8,6 +8,7 @@ import './App.css';
 import Orders from "./Orders";
 import Reviews from "./Reviews";
 import Profile from "./Profile";
+import Login from "./Login";
 import { Card } from "primereact/card";
 import Register from "./Register";
 import { Dialog } from "primereact/dialog";
@@ -33,6 +34,9 @@ class App extends React.Component {
   showContents() {
     return (
       <Router>
+        <Switch>
+          <Route exact path = "/" render={(props) => <Home {...props} {...this.state}/>} />
+        </Switch>
       </Router>
     )
   }
