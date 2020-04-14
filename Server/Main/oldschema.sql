@@ -1,11 +1,3 @@
--- is there a need for salary? (is still in ER diagram)
--- i think doesnt matter for restaurant staff, will remove
-
-CREATE TABLE Category (
-	catName VARCHAR(100),
-	PRIMARY KEY (catName)
-);
-
 CREATE TABLE Restaurants(
 	rid SERIAL,
 	rname VARCHAR(100) NOT NULL,
@@ -14,16 +6,8 @@ CREATE TABLE Restaurants(
 	PRIMARY KEY (rid)
 );
 
-CREATE TABLE Belongs(
-	catName VARCHAR(100),
-	rid INTEGER,
-	PRIMARY KEY (catName, rid),
-	FOREIGN KEY (catName) REFERENCES Category,
-	FOREIGN KEY (rid) REFERENCES Restaurants
-);
-
 CREATE TABLE RestaurantStaffs(
-	rid INTEGER NOT NULL,
+	rid INTEGER,
 	email VARCHAR(100) NOT NULL,
 	password VARCHAR(100) NOT NULL,
 	name VARCHAR(100) NOT NULL,
@@ -31,12 +15,19 @@ CREATE TABLE RestaurantStaffs(
 	FOREIGN KEY (rid) REFERENCES Restaurants
 );
 
+CREATE TABLE Category (
+	name VARCHAR(100),
+	PRIMARY KEY (name)
+);
+
 CREATE TABLE FoodItems(
 	fid SERIAL,
 	fname VARCHAR(100) NOT NULL,
 	description VARCHAR(250),
 	price NUMERIC NOT NULL,
-	PRIMARY KEY (fid)
+	catid VARCHAR(100) NOT NULL,
+	PRIMARY KEY (fid),
+	FOREIGN KEY (catid) REFERENCES Category
 );
 
 CREATE TABLE Sells(
@@ -47,19 +38,17 @@ CREATE TABLE Sells(
 	PRIMARY KEY (rid, fid),
 	FOREIGN KEY (rid) REFERENCES Restaurants,
 	FOREIGN KEY (fid) REFERENCES FoodItems
-        on delete cascade
-        on update cascade
+		on delete cascade
+		on update cascade
 );
 
 CREATE TABLE RestaurantPromotions(
 	rpid SERIAL,
-	email VARCHAR(100) NOT NULL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
 	currentCount INTEGER NOT NULL,
 	promotionLimit INTEGER NOT NULL,
-	PRIMARY KEY (rpid),
-	FOREIGN KEY (email) REFERENCES RestaurantStaffs
+	PRIMARY KEY (rpid)
 );
 
 CREATE TABLE RestaurantPriceDiscount (
@@ -80,23 +69,14 @@ CREATE TABLE Discounts (
 	PRIMARY KEY (rpid, fid)
 );
 
--- what to store type as?
--- store type as integers
--- added time 
-
 CREATE TABLE Orders(
 	oid SERIAL,
-	rid INTEGER,
 	address VARCHAR(100) NOT NULL,
-	date DATE NOT NULL,
-	time TIME NOT NULL,
+	orderDateTime DATE NOT NULL,
 	deliveryFee NUMERIC NOT NULL,
 	totalCost NUMERIC NOT NULL,
-	PRIMARY KEY (oid),
-	FOREIGN KEY (rid) REFERENCES Restaurants
+	PRIMARY KEY (oid)
 );
-
--- oid not included in ER diagram
 
 CREATE TABLE Customers(
 	name VARCHAR(100) NOT NULL,
@@ -104,8 +84,8 @@ CREATE TABLE Customers(
 	password VARCHAR(100) NOT NULL,
 	address VARCHAR(100) NOT NULL,
 	creditCard VARCHAR(100) NOT NULL,
-	rewardPoints NUMERIC NOT NULL,
-    registeredDate DATE DEFAULT NOW(),
+	rewardPoints NUMERIC DEFAULT (0),
+	registeredDate DATE DEFAULT NOW(),
 	PRIMARY KEY (email)
 );
 
@@ -117,16 +97,16 @@ CREATE TABLE Contains(
 	PRIMARY KEY (fid, oid),
 	FOREIGN KEY (oid) REFERENCES Orders,
 	FOREIGN KEY (fid) REFERENCES FoodItems
-        on delete no action
-        on update cascade
+		on delete no action
+		on update cascade
 );
 
 CREATE TABLE FDSPromotions(
 	pcid SERIAL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
-	currentCount INTEGER NOT NULL,
 	redeemLimit INTEGER NOT NULL,
+	currentCount INTEGER NOT NULL,
 	PRIMARY KEY (pcid)
 );
 
@@ -156,18 +136,18 @@ CREATE TABLE FDSLaunch(
 	PRIMARY KEY (pcid, username),
 	FOREIGN KEY (pcid) REFERENCES FDSPromotions,
 	FOREIGN KEY (username) REFERENCES FDSManagers
-        on delete set null
-        on update cascade
+		on delete set null
+		on update cascade
 );
 
 CREATE TABLE Shifts (
 	shiftId SERIAL,
 	shiftNo INTEGER NOT NULL,
-	startDate DATE NOT NULL,
-	endDate DATE NOT NULL,
-	startTime TIME NOT NULL,
-	endTime TIME NOT NULL,
-	hours NUMERIC NOT NULL,
+	date DATE NOT NULL,
+	startAMTime TIME NOT NULL,
+	endAMTime TIME NOT NULL,
+	startPMTime TIME NOT NULL,
+	endPMTime TIME NOT NULL,
 	PRIMARY KEY(shiftId)
 );
 
@@ -184,8 +164,8 @@ CREATE TABLE Schedules (
 	email VARCHAR(100),
 	PRIMARY KEY (email),
 	FOREIGN KEY (email) REFERENCES DeliveryRiders
-        on delete cascade
-        on update cascade
+		on delete cascade
+		on update cascade
 );
 
 CREATE TABLE ScheduleContains (
@@ -201,7 +181,7 @@ CREATE TABLE PartTime (
 	email VARCHAR(100),
 	weeklySalary NUMERIC NOT NULL,
 	FOREIGN KEY (email) REFERENCES DeliveryRiders
-        on delete cascade
+		on delete cascade
 		on update cascade
 );
 
@@ -209,20 +189,22 @@ CREATE TABLE FullTime (
 	email VARCHAR(100),
 	monthlySalary NUMERIC NOT NULL,
 	FOREIGN KEY (email) REFERENCES DeliveryRiders
-        on delete cascade
+		on delete cascade
 		on update cascade
 );
 
 CREATE TABLE Assigned (
 	oid INTEGER,
 	email VARCHAR(100),
-	assignedDateTime TIMESTAMP NOT NULL,
-	deliveredDateTime TIMESTAMP,
 	serviceReview INTEGER,
+	assignedDate DATE NOT NULL,
+	assignedTime TIME NOT NULL,
+	deliveredDate DATE,
+	deliveredTime TIME,
 	PRIMARY KEY (oid, email),
 	FOREIGN KEY (oid) REFERENCES Orders,
 	FOREIGN KEY (email) REFERENCES DeliveryRiders
-        on delete set null
+		on delete set null
 		on update cascade
 );
 
@@ -238,11 +220,14 @@ CREATE TABLE Request (
 	oid INTEGER,
 	email VARCHAR(100),
 	payment VARCHAR(100),
-	foodReview VARCHAR(250),
-	rating NUMERIC,
+	foodReview INTEGER,
 	PRIMARY KEY (oid, email),
 	FOREIGN KEY (oid) REFERENCES Orders,
 	FOREIGN KEY (email) REFERENCES Customers
-        on delete cascade
+		on delete cascade
 		on update cascade
 );
+
+
+
+
