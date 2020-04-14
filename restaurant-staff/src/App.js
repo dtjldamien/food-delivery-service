@@ -8,7 +8,6 @@ import './App.css';
 import Orders from "./Orders";
 import Reviews from "./Reviews";
 import Profile from "./Profile";
-import FoodItems from "./FoodItems";
 import { Card } from "primereact/card";
 import Register from "./Register";
 import { Dialog } from "primereact/dialog";
