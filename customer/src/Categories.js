@@ -31,12 +31,9 @@ class Categories extends React.Component {
       margin: '10px'
     }
 
-    /* Map each category to a Card Component */
     this.state.categories.map(catname => {
       categories.push(
         <div style ={cardStyle}>
-
-          {/* Creating the links for individual cards to their specific menus */}
           <Link to={{
             pathname:`/restaurants/${catname}`,
             state: {
@@ -45,7 +42,6 @@ class Categories extends React.Component {
           }}>
             <Card title={catname} style={cardStyle}/>
           </Link>
-          
         </div>
       )
     })
