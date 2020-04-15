@@ -255,7 +255,7 @@ router.delete('/api/delete/deleteRestaurantStaff', (req, res, next) => {
 })
 
 /* Update Restaurant Staff Details */
-router.put('/api/put/restaurantStaff', (req, res, next) => {
+router.put('/api/put/updateRestaurantStaff', (req, res, next) => {
 
     const values = [
         req.body.params.email,
