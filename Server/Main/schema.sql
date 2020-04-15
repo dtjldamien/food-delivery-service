@@ -88,7 +88,7 @@ CREATE TABLE Orders(
 	oid SERIAL,
 	rid INTEGER,
 	address VARCHAR(100) NOT NULL,
-	orderDateTime DATE DEFAULT NOW(),
+	orderDateTime TIMESTAMPTZ DEFAULT NOW(),
 	deliveryFee NUMERIC NOT NULL,
 	totalCost NUMERIC NOT NULL,
 	PRIMARY KEY (oid),

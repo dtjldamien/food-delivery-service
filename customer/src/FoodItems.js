@@ -26,7 +26,6 @@ class FoodItems extends React.Component {
         this.handleCartAdd = this.handleCartAdd.bind(this)
         this.handleQuantityChange = this.handleQuantityChange.bind(this)
         this.quantityInput = this.quantityInput.bind(this)
-        this.orderItemCreation = this.orderItemCreation.bind(this)
         this.checkout = this.checkout.bind(this)
     }
     componentDidMount() {
@@ -70,7 +69,10 @@ class FoodItems extends React.Component {
         </div>
     }
     viewCart() {
-        return (
+        return this.state.cart.length > 0 ?
+
+        /* Renders data table if the cart is not empty */
+        (
             <div>
                 <DataTable value = {this.state.cart}>
                     <Column field="fid" header = "fid"/>
@@ -82,6 +84,15 @@ class FoodItems extends React.Component {
                 <Button label="Checkout" onClick={this.checkout}></Button>
             </div>
         )
+
+        :
+
+        (
+            <div>
+                <h4>Empty Cart!</h4>
+            </div>
+        )
+
     }
     viewCartDialog() {
         return (
@@ -93,34 +104,35 @@ class FoodItems extends React.Component {
             </div>
         )
     }
-    checkout() {
-        alert("pay by cash plz")
-        //to push into database
-        const orderItem = this.orderItemCreation()
-    }
-    orderItemCreation() {
-        const totalCost = (this.state.cart.map(cart => parseFloat(cart.price)).reduce((total, price) => total + price)).toString()
-        const deliveryFee = '$5'
-        const address = this.state.restaurantData.address
-        const rid = this.state.restaurantData.rid
-        const listOfFoods = this.state.cart.map(cart => ({
-            fid: cart.fid,
-            price: cart.price,
-            quantity: cart.quantity
-        }))
-        const customerEmail = this.state.customer.email
-        const creditCard = this.state.customer.creditcard
+    checkout = async (event) =>  {
+
+        event.preventDefault();
+
+        /* Preps Data to pass into API call */
         const orderItem = {
-            totalCost: totalCost,
-            deliveryFee: deliveryFee,
-            address: address,
-            rid: rid,
-            listOfFoods: listOfFoods,
-            customerEmail: customerEmail,
-            creditCard: creditCard
+            totalCost: (this.state.cart.map(cart => parseFloat(cart.price)).reduce((total, price) => total + price)).toString(),
+            deliveryFee: '5',
+            address: this.state.restaurantData.address,
+            rid: this.state.restaurantData.rid,
+            listOfFoods: this.state.cart.map(cart => ({
+                fid: cart.fid,
+                price: cart.price,
+                quantity: cart.quantity
+            })),
+            customerEmail: this.state.customer.email,
+            creditCard: this.state.customer.creditcard
         }
-        return orderItem
+
+        /* Calls API and prints response */
+        await axios.post('/api/post/createOrder', orderItem)
+            .then(rsp => alert(rsp.data))
+            .catch(err => console.log(err))
+
+        /* Reinitialises carts, values and closes the dialog */
+        this.setState((prevState) => {return ({cart: [], newCart: [], value: '', visible: false})})
+        
     }
+    
     render() {
         return (
             <div>

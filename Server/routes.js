@@ -151,7 +151,7 @@ router.get('/api/get/viewPastOrders', (req, res, next) => {
     const email = req.query.email;
 
     pool.query(
-        `SELECT * FROM Orders O NATURAL JOIN Request R NATURAL JOIN Customers C WHERE C.email=$1 ORDER BY orderDateTime desc`, [email],
+        `SELECT * FROM Restaurants NATURAL JOIN Orders O NATURAL JOIN Request R WHERE R.email=$1 ORDER BY orderDateTime desc`, [email],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -162,6 +162,26 @@ router.get('/api/get/viewPastOrders', (req, res, next) => {
             }
         }
     )
+})
+
+/* View Cart from Order */
+router.get('/api/get/viewCartFromOrder', (req, res, next) => {
+
+    const oid = req.query.oid
+
+    pool.query(
+        `SELECT * FROM Contains NATURAL JOIN FoodItems WHERE oid=$1`, [oid],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+
 })
 
 /* Create Restaurant */
