@@ -7,6 +7,7 @@ import './App.css';
 import Orders from "./Orders";
 import Reviews from "./Reviews";
 import Profile from "./Profile";
+import FoodItems from "./FoodItems";
 import Promotions from "./Promotions";
 import { Card } from "primereact/card";
 import Register from "./Register";
@@ -20,7 +21,7 @@ class App extends React.Component {
 		super()
 		this.state = {
 		  restaurantStaff: {},
-		  loggedIn: false,
+      loggedIn: false,
 		  email: "",
 		  password: "",
 		  visible: false
@@ -38,24 +39,13 @@ class App extends React.Component {
         <Switch>
           <Route exact path = "/" render={(props) => <Home {...props} {...this.state}/>} />
           <Route path = "/profile" render={(props) => <Profile {...props} {...this.state}/>} />
+          <Route path = "/foodItems" render={(props) => <FoodItems {...props} {...this.state}/>} />
           <Route path = "/orders" render={(props) => <Orders {...props} {...this.state}/>} />
           <Route path = "/reviews" render={(props) => <Reviews {...props} {...this.state}/>} />
           <Route path = "/promotions" render={(props) => <Promotions {...props} {...this.state}/>} />
         </Switch>
       </Router>
     )
-  }
-
-  componentDidMount() {
-    const profile = {
-      rname:'Restaurant C',
-      address:'C',
-      minimumSpending:30
-    }
-
-    axios.post('/api/post/createRestaurant', {params: profile})
-      .then(response => console.log(response))
-      .catch((err) => console.log(err))
   }
 
   handleLogin = async (event) => {
@@ -65,7 +55,7 @@ class App extends React.Component {
     /* Ensuring input boxes are not empty */
     if (this.state.email !== '' && this.state.password !== '') {
       const data = {
-        email: this.state.email
+        email: this.state.email,
       }
 
       /* API Call to GET restaurant staff */

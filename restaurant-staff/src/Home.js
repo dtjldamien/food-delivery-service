@@ -1,5 +1,5 @@
 import React from 'react';
-import FoodItems from './FoodItems';
+import Profile from './Profile';
 
 class Home extends React.Component {
   constructor(props) {
@@ -9,13 +9,13 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props)
+    //console.log(this.props.restaurantStaff.rid)
   }
 
   render() {
     return (
       <div>
-        <FoodItems />
+
       </div>
     )
   }
