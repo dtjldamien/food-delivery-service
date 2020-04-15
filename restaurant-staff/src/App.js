@@ -3,12 +3,11 @@ import Home from './Home';
 import MenuBar from './MenuBar'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 import axios from 'axios';
-import logo from './logo.svg';
 import './App.css';
 import Orders from "./Orders";
 import Reviews from "./Reviews";
 import Profile from "./Profile";
-import Login from "./Login";
+import Promotions from "./Promotions";
 import { Card } from "primereact/card";
 import Register from "./Register";
 import { Dialog } from "primereact/dialog";
@@ -34,22 +33,18 @@ class App extends React.Component {
   showContents() {
     return (
       <Router>
+        <MenuBar activeItem = "Restaurants"/>
+        <button onClick={this.handleLogout}>Log Out</button>
         <Switch>
           <Route exact path = "/" render={(props) => <Home {...props} {...this.state}/>} />
+          <Route path = "/profile" render={(props) => <Profile {...props} {...this.state}/>} />
+          <Route path = "/orders" render={(props) => <Orders {...props} {...this.state}/>} />
+          <Route path = "/reviews" render={(props) => <Reviews {...props} {...this.state}/>} />
+          <Route path = "/promotions" render={(props) => <Promotions {...props} {...this.state}/>} />
         </Switch>
       </Router>
     )
   }
-
-  // componentDidMount() {
-  //   const data = {
-  //     email: "A@email.com"
-  //   }
-
-  //   axios.get('api/get/login', {params: {data}})
-  //     .then(response => console.log(response))
-  //     .catch((err) => console.log(err))
-  // }
 
   componentDidMount() {
     const profile = {
