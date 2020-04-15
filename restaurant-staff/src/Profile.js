@@ -22,19 +22,16 @@ class Profile extends React.Component {
     event.preventDefault();
 
     const data = {
-        name: this.state.name,
-        email: this.state.email,
         password: this.state.password,
+        email: this.state.email
     }
 
     /* Checks if data has been changed */
-    if (data.email === this.props.restaurantStaff.email &&
-        data.password === this.props.restaurantStaff.password) {
+    if (data.password === this.props.restaurantStaff.password) {
             alert("Profile Details Not Changed.")
         } else {
-            console.log(data.email === this.props.restaurantStaff.email)
             console.log(data.password === this.props.restaurantStaff.password)
-            await axios.put('/api/put/updateRestaurantStaff', {params: data})
+            await axios.put('/api/put/restaurantStaff', {params: data})
                 .catch(err => {
                     console.log(err)
                     alert("Error Ocurred During Update")
@@ -58,7 +55,7 @@ class Profile extends React.Component {
         <form onSubmit={this.handleUpdate}>
             <label>Name:         {this.state.name}</label>
             <br></br>
-            <label>Email:     <input type="text" value={this.state.email} name="email" onChange={this.handleChange}></input></label>
+            <label>Email:         {this.state.email}</label>
             <br></br>
             <label>Password:     <input type="text" value={this.state.password} name="password" onChange={this.handleChange}></input></label>
             <br></br>

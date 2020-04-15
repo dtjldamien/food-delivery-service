@@ -255,18 +255,17 @@ router.delete('/api/delete/deleteRestaurantStaff', (req, res, next) => {
 })
 
 /* Update Restaurant Staff Details */
-router.put('/api/put/updateRestaurantStaff', (req, res, next) => {
+router.put('/api/put/restaurantStaff', (req, res, next) => {
 
     const values = [
-        req.body.params.email,
-        req.body.params.password
+        req.body.params.password,
+        req.body.params.email
     ]
 
     console.log(values)
 
     pool.query(
-        `UPDATE RestaurantStaffs SET password=$2 WHERE email=$1`,
-        values,
+        `UPDATE RestaurantStaffs SET password=$1 WHERE email=$2`, values,
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
