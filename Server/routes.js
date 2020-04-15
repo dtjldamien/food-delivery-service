@@ -596,11 +596,10 @@ router.post('/api/post/createFoodItem', (req, res, next) => {
         req.body.params.fname,
         req.body.params.description,
         req.body.params.price,
-        req.body.params.catName
     ]
 
     pool.query(
-        `INSERT INTO FoodItems VALUES ($1, $2, $3, $4)`,
+        `INSERT INTO FoodItems VALUES ($1, $2, $3)`,
         values,
         (q_err, q_res) => {
             if (q_err) {
@@ -637,15 +636,14 @@ router.delete('/api/delete/deleteFoodItem', (req, res, next) => {
 router.put('/api/put/updateFoodItem', (req, res, next) => {
 
     const values = [
-        req.body.params.oid,
+        req.body.params.fid,
         req.body.params.fname,
         req.body.params.description,
         req.body.params.price,
-        req.body.params.catName
     ]
 
     pool.query(
-        `UPDATE FoodItems SET fname=$2, description=$3, price=$4, catName=$5 WHERE username=$1`,
+        `UPDATE FoodItems SET fname=$2, description=$3, price=$4 WHERE fid=$1`,
         values,
         (q_err, q_res) => {
             if (q_err) {
