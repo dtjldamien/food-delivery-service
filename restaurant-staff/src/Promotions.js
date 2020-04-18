@@ -1,9 +1,39 @@
 import React from 'react';
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Title from './Title';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import 'primereact/resources/themes/nova-light/theme.css';
+import Home from './Home';
+import CreateRestaurantPromotion from "./CreateRestaurantPromotion";
 
+
+class Promotions extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      rid: props.restaurantStaff.rid,
+      email: props.restaurantStaff.email,
+      password: props.restaurantStaff.password,
+      name: props.restaurantStaff.name,
+    };
+  }
+
+  componentDidMount() {
+    console.log(this.props)
+  }
+
+  render() {
+    return (
+      <div>
+        <ul>
+          <a href="/createRestaurantPromotions">Create Restaurant Promotion</a>
+        </ul>
+      </div>
+    );
+  }
+}
+
+export default Promotions
+
+/*
 function preventDefault(event) {
   event.preventDefault();
 }
@@ -33,3 +63,4 @@ export default function Promotions() {
     </React.Fragment>
   );
 }
+*/

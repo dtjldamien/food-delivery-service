@@ -532,7 +532,7 @@ router.post('/api/post/createOrder', async (req, res) => {
                 `,
                 [rid, address, deliveryFee, totalCost],
             )).rows[0];
-        
+
         /* Second, map each food item into its own Contains tuple */
         await Promise.all(listOfFoods.map((foods) => {
 
@@ -543,30 +543,30 @@ router.post('/api/post/createOrder', async (req, res) => {
                     INSERT INTO Contains (oid, fid, price, quantity)
                     VALUES ($1, $2, $3, $4)
                 `,
-                [order_id.oid, fid, price ,quantity],
+                [order_id.oid, fid, price, quantity],
                 (q_err, q_res) => {
                     if (q_err) {
                         console.log(q_err.stack)
                     }
                 }
             )
-            
+
         }))
 
         /* Finally create a Request Tuple */
-        await pool.query(   
+        await pool.query(
             `
                 INSERT INTO Request (oid, email, payment)
                 VALUES ($1, $2, $3)
             `,
             [order_id.oid, customerEmail, creditCard],
         )
-        
+
         res.status(200).send("Order " + order_id.oid + " Successfully Completed By " + customerEmail)
     } catch (error) {
         console.log(error)
         return res.status(500).send("An Error Occured")
-    } 
+    }
 
 })
 
@@ -710,12 +710,11 @@ router.post('/api/post/createRestaurantPromotion', (req, res, next) => {
         req.body.params.startDate,
         req.body.params.endDate,
         req.body.params.currentCount,
-        req.body.params.promotionLimit,
-        req.body.params.type
+        req.body.params.promotionLimit
     ]
 
     pool.query(
-        `INSERT INTO RestaurantPromotions VALUES ($1, $2, $3, $4, $5, $6)`,
+        `INSERT INTO RestaurantPromotions VALUES ($1, $2, $3, $4, $5)`,
         values,
         (q_err, q_res) => {
             if (q_err) {
