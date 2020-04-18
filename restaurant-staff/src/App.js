@@ -44,10 +44,8 @@ class App extends React.Component {
           <Route path="/orders" render={(props) => <Orders {...props} {...this.state} />} />
           <Route path="/reviews" render={(props) => <Reviews {...props} {...this.state} />} />
           <Route path="/promotions" render={(props) => <Promotions {...props} {...this.state} />} />
+          <Route path="/createRestaurantPromotion" render={(props) => <CreateRestaurantPromotion {...props} {...this.state} />} />
         </Switch>
-        <Route path="/createRestaurantPromotion">
-          <CreateRestaurantPromotion />
-        </Route>
       </Router>
     )
   }

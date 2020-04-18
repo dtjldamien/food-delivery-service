@@ -10,12 +10,12 @@ class CreateRestaurantPromotion extends React.Component {
       email: props.restaurantStaff.email,
       password: props.restaurantStaff.password,
       name: props.restaurantStaff.name,
-      promotionLimit: '',
-      startDate: '',
-      endDate: ''
+      promotionLimit: "",
+      startDate: "",
+      endDate: ""
     }
     this.handleChange = this.handleChange.bind(this)
-    this.handleRegister = this.handleRegister.bind(this)
+    this.handleCreateRestaurantPromotion = this.handleCreateRestaurantPromotion.bind(this)
   }
 
   componentDidMount() {
@@ -29,7 +29,7 @@ class CreateRestaurantPromotion extends React.Component {
     console.log(this.state)
   }
 
-  handleCreateRestaurantPromotions = async (event) => {
+  handleCreateRestaurantPromotion = async (event) => {
     event.preventDefault()
     const currentCount = 0
     const restaurantPromotion = {
@@ -43,22 +43,14 @@ class CreateRestaurantPromotion extends React.Component {
     console.log(restaurantPromotion)
 
     await axios.post('/api/post/createRestaurantPromotion', restaurantPromotion)
-    .then(res => alert("Restaurant Promotion Created Successfully!"))
-    .catch(err => alert("Create Restaurant Promotion Error"))
+      .then(res => alert("Restaurant Promotion Created Successfully!"))
+      .catch(err => alert("Create Restaurant Promotion Error"))
   }
 
   render() {
     return (
       <div>
-        <form onSubmit={this.handleCreateRestaurantPromotions}>
-          <label>Promotion Limit: <input type="number" name="promotionLimit" onChange={this.handleChange}></input></label>
-          <br></br>
-          <label>Start Date: <input type="date" name="startDate" onChange={this.handleChange}></input></label>
-          <br></br>
-          <label>End Date: <input type="date" name="endDate" onChange={this.handleChange}></input></label>
-          <br></br>
-          <input type="submit" value="Create Restaurant Promotion" />
-        </form>
+        <h1>hi</h1>
       </div>
     )
   }

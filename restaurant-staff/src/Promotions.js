@@ -1,9 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import 'primereact/resources/themes/nova-light/theme.css';
-import Home from './Home';
-import CreateRestaurantPromotion from "./CreateRestaurantPromotion";
-
+import { Link } from "react-router-dom";
 
 class Promotions extends React.Component {
   constructor(props) {
@@ -23,9 +19,9 @@ class Promotions extends React.Component {
   render() {
     return (
       <div>
-        <ul>
-          <a href="/createRestaurantPromotions">Create Restaurant Promotion</a>
-        </ul>
+        <Link to={{pathname:'/createRestaurantPromotions'}}>
+          <a>Create New Restauarnt Promotion</a>
+        </Link>
       </div>
     );
   }
