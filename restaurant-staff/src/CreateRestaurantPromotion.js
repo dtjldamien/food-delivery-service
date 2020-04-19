@@ -7,7 +7,7 @@ class CreateRestaurantPromotion extends React.Component {
     super(props)
     this.state = {
       rid: props.restaurantStaff.rid,
-      email: props.restaurantStaff.email,
+      email: "",
       password: props.restaurantStaff.password,
       name: props.restaurantStaff.name,
       promotionLimit: "",
@@ -50,7 +50,17 @@ class CreateRestaurantPromotion extends React.Component {
   render() {
     return (
       <div>
-        <h1>hi</h1>
+        <form onSubmit={this.handleCreateRestaurantPromotion}>
+          <label>Email: <input type="email" name="email" onChange={this.handleChange}></input></label>
+          <br></br>
+          <label>Promotion Limit: <input type="text" name="promotionLimit" onChange={this.handleChange}></input></label>
+          <br></br>
+          <label>Start Date: <input type="date" name="startDate" onChange={this.handleChange}></input></label>
+          <br></br>
+          <label>End Date: <input type="date" name="endDate" onChange={this.handleChange}></input></label>
+          <br></br>
+          <input type="submit" value="Create New Restaurant Promotion" />
+        </form>
       </div>
     )
   }
