@@ -42,7 +42,7 @@ class CreateRestaurantPromotion extends React.Component {
 
     console.log(restaurantPromotion)
 
-    await axios.post('/api/post/createRestaurantPromotion', restaurantPromotion)
+    await axios.post('/api/post/createRestaurantPromotion', {params:restaurantPromotion})
       .then(res => alert("Restaurant Promotion Created Successfully!"))
       .catch(err => alert("Create Restaurant Promotion Error"))
   }

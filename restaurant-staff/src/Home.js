@@ -1,5 +1,4 @@
 import React from 'react';
-import Profile from './Profile';
 
 class Home extends React.Component {
   constructor(props) {

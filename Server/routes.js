@@ -714,7 +714,7 @@ router.post('/api/post/createRestaurantPromotion', (req, res, next) => {
     ]
 
     pool.query(
-        `INSERT INTO RestaurantPromotions VALUES ($1, $2, $3, $4, $5)`,
+        `INSERT INTO RestaurantPromotions (email, startDate, endDate, currentCount, promotionLimit) VALUES ($1, $2, $3, $4, $5)`,
         values,
         (q_err, q_res) => {
             if (q_err) {

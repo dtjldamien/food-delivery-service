@@ -3,7 +3,7 @@ import {Button} from 'primereact/button'
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-import {Redirect, Link} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
 class MenuBar extends React.Component {
   constructor() {
