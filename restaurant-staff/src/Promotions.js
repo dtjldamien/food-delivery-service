@@ -19,7 +19,7 @@ class Promotions extends React.Component {
   render() {
     return (
       <div>
-        <Link to={{pathname:'/createRestaurantPromotions'}}>
+        <Link to={{pathname:'/createRestaurantPromotion'}}>
           <a>Create New Restauarnt Promotion</a>
         </Link>
       </div>

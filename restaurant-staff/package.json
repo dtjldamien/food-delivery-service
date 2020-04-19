@@ -12,7 +12,7 @@
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "primeicons": "^2.0.0",
-    "primereact": "^4.1.2",
+    "primereact": "^4.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
