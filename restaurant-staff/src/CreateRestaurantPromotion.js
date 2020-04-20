@@ -34,8 +34,8 @@ class CreateRestaurantPromotion extends React.Component {
 
   handleCreateRestaurantPromotion = async (event) => {
     event.preventDefault()
-    const currentCount = 0
-    if (this.state.discountType.valueOf() == new String("priceDiscount").valueOf()) {
+
+    if (this.state.discountType.valueOf() === "priceDiscount") {
       this.state.isPriceDiscount = true
     } else {
       this.state.isPriceDiscount = false
@@ -44,7 +44,6 @@ class CreateRestaurantPromotion extends React.Component {
       email: this.state.email,
       startDate: this.state.startDate,
       endDate: this.state.endDate,
-      currentCount: currentCount,
       promotionLimit: this.state.promotionLimit,
       isPriceDiscount: this.state.isPriceDiscount,
       discountValue: this.state.discountValue
@@ -53,7 +52,7 @@ class CreateRestaurantPromotion extends React.Component {
     console.log(restaurantPromotion)
 
     await axios.post('/api/post/createRestaurantPromotion', { params: restaurantPromotion })
-      .then(res => alert("Restaurant Promotion Created Successfully!"))
+      .then(res => alert(res.data))
       .catch(err => alert("Create Restaurant Promotion Error"))
   }
 

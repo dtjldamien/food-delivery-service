@@ -56,7 +56,7 @@ CREATE TABLE RestaurantPromotions(
 	email VARCHAR(100) NOT NULL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
-	currentCount INTEGER NOT NULL,
+	currentCount INTEGER DEFAULT 0,
 	promotionLimit INTEGER NOT NULL,
 	PRIMARY KEY (rpid),
 	FOREIGN KEY (email) REFERENCES RestaurantStaffs
