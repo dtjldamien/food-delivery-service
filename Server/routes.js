@@ -702,32 +702,6 @@ router.get('/api/get/viewAllReviews', (req, res, next) => {
 
 })
 
-/* Create Restaurant Promotions */
-router.post('/api/post/createRestaurantPromotion', (req, res, next) => {
-
-    const values = [
-        req.body.params.email,
-        req.body.params.startDate,
-        req.body.params.endDate,
-        req.body.params.currentCount,
-        req.body.params.promotionLimit
-    ]
-
-    pool.query(
-        `INSERT INTO RestaurantPromotions (email, startDate, endDate, currentCount, promotionLimit) VALUES ($1, $2, $3, $4, $5)`,
-        values,
-        (q_err, q_res) => {
-            if (q_err) {
-                console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
-            } else {
-                console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
-            }
-        }
-    )
-})
-
 /* Create FDS Promotions */
 router.post('/api/post/createFdsPromotion', (req, res, next) => {
 
@@ -977,4 +951,86 @@ router.get('/api/get/viewRestaurantPromotionsByStaff', (req, res, next) => {
     )
 })
 
+/* Create Restaurant Promotions */
+router.post('/api/post/createRestaurantPromotion', (req, res, next) => {
+
+    const values = [
+        req.body.params.email,
+        req.body.params.startDate,
+        req.body.params.endDate,
+        req.body.params.currentCount,
+        req.body.params.promotionLimit
+    ]
+
+    pool.query(
+        `INSERT INTO RestaurantPromotions (email, startDate, endDate, currentCount, promotionLimit) VALUES ($1, $2, $3, $4, $5)`,
+        values,
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+})
+
+/* Create Restaurant Promotions
+router.post('/api/post/createRestaurantPromotion', (req, res, next) => {
+
+    try {
+
+        const values = [
+            req.body.params.email,
+            req.body.params.startDate,
+            req.body.params.endDate,
+            req.body.params.currentCount,
+            req.body.params.promotionLimit
+        ]
+
+        const promo_id = (
+            await pool.query(
+                `INSERT INTO RestaurantPromotions (email, startDate, endDate, currentCount, promotionLimit)
+                VALUES ($1, $2, $3, $4, $5)
+                RETURNING rpid`,
+                values,
+            )).rows[0];
+
+        const rpidAndValue = [
+            promoId,
+            req.body.params.discountValue
+        ]
+
+        const isPriceDiscount = req.body.params.isPriceDiscount
+
+        if (isPriceDiscount) {
+            await pool.query(
+                `INSERT INTO RestaurantPriceDiscount (rpid, priceDiscount) VALUES ($1, $2)`,
+                [rpidAndValue],
+                (q_err, q_res) => {
+                    if (q_err) {
+                        console.log(q_err.stack)
+                    }
+                }
+            )
+        } else {
+            await pool.query(
+                `INSERT INTO RestaurantPercentageDiscount (rpid, priceDiscount) VALUES ($1, $2)`,
+                [rpidAndValue],
+                (q_err, q_res) => {
+                    if (q_err) {
+                        console.log(q_err.stack)
+                    }
+                }
+            )
+        }
+        res.status(200).send("Restaurant Promo Successfully Completed")
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send("An Error Occured")
+    }
+})
+*/
 module.exports = router

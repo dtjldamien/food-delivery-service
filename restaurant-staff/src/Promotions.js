@@ -31,9 +31,9 @@ class Promotions extends React.Component {
     }
     console.log(this.props)
     console.log(this.state)
-    axios.get('/api/get/viewRestaurantPromotionsByStaff', {params: email})
+    axios.get('/api/get/viewRestaurantPromotionsByStaff', { params: email })
       .then(data => data.data.map(promotions => promotions))
-      .then(promotions => this.setState({promotionData:promotions}))
+      .then(promotions => this.setState({ promotionData: promotions }))
   }
 
   render() {
@@ -103,36 +103,6 @@ class Promotions extends React.Component {
 export default Promotions
 
 /*
-          <p>Select a discount type:</p>
-          <ul>
-            <li>
-              <label>
-                <input
-                  type="radio"
-                  value="isPriceDiscount"
-                  checked={this.state.isPriceDiscount === true}
-                  onChange={this.handleChange}
-                />
-                Price Discount
-              </label>
-            </li>
-
-            <li>
-              <label>
-                <input
-                  type="radio"
-                  value="isPercentageDiscount"
-                  checked={this.state.isPriceDiscount === false}
-                  onChange={this.handleChange}
-                />
-                Percentage Discount
-              </label>
-            </li>
-          </ul>
-
-          <label>Discount Value: <input type="number" name="discountValue" onChange={this.handleChange}></input></label>
-          <br></br>
-
 
 function preventDefault(event) {
   event.preventDefault();
