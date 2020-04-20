@@ -82,16 +82,16 @@ class Orders extends React.Component {
     render() {
         return (
             <div>
-            <DataTable value = {this.state.orderData}>
-               <Column field="oid" header = "oid"/>
-               <Column field="rname" header="Restaurant"/>
-               <Column field="orderdatetime" header="Date/Time" sortable={true}/>
-               <Column field="totalcost" header="Cost" sortable={true}/>
-               <Column field="deliveryfee" header="Delivery Fee" sortable={true}/>
-               <Column field="address" header="Address" sortable={true}/>
-               <Column field="oid" body={this.viewOrderDialog}/>
-           </DataTable>
-       </div>
+                <DataTable value = {this.state.orderData}>
+                    <Column field="oid" header = "oid"/>
+                    <Column field="rname" header="Restaurant"/>
+                    <Column field="orderdatetime" header="Date/Time" sortable={true}/>
+                    <Column field="totalcost" header="Cost" sortable={true}/>
+                    <Column field="deliveryfee" header="Delivery Fee" sortable={true}/>
+                    <Column field="address" header="Address" sortable={true}/>
+                    <Column field="oid" body={this.viewOrderDialog}/>
+                </DataTable>
+            </div>
         )
     }
 }

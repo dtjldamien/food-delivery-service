@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-var pool = require('./Main/db');
+const { query, transact } = require('./Main/db');
 
 /* 
 	When passing into a router method,
@@ -15,7 +15,7 @@ var pool = require('./Main/db');
 router.get('/api/get/customerLogin', (req, res, next) => {
 
     const email = req.query.email;
-    pool.query(`SELECT * FROM customers WHERE email=$1`, [email],
+    query(`SELECT * FROM customers WHERE email=$1`, [email],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -32,7 +32,7 @@ router.get('/api/get/customerLogin', (req, res, next) => {
 router.get('/api/get/deliveryRiderLogin', (req, res, next) => {
 
     const email = req.query.email
-    pool.query(`SELECT * FROM DeliveryRiders WHERE email=$1`, [email],
+    query(`SELECT * FROM DeliveryRiders WHERE email=$1`, [email],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -49,7 +49,7 @@ router.get('/api/get/deliveryRiderLogin', (req, res, next) => {
 router.get('/api/get/restaurantStaffLogin', (req, res, next) => {
 
     const email = req.query.email
-    pool.query(`SELECT * FROM RestaurantStaffs WHERE email=$1`, [email],
+    query(`SELECT * FROM RestaurantStaffs WHERE email=$1`, [email],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -66,7 +66,7 @@ router.get('/api/get/restaurantStaffLogin', (req, res, next) => {
 router.get('/api/get/fdsManagerLogin', (req, res, next) => {
 
     const username = req.query.username
-    pool.query(`SELECT * FROM FDSManagers WHERE username=$1`, [username],
+    query(`SELECT * FROM FDSManagers WHERE username=$1`, [username],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -92,7 +92,7 @@ router.post('/api/post/registerCustomer', (req, res, next) => {
 
     console.log(values);
 
-    pool.query(`INSERT INTO Customers VALUES ($1, $2, $3, $4, $5, $6)`, values,
+    query(`INSERT INTO Customers VALUES ($1, $2, $3, $4, $5, $6)`, values,
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -109,7 +109,7 @@ router.post('/api/post/registerCustomer', (req, res, next) => {
 router.delete('/api/delete/customer', (req, res, next) => {
     const email = req.query.email;
     console.log(email);
-    pool.query(`DELETE FROM Customers WHERE email=$1`, [email],
+    query(`DELETE FROM Customers WHERE email=$1`, [email],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -132,7 +132,7 @@ router.put('/api/put/updateCustomer', (req, res, next) => {
 
     console.log(values)
 
-    pool.query(`UPDATE Customers SET password=$1, address=$2, creditCard=$3 WHERE email=$4`, values,
+    query(`UPDATE Customers SET password=$1, address=$2, creditCard=$3 WHERE email=$4`, values,
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -150,7 +150,7 @@ router.get('/api/get/viewPastOrders', (req, res, next) => {
 
     const email = req.query.email;
 
-    pool.query(
+    query(
         `SELECT * FROM Restaurants NATURAL JOIN Orders O NATURAL JOIN Request R WHERE R.email=$1 ORDER BY orderDateTime desc`, [email],
         (q_err, q_res) => {
             if (q_err) {
@@ -169,7 +169,7 @@ router.get('/api/get/viewCartFromOrder', (req, res, next) => {
 
     const oid = req.query.oid
 
-    pool.query(
+    query(
         `SELECT * FROM Contains NATURAL JOIN FoodItems WHERE oid=$1`, [oid],
         (q_err, q_res) => {
             if (q_err) {
@@ -193,7 +193,7 @@ router.post('/api/post/createRestaurant', (req, res, next) => {
         parseFloat(req.body.params.minimumSpending)
     ]
 
-    pool.query(
+    query(
         `INSERT INTO Restaurants (rname, address, minimumSpending) VALUES ($1, $2, $3)`,
         values,
         (q_err, q_res) => {
@@ -219,7 +219,7 @@ router.post('/api/post/registerRestaurantStaff', (req, res, next) => {
         req.body.params.name
     ]
 
-    pool.query(
+    query(
         `INSERT INTO RestaurantStaffs (rid, email, password, name) VALUES ($1, $2, $3, $4)`,
         values,
         (q_err, q_res) => {
@@ -240,7 +240,7 @@ router.delete('/api/delete/deleteRestaurantStaff', (req, res, next) => {
 
     const email = req.query.email
 
-    pool.query(
+    query(
         `DELETE FROM RestaurantStaffs WHERE email=$1`, [email],
         (q_err, q_res) => {
             if (q_err) {
@@ -264,7 +264,7 @@ router.put('/api/put/restaurantStaff', (req, res, next) => {
 
     console.log(values)
 
-    pool.query(
+    query(
         `UPDATE RestaurantStaffs SET password=$1 WHERE email=$2`, values,
         (q_err, q_res) => {
             if (q_err) {
@@ -292,7 +292,7 @@ router.post('/api/post/registerDeliveryRider', (req, res, next) => {
 
     console.log(req)
 
-    pool.query(
+    query(
         `INSERT INTO DeliveryRiders (email, name, vehicle, bankAccount, password) VALUES ($1, $2, $3, $4, $5)`,
         values,
         (q_err, q_res) => {
@@ -312,7 +312,7 @@ router.delete('/api/delete/deliveryRider', (req, res, next) => {
 
     const email = req.query.email
 
-    pool.query(
+    query(
         `DELETE FROM DeliveryRiders WHERE email=$1`, [email],
         (q_err, q_res) => {
             if (q_err) {
@@ -337,7 +337,7 @@ router.put('/api/put/updateDeliveryRider', (req, res, next) => {
         req.body.params.password
     ]
 
-    pool.query(
+    query(
         `UPDATE DeliveryRiders SET vehicle=$2, bankAccount=$3, password=$4 WHERE email=$1`,
         values,
         (q_err, q_res) => {
@@ -361,7 +361,7 @@ router.post('/api/post/createFDSManager', (req, res, next) => {
         req.body.params.password
     ]
 
-    pool.query(
+    query(
         `INSERT INTO FdsManagers (username, password) VALUES ($1, $2)`,
         values,
         (q_err, q_res) => {
@@ -382,7 +382,7 @@ router.delete('/api/delete/deleteFDSManager', (req, res, next) => {
 
     const username = req.query.username
 
-    pool.query(
+    query(
         `DELETE FROM FDSManagers WHERE username=$1`, [username],
         (q_err, q_res) => {
             if (q_err) {
@@ -405,7 +405,7 @@ router.put('/api/put/updateFDSManager', (req, res, next) => {
         req.body.params.password
     ]
 
-    pool.query(
+    query(
         `UPDATE FDSManagers SET password=$2 WHERE username=$1`,
         values,
         (q_err, q_res) => {
@@ -426,7 +426,7 @@ router.post('/api/post/createCategory', (req, res, next) => {
 
     const category = req.query.category
 
-    pool.query(
+    query(
         `INSERT INTO Category VALUES ($1)`, [category],
         (q_err, q_res) => {
             if (q_err) {
@@ -445,7 +445,7 @@ router.get('/api/get/getFoodItemsByRestaurantID', (req, res, next) => {
 
     const rid = req.query.rid
 
-    pool.query(
+    query(
         `SELECT * FROM FoodItems NATURAL JOIN Sells NATURAL JOIN Restaurants WHERE Restaurants.rid=$1`,
         [rid],
         (q_err, q_res) => {
@@ -464,7 +464,7 @@ router.get('/api/get/getFoodItemsByRestaurantID', (req, res, next) => {
 /* Get all food categories */
 router.get('/api/get/getCategories', (req, res, next) => {
 
-    pool.query(
+    query(
         `SELECT * FROM Category`,
         (q_err, q_res) => {
             if (q_err) {
@@ -484,7 +484,7 @@ router.get('/api/get/getRestaurantsByCategory', (req, res, next) => {
 
     const category = req.query.catname
 
-    pool.query(
+    query(
         `SELECT * FROM Category NATURAL JOIN Belongs Natural JOIN Restaurants WHERE catName=$1`, [category],
         (q_err, q_res) => {
             if (q_err) {
@@ -506,63 +506,67 @@ router.post('/api/post/createOrder', async (req, res) => {
 
     try {
 
-        const {
-            /* To be inside Orders */
-            totalCost, deliveryFee, address, rid,
+        await transact(async (query) => {
 
-            /* 
-                To be mapped to iterate through the list of foods, to Contains 
-                Should be in the following format
-                [fid, price, quantity]
-            */
-            listOfFoods,
+            const {
+                /* To be inside Orders */
+                totalCost, deliveryFee, address, rid,
 
-            /* To be inside Request */
-            customerEmail, creditCard
+                /* 
+                    To be mapped to iterate through the list of foods, to Contains 
+                    Should be in the following format
+                    [fid, price, quantity]
+                */
+                listOfFoods,
 
-        } = req.body
+                /* To be inside Request */
+                customerEmail, creditCard
 
-        /* First Generate The Order Entity */
-        const order_id = (
-            await pool.query(
-                `
-                    INSERT INTO Orders (rid, address, deliveryFee, totalCost)
-                    VALUES ($1, $2, $3, $4)
-                    RETURNING oid
-                `,
-                [rid, address, deliveryFee, totalCost],
-            )).rows[0];
+            } = req.body
 
-        /* Second, map each food item into its own Contains tuple */
-        await Promise.all(listOfFoods.map((foods) => {
+            /* First Generate The Order Entity */
+            const order_id = (
+                await query(
+                    `
+                        INSERT INTO Orders (rid, address, deliveryFee, totalCost)
+                        VALUES ($1, $2, $3, $4)
+                        RETURNING oid
+                    `,
+                    [rid, address, deliveryFee, totalCost],
+                )).rows[0];
+            
+            /* Second, map each food item into its own Contains tuple */
+            await Promise.all(listOfFoods.map((foods) => {
 
-            const { fid, price, quantity } = foods
+                const { fid, price, quantity } = foods
 
-            return pool.query(
-                `
-                    INSERT INTO Contains (oid, fid, price, quantity)
-                    VALUES ($1, $2, $3, $4)
-                `,
-                [order_id.oid, fid, price, quantity],
-                (q_err, q_res) => {
-                    if (q_err) {
-                        console.log(q_err.stack)
+                return query(
+                    `
+                        INSERT INTO Contains (oid, fid, price, quantity)
+                        VALUES ($1, $2, $3, $4)
+                    `,
+                    [order_id.oid, fid, price, quantity],
+                    (q_err, q_res) => {
+                        if (q_err) {
+                            console.log(q_err.stack)
+                        }
                     }
-                }
+                )
+
+            }))
+
+            /* Finally create a Request Tuple */
+            await query(
+                `
+                    INSERT INTO Request (oid, email, payment)
+                    VALUES ($1, $2, $3)
+                `,
+                [order_id.oid, customerEmail, creditCard],
             )
 
-        }))
+            res.status(200).send("Order " + order_id.oid + " Successfully Completed By " + customerEmail)
 
-        /* Finally create a Request Tuple */
-        await pool.query(
-            `
-                INSERT INTO Request (oid, email, payment)
-                VALUES ($1, $2, $3)
-            `,
-            [order_id.oid, customerEmail, creditCard],
-        )
-
-        res.status(200).send("Order " + order_id.oid + " Successfully Completed By " + customerEmail)
+        })
     } catch (error) {
         console.log(error)
         return res.status(500).send("An Error Occured")
@@ -575,7 +579,7 @@ router.delete('/api/delete/deleteOrder', (req, res, next) => {
 
     const oid = req.query.oid
 
-    pool.query(
+    query(
         `DELETE FROM Order WHERE oid=$1`, [oid],
         (q_err, q_res) => {
             if (q_err) {
@@ -598,7 +602,7 @@ router.post('/api/post/createFoodItem', (req, res, next) => {
         req.body.params.price,
     ]
 
-    pool.query(
+    query(
         `INSERT INTO FoodItems VALUES ($1, $2, $3)`,
         values,
         (q_err, q_res) => {
@@ -618,7 +622,7 @@ router.delete('/api/delete/deleteFoodItem', (req, res, next) => {
 
     const fid = req.query.fid
 
-    pool.query(
+    query(
         `DELETE FROM FoodItems WHERE fid=$1`, [oid],
         (q_err, q_res) => {
             if (q_err) {
@@ -642,7 +646,7 @@ router.put('/api/put/updateFoodItem', (req, res, next) => {
         req.body.params.price,
     ]
 
-    pool.query(
+    query(
         `UPDATE FoodItems SET fname=$2, description=$3, price=$4 WHERE fid=$1`,
         values,
         (q_err, q_res) => {
@@ -668,7 +672,7 @@ router.put('/api/put/writeReview', (req, res, next) => {
         req.body.params.foodReview,
     ]
 
-    pool.query(
+    query(
         `UPDATE Request SET foodReview=$1 WHERE oid=$1`,
         values,
         (q_err, q_res) => {
@@ -689,7 +693,7 @@ router.get('/api/get/viewAllReviews', (req, res, next) => {
 
     const email = req.query.email;
     console.log(req);
-    pool.query(`SELECT R1.foodReview FROM Request R1 NATURAL JOIN Orders O NATURAL JOIN Restaurants R2 WHERE R2.rid=$1 ORDER BY O.date desc, O.time desc`, [email],
+    query(`SELECT R1.foodReview FROM Request R1 NATURAL JOIN Orders O NATURAL JOIN Restaurants R2 WHERE R2.rid=$1 ORDER BY O.date desc, O.time desc`, [email],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -713,7 +717,7 @@ router.post('/api/post/createRestaurantPromotion', (req, res, next) => {
         req.body.params.promotionLimit
     ]
 
-    pool.query(
+    query(
         `INSERT INTO RestaurantPromotions (email, startDate, endDate, currentCount, promotionLimit) VALUES ($1, $2, $3, $4, $5)`,
         values,
         (q_err, q_res) => {
@@ -739,7 +743,7 @@ router.post('/api/post/createFdsPromotion', (req, res, next) => {
         req.body.params.type
     ]
 
-    pool.query(
+    query(
         `INSERT INTO FDSPromotions VALUES ($1, $2, $3, $4, $5, $6)`,
         values,
         (q_err, q_res) => {
@@ -759,7 +763,7 @@ router.get('/api/get/viewRewardPoints', (req, res, next) => {
 
     const email = req.query.email;
     console.log(req);
-    pool.query(`SELECT C.rewardPoints FROM Customers C WHERE C.email=$1`, [email],
+    query(`SELECT C.rewardPoints FROM Customers C WHERE C.email=$1`, [email],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -780,7 +784,7 @@ router.put('/api/put/updateFoodItem', (req, res, next) => {
         req.body.params.rewardPoints
     ]
 
-    pool.query(
+    query(
         `UPDATE Customers SET rewardPoints=$2 WHERE email=$1`,
         values,
         (q_err, q_res) => {
@@ -804,7 +808,7 @@ router.put('/api/put/rateDeliveryService', (req, res, next) => {
         req.body.params.rating
     ]
 
-    pool.query(
+    query(
         `UPDATE Request SET rating=$2 WHERE oid=$1`,
         values,
         (q_err, q_res) => {
@@ -829,7 +833,7 @@ router.post('/api/post/createAssignment', (req, res, next) => {
         req.body.params.assignedDateTime
     ]
 
-    pool.query(
+    query(
         `INSERT INTO Assigned (oid, email, assignedDateTime) VALUES ($1, $2, $3)`,
         values,
         (q_err, q_res) => {
@@ -849,7 +853,7 @@ router.get('/api/get/viewFoodItem', (req, res, next) => {
 
     const fid = req.query.fid;
     console.log(req);
-    pool.query(`SELECT * FROM FoodItems F WHERE F.fid=$1`, [fid],
+    query(`SELECT * FROM FoodItems F WHERE F.fid=$1`, [fid],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -866,7 +870,7 @@ router.get('/api/get/viewRecentDeliveryLocations', (req, res, next) => {
 
     const email = req.query.email;
     console.log(req);
-    pool.query(`SELECT o.address FROM Customers C natural join Orders O natural join Request R WHERE c.email = $1 ORDER BY date desc, time desc LIMIT 5`, [email],
+    query(`SELECT o.address FROM Customers C natural join Orders O natural join Request R WHERE c.email = $1 ORDER BY date desc, time desc LIMIT 5`, [email],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -883,7 +887,7 @@ router.get('/api/get/viewTotalWorkHours', (req, res, next) => {
 
     const email = req.query.email;
     console.log(req);
-    pool.query(`SELECT sum(workHours) FROM ScheduleContains WHERE email = $1`, [email],
+    query(`SELECT sum(workHours) FROM ScheduleContains WHERE email = $1`, [email],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -900,7 +904,7 @@ router.get('/api/get/viewTotalWorkHours', (req, res, next) => {
 
     const email = req.query.email;
     console.log(req);
-    pool.query(`SELECT count(*) FROM Assigned A WHERE A.email = $1 AND deliveredDateTime >= $2 AND deliveredDateTime < $3`, [email],
+    query(`SELECT count(*) FROM Assigned A WHERE A.email = $1 AND deliveredDateTime >= $2 AND deliveredDateTime < $3`, [email],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -920,7 +924,7 @@ router.post('/api/post/createRestaurantPriceDiscount', (req, res, next) => {
         req.body.params.priceDiscount
     ]
 
-    pool.query(
+    query(
         `INSERT INTO RestaurantPriceDiscount (rpid, priceDiscount) VALUES ($1, $2)`,
         values,
         (q_err, q_res) => {
@@ -943,7 +947,7 @@ router.post('/api/post/createRestaurantPercentageDiscount', (req, res, next) => 
         req.body.params.percentageDiscount
     ]
 
-    pool.query(
+    query(
         `INSERT INTO RestaurantPercentageDiscount (rpid, percentageDiscount) VALUES ($1, $2)`,
         values,
         (q_err, q_res) => {
@@ -963,7 +967,7 @@ router.get('/api/get/viewRestaurantPromotionsByStaff', (req, res, next) => {
 
     const email = req.query.email;
 
-    pool.query(
+    query(
         `SELECT * FROM RestaurantPromotions WHERE email=$1`, [email],
         (q_err, q_res) => {
             if (q_err) {
