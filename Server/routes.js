@@ -958,4 +958,23 @@ router.post('/api/post/createRestaurantPercentageDiscount', (req, res, next) => 
     )
 })
 
+/* Get restaurant promotions by restaurant staff */
+router.get('/api/get/viewRestaurantPromotionsByStaff', (req, res, next) => {
+
+    const email = req.query.email;
+
+    pool.query(
+        `SELECT * FROM RestaurantPromotions WHERE email=$1`, [email],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+})
+
 module.exports = router
