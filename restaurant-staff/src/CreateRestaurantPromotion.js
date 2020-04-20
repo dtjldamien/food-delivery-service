@@ -13,7 +13,9 @@ class CreateRestaurantPromotion extends React.Component {
       promotionLimit: "",
       startDate: "",
       endDate: "",
-      isPriceDiscount: ""
+      discountType: "",
+      isPriceDiscount: false,
+      discountValue: ""
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleCreateRestaurantPromotion = this.handleCreateRestaurantPromotion.bind(this)
@@ -33,12 +35,19 @@ class CreateRestaurantPromotion extends React.Component {
   handleCreateRestaurantPromotion = async (event) => {
     event.preventDefault()
     const currentCount = 0
+    if (this.state.discountType.valueOf() == new String("priceDiscount").valueOf()) {
+      this.state.isPriceDiscount = true
+    } else {
+      this.state.isPriceDiscount = false
+    }
     const restaurantPromotion = {
       email: this.state.email,
       startDate: this.state.startDate,
       endDate: this.state.endDate,
       currentCount: currentCount,
-      promotionLimit: this.state.promotionLimit
+      promotionLimit: this.state.promotionLimit,
+      isPriceDiscount: this.state.isPriceDiscount,
+      discountValue: this.state.discountValue
     }
 
     console.log(restaurantPromotion)
@@ -60,7 +69,11 @@ class CreateRestaurantPromotion extends React.Component {
           <br></br>
           <label>End Date: <input type="date" name="endDate" onChange={this.handleChange}></input></label>
           <br></br>
-          <label>End Date: <input type="date" name="endDate" onChange={this.handleChange}></input></label>
+          <p>Select a discount type:</p>
+          <label>Percentage Discount: </label><input type="radio" value="percentageDiscount" name="discountType" />
+          <label>Price Discount: </label><input type="radio" value="priceDiscount" name="discountType" />
+          <br></br>
+          <label>Discount Value: <input type="number" name="discountValue" onChange={this.handleChange}></input></label>
           <br></br>
           <input type="submit" value="Create New Restaurant Promotion" />
         </form>
