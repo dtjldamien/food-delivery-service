@@ -70,7 +70,7 @@ CREATE TABLE RestaurantPriceDiscount (
 
 CREATE TABLE RestaurantPercentageDiscount (
 	rpid INTEGER,
-	PercentageDiscount NUMERIC NOT NULL,
+	percentageDiscount NUMERIC NOT NULL,
 	FOREIGN KEY (rpid) REFERENCES RestaurantPromotions
 );
 

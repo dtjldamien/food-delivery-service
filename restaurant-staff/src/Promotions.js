@@ -30,6 +30,37 @@ class Promotions extends React.Component {
 export default Promotions
 
 /*
+          <p>Select a discount type:</p>
+          <ul>
+            <li>
+              <label>
+                <input
+                  type="radio"
+                  value="isPriceDiscount"
+                  checked={this.state.isPriceDiscount === true}
+                  onChange={this.handleChange}
+                />
+                Price Discount
+              </label>
+            </li>
+
+            <li>
+              <label>
+                <input
+                  type="radio"
+                  value="isPercentageDiscount"
+                  checked={this.state.isPriceDiscount === false}
+                  onChange={this.handleChange}
+                />
+                Percentage Discount
+              </label>
+            </li>
+          </ul>
+
+          <label>Discount Value: <input type="number" name="discountValue" onChange={this.handleChange}></input></label>
+          <br></br>
+
+
 function preventDefault(event) {
   event.preventDefault();
 }

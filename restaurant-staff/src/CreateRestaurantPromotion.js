@@ -12,7 +12,8 @@ class CreateRestaurantPromotion extends React.Component {
       name: props.restaurantStaff.name,
       promotionLimit: "",
       startDate: "",
-      endDate: ""
+      endDate: "",
+      isPriceDiscount: ""
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleCreateRestaurantPromotion = this.handleCreateRestaurantPromotion.bind(this)
@@ -42,7 +43,7 @@ class CreateRestaurantPromotion extends React.Component {
 
     console.log(restaurantPromotion)
 
-    await axios.post('/api/post/createRestaurantPromotion', {params:restaurantPromotion})
+    await axios.post('/api/post/createRestaurantPromotion', { params: restaurantPromotion })
       .then(res => alert("Restaurant Promotion Created Successfully!"))
       .catch(err => alert("Create Restaurant Promotion Error"))
   }
@@ -56,6 +57,8 @@ class CreateRestaurantPromotion extends React.Component {
           <label>Promotion Limit: <input type="text" name="promotionLimit" onChange={this.handleChange}></input></label>
           <br></br>
           <label>Start Date: <input type="date" name="startDate" onChange={this.handleChange}></input></label>
+          <br></br>
+          <label>End Date: <input type="date" name="endDate" onChange={this.handleChange}></input></label>
           <br></br>
           <label>End Date: <input type="date" name="endDate" onChange={this.handleChange}></input></label>
           <br></br>

@@ -912,5 +912,50 @@ router.get('/api/get/viewTotalWorkHours', (req, res, next) => {
         })
 })
 
+/* Create Restaurant Price Discount */
+router.post('/api/post/createRestaurantPriceDiscount', (req, res, next) => {
+
+    const values = [
+        req.body.params.rpid,
+        req.body.params.priceDiscount
+    ]
+
+    pool.query(
+        `INSERT INTO RestaurantPriceDiscount (rpid, priceDiscount) VALUES ($1, $2)`,
+        values,
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+})
+
+/* Create Restaurant Percentage Discount */
+router.post('/api/post/createRestaurantPercentageDiscount', (req, res, next) => {
+
+    const values = [
+        req.body.params.rpid,
+        req.body.params.percentageDiscount
+    ]
+
+    pool.query(
+        `INSERT INTO RestaurantPercentageDiscount (rpid, percentageDiscount) VALUES ($1, $2)`,
+        values,
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+})
 
 module.exports = router
