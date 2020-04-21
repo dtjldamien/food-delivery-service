@@ -31,7 +31,9 @@ class Reviews extends React.Component {
         this.setReviewData = this.setReviewData.bind(this)
         this.viewRating = this.viewRating.bind(this)
         this.setRating = this.setRating.bind(this)
+        this.submitReview = this.submitReview.bind(this)
     }
+
     componentDidMount() {
 
         const data = {
@@ -53,14 +55,39 @@ class Reviews extends React.Component {
         console.log(copyData)
         this.setState({reviewData: copyData})
     }
+
     viewReview(rowData, review) {
         console.log(this.state.reviewData)
         return (
             <div>
                 <InputTextarea style={{width: '700px', height: '400px', fontSize: 'large'}} value={rowData.foodreview} onChange={(e) => {this.setReviewData(e.target.value, rowData)}}/>
+                <Button label="Submit Review" onClick={e => this.submitReview(rowData, e)}></Button>
             </div>
         )
     }
+
+    submitReview = async (rowData, event) => {
+
+        event.preventDefault();
+
+        if (rowData.rating === '0' || rowData.foodreview === '') {
+            alert('Review Not Changed or Made.')
+        } else {
+
+            const data =  {
+                oid: rowData.oid,
+                rating: rowData.rating,
+                foodReview: rowData.foodreview
+            }
+
+            await axios.put('/api/put/createReview', {params : data})
+                .then(res => alert("Review Successfully Updated!"))
+                .catch(err => alert("An Error Ocurred."))
+
+        }
+
+    }
+
     viewReviewDialog(rowData) {
         return (
             <div>
@@ -71,6 +98,7 @@ class Reviews extends React.Component {
             </div>
         )
     }
+
     setRating(rating, rowData) {
         const data = this.state.reviewData.slice()
         var copyData = []
@@ -81,6 +109,7 @@ class Reviews extends React.Component {
         console.log(copyData)
         this.setState({reviewData: copyData})
     }
+
     viewRating(rowData) {
         return (
             <div style={{margin: '0 auto'}}>
@@ -88,19 +117,20 @@ class Reviews extends React.Component {
             </div>
         )
     }
+    
     render() {
         return (
             <div>
-            <DataTable value = {this.state.reviewData}>
-               <Column field="oid" header = "oid"/>
-               <Column field="orderdatetime" header = "Date/Time"/>
-               <Column field="rating" header="Rating" sortable={true} body={this.viewRating}/>
-               <Column field="rname" header="rName" sortable={true}/>
-               <Column field="deliveryfee" header="Delivery Fee" sortable={true}/>
-               <Column field="address" header="Address" sortable={true}/>
-               <Column field="foodreview" body={this.viewReviewDialog}/>
-           </DataTable>
-       </div>
+                <DataTable value = {this.state.reviewData}>
+                    <Column field="oid" header = "oid"/>
+                    <Column field="orderdatetime" header = "Date/Time"/>
+                    <Column field="rating" header="Rating" sortable={true} body={this.viewRating}/>
+                    <Column field="rname" header="rName" sortable={true}/>
+                    <Column field="deliveryfee" header="Delivery Fee" sortable={true}/>
+                    <Column field="address" header="Address" sortable={true}/>
+                    <Column field="foodreview" body={this.viewReviewDialog}/>
+                </DataTable>
+            </div>
         )
     }
 }

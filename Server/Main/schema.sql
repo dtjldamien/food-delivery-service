@@ -42,7 +42,9 @@ CREATE TABLE FoodItems(
 CREATE TABLE Sells(
 	rid INTEGER,
 	fid INTEGER,
+	/* Availability is availability at the current time */
 	availability INTEGER NOT NULL,
+	/* Will need a trigger to set daily limit to availability everyday */
 	dailyLimit INTEGER NOT NULL,
 	PRIMARY KEY (rid, fid),
 	FOREIGN KEY (rid) REFERENCES Restaurants,
