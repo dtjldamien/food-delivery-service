@@ -40,7 +40,7 @@ class FoodItems extends React.Component {
         axios.get('/api/get/getFoodItemsByRestaurantID', {params: restaurantID})
         .then(data => data.data.map(foodItems => foodItems))
         .then(foodItems => foodItems.map(food => {
-            food.quantity='0'
+            food.quantity = 0
             return food
         }))
         .then(foodItems=>this.setState({foodData:foodItems}))
@@ -48,17 +48,14 @@ class FoodItems extends React.Component {
     }
     handleCartAdd(newCart) {
         this.setState((prevState) => {return ({cart: newCart})})
+        console.log(newCart)
         alert("Added To Cart")
     }
     handleQuantityChange(rowData, quantity) {
-        const data = this.state.foodData.slice()
-        var copyData = []
-        Object.assign(copyData, data)
-        copyData.filter((data) => {return (data.fid !== rowData.fid)})
+        this.setState({value: quantity})
         rowData.quantity = quantity
-        copyData.push(rowData)
-        console.log(copyData)
-        this.setState({foodData: copyData})
+        console.log(rowData)
+        this.setState({newCart: rowData})
     }
     addToCart(rowData, column) {
         const newCart = this.state.cart.slice()
@@ -72,7 +69,7 @@ class FoodItems extends React.Component {
     }
     quantityInput(rowData, column) {
         return <div>
-            <InputText style={{display:'inline-block', width:'50px'}} value={rowData.quantity} onChange={(e) => this.handleQuantityChange(rowData, e.target.value)} />
+            <InputText style={{display:'inline-block', width:'50px'}} value={this.state.value} onChange={(e) => this.handleQuantityChange(rowData, e.target.value)} />
         </div>
     }
     viewCart() {
@@ -141,7 +138,6 @@ class FoodItems extends React.Component {
     }
     
     render() {
-        console.log(this.state.foodData)
         return (
             <div>
                  <DataTable value = {this.state.foodData}>
