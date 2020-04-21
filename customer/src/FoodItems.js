@@ -52,16 +52,19 @@ class FoodItems extends React.Component {
         alert("Added To Cart")
     }
     handleQuantityChange(rowData, quantity) {
-        this.setState({value: quantity})
+        const data = this.state.foodData.slice()
+        var copyData = []
+        Object.assign(copyData, data)
         rowData.quantity = quantity
-        console.log(rowData)
-        this.setState({newCart: rowData})
+        const index = this.state.foodData.findIndex(function(ele) {
+            return ele.fid == rowData.fid
+        })
+        copyData.splice(index, 1, rowData)
+        this.setState({foodData: copyData})
     }
     addToCart(rowData, column) {
         const newCart = this.state.cart.slice()
-        var copyCart = {}
-        Object.assign(copyCart, this.state.newCart)
-        newCart.push(copyCart)
+        newCart.push(rowData)
         return <div>
             {/* <InputText style={{display:'inline-block', width:'50px'}} value={this.state.value} onChange={(e) => this.handleQuantityChange(rowData, e.target.value)} /> */}
             <Button style={{display:'inline-block'}} label="Add To Cart" onClick={()=>this.handleCartAdd(newCart)}></Button>
@@ -69,7 +72,7 @@ class FoodItems extends React.Component {
     }
     quantityInput(rowData, column) {
         return <div>
-            <InputText style={{display:'inline-block', width:'50px'}} value={this.state.value} onChange={(e) => this.handleQuantityChange(rowData, e.target.value)} />
+            <InputText style={{display:'inline-block', width:'50px'}} value={rowData.quantity} onChange={(e) => this.handleQuantityChange(rowData, e.target.value)} />
         </div>
     }
     viewCart() {
