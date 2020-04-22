@@ -13,16 +13,7 @@ class Reviews extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            reviewData: [
-                {
-                    oid: 1,
-                    rating: 5,
-                    rName: 'mcd',
-                    deliveryFee: 5,
-                    address: "Compton",
-                    foodreview: "This food quite good but unhealthy"
-                }
-            ],
+            reviewData: [],
             orderData: [],
             visible: false
         };

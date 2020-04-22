@@ -668,32 +668,6 @@ router.put('/api/put/updateFoodItem', (req, res, next) => {
 
 })
 
-
-
-/* WriteReview */
-router.put('/api/put/writeReview', (req, res, next) => {
-
-    const values = [
-        req.body.params.oid,
-        req.body.params.foodReview,
-    ]
-
-    query(
-        `UPDATE Request SET foodReview=$1 WHERE oid=$1`,
-        values,
-        (q_err, q_res) => {
-            if (q_err) {
-                console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
-            } else {
-                console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
-            }
-        }
-    )
-
-})
-
 /* View All Reviews */
 router.get('/api/get/viewAllReviews', (req, res, next) => {
 
@@ -709,6 +683,31 @@ router.get('/api/get/viewAllReviews', (req, res, next) => {
                 return res.status(200).json(q_res.rows);
             }
         })
+
+})
+
+/* View Reviews of Restaurant */
+router.get('/api/get/viewReviewOfRestaurant', (req, res) => {
+
+    const rid = req.query.rid
+    query(
+        `
+            SELECT rating, foodReview
+            FROM Orders NATURAL JOIN Request
+            WHERE rid = $1
+            AND (rating IS NOT NULL AND foodReview IS NOT NULL) 
+        `,
+        [rid],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
 
 })
 
