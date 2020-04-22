@@ -23,6 +23,7 @@ class Reviews extends React.Component {
         this.viewRating = this.viewRating.bind(this)
         this.setRating = this.setRating.bind(this)
         this.submitReview = this.submitReview.bind(this)
+        this.setRowDataVisibility = this.setRowDataVisibility.bind(this)
     }
 
     componentDidMount() {
@@ -32,7 +33,11 @@ class Reviews extends React.Component {
         }
         console.log(data)
         axios.get('/api/get/viewPastOrders', {params: data})
-            .then(rsp => this.setState({reviewData: rsp.data}))
+            .then(rsp => rsp.data.map(reviews => {
+                reviews.visbility = false
+                return reviews
+            }))
+            .then(rsp => this.setState({reviewData: rsp}))
             .catch(err => console.log(err))
     }
 
@@ -41,9 +46,9 @@ class Reviews extends React.Component {
         var copyData = []
         Object.assign(copyData, data)
         const index = copyData.findIndex((ele)=>{return ele===rowData})
+        console.log(index)
         rowData.foodreview = foodreview
         copyData.splice(index, 1, rowData)
-        console.log(copyData)
         this.setState({reviewData: copyData})
     }
 
@@ -78,27 +83,35 @@ class Reviews extends React.Component {
         }
 
     }
-
+    setRowDataVisibility(rowData, visible) {
+        const data = this.state.reviewData.slice()
+        var copyData = []
+        Object.assign(copyData, data)
+        rowData.visible = visible
+        const index = this.state.reviewData.findIndex(function(ele) {
+            return ele.oid === rowData.oid
+        })
+        copyData.splice(index, 1, rowData)
+        this.setState({reviewData: copyData})
+    }
     viewReviewDialog(rowData) {
-        console.log(rowData)
         return (
             <div>
-                <Dialog header="View Review" visible={this.state.visible} onHide={() => this.setState({visible: false})}>
+                <Dialog header="View Review" visible={rowData.visible} onHide={() => this.setRowDataVisibility(rowData, false)}>
                     {this.viewReview(rowData)}
                 </Dialog>
-                <Button label="View Review" onClick={()=> this.setState({visible: true})}></Button>
+                <Button label="View Review" onClick={()=> this.setRowDataVisibility(rowData, true)}></Button>
             </div>
         )
     }
 
     setRating(rating, rowData) {
-        // const data = this.state.reviewData.slice()
+        const data = this.state.reviewData.slice()
         var copyData = []
-        Object.assign(copyData, this.state.data)
-        copyData.filter((data) => {return (data !== rowData)})
+        Object.assign(copyData, data)
+        const index = this.state.reviewData.findIndex((ele)=>ele===rowData)
         rowData.rating = rating
-        copyData.push(rowData)
-        console.log(copyData)
+        copyData.splice(index, 1, rowData)
         this.setState({reviewData: copyData})
     }
 
