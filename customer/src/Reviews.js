@@ -1,6 +1,7 @@
 import React from "react"
 import axios from 'axios'
-import { DataTable, Column } from 'primereact/datatable'
+import { DataTable } from 'primereact/datatable'
+import { Column } from 'primereact/column'
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -31,7 +32,6 @@ class Reviews extends React.Component {
         const data = {
             email: this.props.customer.email
         }
-        console.log(data)
         axios.get('/api/get/viewPastOrders', {params: data})
             .then(rsp => rsp.data.map(reviews => {
                 reviews.visbility = false
@@ -46,7 +46,6 @@ class Reviews extends React.Component {
         var copyData = []
         Object.assign(copyData, data)
         const index = copyData.findIndex((ele)=>{return ele===rowData})
-        console.log(index)
         rowData.foodreview = foodreview
         copyData.splice(index, 1, rowData)
         this.setState({reviewData: copyData})

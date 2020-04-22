@@ -13,6 +13,8 @@ import Register from "./Register"
 import { Dialog } from "primereact/dialog"
 import 'primereact/resources/themes/nova-light/theme.css';
 import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext'
+import { Password } from 'primereact/password'
 
 class App extends React.Component {
     
@@ -26,60 +28,41 @@ class App extends React.Component {
             visible: false
         }
         this.handleLogin = this.handleLogin.bind(this)
-        this.handleChange = this.handleChange.bind(this)
         this.handleLogout = this.handleLogout.bind(this)
     }
 
-  showContents() {
-      return (
-            <Router>
-                <MenuBar activeItem = "Restaurants"/>
-                <button onClick={this.handleLogout}>Log Out</button>
-                <Switch>
-                    <Route exact path = "/" render={(props) => <Home {...props} {...this.state}/>} />
-                    <Route path = "/orders" render={(props) => <Orders {...props} {...this.state}/>} />
-                    <Route path = "/reviews" render={(props) => <Reviews {...props} {...this.state}/>} />
-                    <Route path = "/profile" render={(props) => <Profile {...props} {...this.state}/>} />
-                    <Route exact path = "/restaurants" render={(props) => <Restaurants {...props} {...this.state}/>} />
-                    <Route exact path = "/restaurants/:catname" render={(props) => <Restaurants {...props} {...this.state}/>} />
-                    <Route exact path = "/restaurants/:catname/:rname" render={(props)=> <FoodItems {...props} {...this.state}/>}/>
-                </Switch>
-            </Router>
-      )
-  }
+    handleLogin = async (event) => {
+        
+        event.preventDefault();
 
-  handleLogin = async (event) => {
-    
-      event.preventDefault();
-
-      /* Ensuring input boxes are not empty */
-      if (this.state.email !== '' && this.state.password !== '') {
-            const data = {
-                email: this.state.email
-            }
-
-            /* API Call to GET customer */
-            await axios.get('/api/get/customerLogin', {params: data})
-                    .then(data => this.setState({customer : data.data[0]}))
-                    .catch(err => {
-                        alert("Account Doesn't Exist")
-                    })
-          
-            /* Check if customer is GET from database */
-            if (this.state.customer !== undefined) {
-                if (this.state.password === this.state.customer.password) { 
-                  /* Set state if customer passes authentication */
-                  this.setState({loggedIn: true})
-                } else {
-                  alert("Invalid Password")
+        /* Ensuring input boxes are not empty */
+        if (this.state.email !== '' && this.state.password !== '') {
+                const data = {
+                    email: this.state.email
                 }
-            } else {
-                alert("Account Not Found.")
-            }
 
-      }
+                /* API Call to GET customer */
+                await axios.get('/api/get/customerLogin', {params: data})
+                        .then(data => this.setState({customer : data.data[0]}))
+                        .catch(err => {
+                            alert("Account Doesn't Exist")
+                        })
+            
+                /* Check if customer is GET from database */
+                if (this.state.customer !== undefined) {
+                    if (this.state.password === this.state.customer.password) { 
+                    /* Set state if customer passes authentication */
+                    this.setState({loggedIn: true})
+                    } else {
+                    alert("Invalid Password")
+                    }
+                } else {
+                    alert("Account Not Found.")
+                }
 
-  }
+        }
+
+    }
 
     handleLogout() {
         this.setState({loggedIn: false})
@@ -88,30 +71,32 @@ class App extends React.Component {
         this.setState({password: ""})
     }
 
-    handleChange(event) {
-        this.setState({
-        [event.target.name]: event.target.value
-        })
-    }
-
     loginPage() {
 
         /* Inputs for the customer email and password */
         const inputs =  <div>
-                        <label>Customer Email: <input type="text" name="email" onChange={this.handleChange}/></label>
-                        <br></br>
-                        <label>Password: <input type="text" name="password" onChange={this.handleChange}></input></label>
-                        <br></br>
-                        <input type="submit" value="Log In"/>
+                            <span className="p-float-label"> 
+                                <InputText id="email" value={this.state.email} onChange={e => this.setState({email: e.target.value})}/>
+                                <label htmlFor="email">Customer Email: </label>
+                            </span>
+                            <br></br>
+                            <span className="p-float-label"> 
+                                <Password id="password" value={this.state.password} feedback={false} onChange={e => this.setState({password: e.target.value})}/>
+                                <label htmlFor="password">Password: </label>
+                            </span>
+                            <br></br>
+                            <Button label="Log In" onClick={e => this.handleLogin(e)}/>
+                            {" "}
+                            <Button label="Register" icon="pi pi-info-circle" onClick={(e) => this.setState({visible: true})}/>
                         </div>;
 
         const header = <h3>Food Delivery Service: Customer Login</h3>
 
         const loginCardStyle = {
-        display: 'inline-block',
-        width: '360px',
-        padding: '5px',
-        margin: '10px',
+            display: 'inline-block',
+            width: '360px',
+            padding: '5px',
+            margin: '10px',
         }
 
         return (
@@ -119,26 +104,38 @@ class App extends React.Component {
             
             {/* Login Form Handling Login */}
             <form onSubmit={this.handleLogin}>
-            {this.state.errorMessage && <h3>{this.state.errorMessage}</h3>}
-            <Card header={header} footer={inputs} style={loginCardStyle}></Card>
+                <Card header={header} footer={inputs} style={loginCardStyle}></Card>
             </form>
 
             {/* Dialog of the register card */}
             <Dialog header="Register" visible={this.state.visible} onHide={() => this.setState({visible: false})}>
-            <Register/>
+                <Register/>
             </Dialog>
 
-            {/* e is the short form for events, basically make the register card visible */}
-            <Button label="Register" icon="pi pi-info-circle" onClick={(e) => this.setState({visible: true})}/>
-
         </div>
+        )
+    }
+
+    showContents() {
+        return (
+              <Router>
+                  <MenuBar activeItem = "Restaurants" handleLogout={this.handleLogout}/>
+                  <Switch>
+                      <Route exact path = "/" render={(props) => <Home {...props} {...this.state}/>} />
+                      <Route path = "/orders" render={(props) => <Orders {...props} {...this.state}/>} />
+                      <Route path = "/reviews" render={(props) => <Reviews {...props} {...this.state}/>} />
+                      <Route path = "/profile" render={(props) => <Profile {...props} {...this.state}/>} />
+                      <Route exact path = "/restaurants" render={(props) => <Restaurants {...props} {...this.state}/>} />
+                      <Route exact path = "/restaurants/:catname" render={(props) => <Restaurants {...props} {...this.state}/>} />
+                      <Route exact path = "/restaurants/:catname/:rname" render={(props)=> <FoodItems {...props} {...this.state}/>}/>
+                  </Switch>
+              </Router>
         )
     }
 
     render() {
         return (
             <div>
-
                 {!this.state.loggedIn && this.loginPage()} 
                 {this.state.loggedIn && this.showContents()}
             </div>

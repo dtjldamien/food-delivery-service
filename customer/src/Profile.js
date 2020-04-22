@@ -1,5 +1,8 @@
 import React from "react"
 import axios from "axios"
+import { InputText } from 'primereact/inputtext'
+import { Password } from 'primereact/password'
+import { Button } from 'primereact/button'
 
 class Profile extends React.Component {
     constructor(props) {
@@ -43,6 +46,7 @@ class Profile extends React.Component {
                         console.log(err)
                         alert("Error Ocurred During Update")
                     })
+                alert("Profile Details Successfully Changed!")
             }
     }
 
@@ -61,19 +65,36 @@ class Profile extends React.Component {
         <div>
             <h4>Profile</h4>
 
-            <form onSubmit={this.handleUpdate}>
-                <label>Name:         {this.state.name}</label>
+            <div>
+
+                <span className="p-float-label"> 
+                    <InputText id="name" value={this.state.name} onChange={e => e}/>
+                    <label htmlFor="name">Name: </label>
+                </span>
                 <br></br>
-                <label>Email:        {this.state.email}</label>
+                <span className="p-float-label"> 
+                    <InputText id="email" value={this.state.email} onChange={e => e}/>
+                    <label htmlFor="email">Email: </label>
+                </span>
                 <br></br>
-                <label>Password:     <input type="text" value={this.state.password} name="password" onChange={this.handleChange}></input></label>
+                <span className="p-float-label"> 
+                    <Password id="password" value={this.state.password} feedback={false} onChange={e => this.setState({password: e.target.value})}/>
+                    <label htmlFor="password">Password: </label>
+                </span>
                 <br></br>
-                <label>Address:      <input type="text" value={this.state.address} name="address" onChange={this.handleChange}></input></label>
+                <span className="p-float-label"> 
+                    <InputText id="address" value={this.state.address} onChange={e => this.setState({address: e.target.value})}/>
+                    <label htmlFor="address">Address: </label>
+                </span>
                 <br></br>
-                <label>Credit Card:  <input type="text" value={this.state.creditcard} name="creditcard" onChange={this.handleChange}></input></label>
+                <span className="p-float-label"> 
+                    <InputText id="creditCard" value={this.state.creditcard} onChange={e => this.setState({creditcard: e.target.value})}/>
+                    <label htmlFor="creditCard">Credit Card: </label>
+                </span>
                 <br></br>
-                <input type="submit" value="Update Profile"/>
-            </form>
+                <Button label="Update Profile" onClick={e => this.handleUpdate(e)}/>
+
+           </div>
 
         </div>);
     }

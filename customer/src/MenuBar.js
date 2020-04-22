@@ -6,8 +6,8 @@ import 'primeicons/primeicons.css';
 import { Link } from 'react-router-dom'
 
 class MenuBar extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             items: [
                 {label: 'Home', icon: 'pi pi-fw pi-home', command: (event)=> {window.location = "/"}},
@@ -54,6 +54,7 @@ class MenuBar extends React.Component {
                 <Link to={{pathname:`/profile`}}>
                     <Button style = {menuStyle} label="My Profile" />
                 </Link>
+                <Button style = {menuStyle} label="Log Out" onClick={e => this.props.handleLogout()}/>
             </div>
         )
     }

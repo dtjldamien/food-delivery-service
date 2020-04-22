@@ -1,6 +1,7 @@
 import React from "react"
 import axios from 'axios'
-import { DataTable, Column } from 'primereact/datatable'
+import { DataTable } from 'primereact/datatable'
+import { Column } from 'primereact/column'
 import { Redirect } from 'react-router-dom'
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -29,7 +30,6 @@ class Restaurants extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props)
         this.setState({categoryName: this.props.match.params.catname})
         const restaurantParam = {
             catname: this.props.match.params.catname

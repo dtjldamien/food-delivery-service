@@ -1,6 +1,7 @@
 import React from "react"
 import axios from 'axios'
-import { DataTable, Column } from 'primereact/datatable'
+import { DataTable } from 'primereact/datatable'
+import { Column } from 'primereact/column'
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -56,16 +57,14 @@ class FoodItems extends React.Component {
     }
 
     handleCartAdd(newCart, rowData) {
-        console.log(rowData)
         var qty = parseInt(rowData.quantity)
+
         if((qty > 0) && (rowData.availability >= qty)) {
             this.setState((prevState) => {return ({cart: newCart})})
             alert("Added To Cart")
-        } 
-        else if (qty > 0) {
+        } else if (qty > 0) {
             alert("The restaurant only has " + rowData.availability.toString() + " left")
-        } 
-        else {
+        } else {
             alert("Quantity Must Be Above 0")
         }
 
