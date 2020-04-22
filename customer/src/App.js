@@ -137,12 +137,11 @@ class App extends React.Component {
 
     render() {
         return (
-        <div>
+            <div>
 
-            {!this.state.loggedIn && this.loginPage()} 
-            {this.state.loggedIn && this.showContents()}
-            {/* {this.showContents()} */}
-        </div>
+                {!this.state.loggedIn && this.loginPage()} 
+                {this.state.loggedIn && this.showContents()}
+            </div>
         )
     }
 }

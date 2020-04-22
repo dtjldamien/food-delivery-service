@@ -1,14 +1,15 @@
 import React from "react"
 import axios from 'axios'
 import { DataTable, Column } from 'primereact/datatable'
-import { Link, Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import { Dialog } from 'primereact/dialog'
 import { Button } from 'primereact/button'
-import {Rating} from 'primereact/rating';
-import {InputText} from 'primereact/inputtext'
+import { Rating } from 'primereact/rating';
+import { InputText } from 'primereact/inputtext'
+
 class Restaurants extends React.Component {
     constructor(props) {
         super(props)
@@ -33,10 +34,10 @@ class Restaurants extends React.Component {
         const restaurantParam = {
             catname: this.props.match.params.catname
         }
-        let resData = []
+
         axios.get('/api/get/getRestaurantsByCategory', {params: restaurantParam})
-        .then(data => data.data.map(restaurant => restaurant))
-        .then(restaurant=>this.setState({restaurantData:restaurant}))
+            .then(data => data.data.map(restaurant => restaurant))
+            .then(restaurant=>this.setState({restaurantData:restaurant}))
     }
 
     redirectOnClick() {

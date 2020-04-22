@@ -31,31 +31,24 @@ class Categories extends React.Component {
             margin: '10px'
         }
 
-        this.state.categories.map(catname => {
+        this.state.categories.map(catname => 
             categories.push(
                 <div style ={cardStyle}>
-                <Link to={{
-                    pathname:`/restaurants/${catname}`,
-                    state: {
-                    catname: {catname}
-                    }
-                }}>
-                    <Card title={catname} style={cardStyle}/>
-                </Link>
+                    <Link to={{
+                        pathname:`/restaurants/${catname}`,
+                        state: {
+                        catname: {catname}
+                        }
+                    }}>
+                        <Card title={catname} style={cardStyle}/>
+                    </Link>
                 </div>
             )
-        })
+        )
         return categories
     }
 
     render() {
-
-        const cardStyle = {
-            display: 'inline-block',
-            width: '360px',
-            padding: '5px',
-            margin: '10px'
-        }
 
         return (
             <div>

@@ -1,13 +1,14 @@
 import React from "react"
 import axios from 'axios'
-import datatable, { DataTable, Column } from 'primereact/datatable'
-import { Link, Redirect } from 'react-router-dom'
+import { DataTable, Column } from 'primereact/datatable'
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import { Dialog } from 'primereact/dialog'
 import { Button } from 'primereact/button'
-import {InputText} from 'primereact/inputtext';
+import { InputText } from 'primereact/inputtext';
+
+
 class FoodItems extends React.Component {
     constructor(props) {
         super(props)
@@ -28,34 +29,36 @@ class FoodItems extends React.Component {
         this.quantityInput = this.quantityInput.bind(this)
         this.checkout = this.checkout.bind(this)
     }
+
     componentDidMount() {
         const restaurant = this.props.location.state.selectedRestaurant
         this.setState({restaurantData: restaurant})
         const restaurantID = {
             rid: restaurant.rid
         }
-        // console.log(this.state)
-        console.log(this.props)
-        console.log(this.state)
+        
         axios.get('/api/get/getFoodItemsByRestaurantID', {params: restaurantID})
-        .then(data => data.data.map(foodItems => foodItems))
-        .then(foodItems => foodItems.map(food => {
-            food.quantity = 0
-            return food
-        }))
-        .then(foodItems=>this.setState({foodData:foodItems}))
+                .then(data => data.data.map(foodItems => foodItems))
+                .then(foodItems => foodItems.map(food => {
+                    food.quantity = 0
+                    return food
+                }))
+                .then(foodItems=>this.setState({foodData:foodItems}))
+
         this.setState({customer: this.props.customer})
     }
+
     handleCartAdd(newCart, rowData) {
+
         if(parseInt(rowData.quantity) > 0) {
             this.setState((prevState) => {return ({cart: newCart})})
-            console.log(newCart)
             alert("Added To Cart")
-        }
-        else {
+        } else {
             alert("Quantity Must Be Above 0")
         }
+
     }
+
     handleQuantityChange(rowData, quantity) {
         const data = this.state.foodData.slice()
         var copyData = []
@@ -67,6 +70,7 @@ class FoodItems extends React.Component {
         copyData.splice(index, 1, rowData)
         this.setState({foodData: copyData})
     }
+
     addToCart(rowData, column) {
         const newCart = this.state.cart.slice()
         newCart.push(rowData)
@@ -75,11 +79,13 @@ class FoodItems extends React.Component {
             <Button style={{display:'inline-block'}} label="Add To Cart" onClick={()=>this.handleCartAdd(newCart, rowData)}></Button>
         </div>
     }
+
     quantityInput(rowData, column) {
         return <div>
             <InputText style={{display:'inline-block', width:'50px'}} value={rowData.quantity} onChange={(e) => this.handleQuantityChange(rowData, e.target.value)} />
         </div>
     }
+
     viewCart() {
 
         const cartCost = this.state.cart.length > 0 ? (this.state.cart.map(cart => parseFloat(cart.price) * parseFloat(cart.quantity)).reduce((total, price) => total + price)).toString() : "0"
@@ -116,6 +122,7 @@ class FoodItems extends React.Component {
         )
 
     }
+
     viewCartDialog() {
         return (
             <div>
@@ -126,11 +133,10 @@ class FoodItems extends React.Component {
             </div>
         )
     }
+
     checkout = async (event) =>  {
 
         event.preventDefault();
-
-        console.log(this.state.cart)
 
         /* Preps Data to pass into API call */
         const orderItem = {

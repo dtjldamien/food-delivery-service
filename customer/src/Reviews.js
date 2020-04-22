@@ -1,14 +1,14 @@
 import React from "react"
 import axios from 'axios'
-import datatable, { DataTable, Column } from 'primereact/datatable'
-import { Link, Redirect } from 'react-router-dom'
+import { DataTable, Column } from 'primereact/datatable'
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import { Dialog } from 'primereact/dialog'
 import { Button } from 'primereact/button'
-import {InputTextarea} from 'primereact/inputtextarea';
-import {Rating} from 'primereact/rating';
+import { InputTextarea } from 'primereact/inputtextarea';
+import { Rating } from 'primereact/rating';
+
 class Reviews extends React.Component {
     constructor(props) {
         super(props);
@@ -92,7 +92,7 @@ class Reviews extends React.Component {
     }
 
     setRating(rating, rowData) {
-        const data = this.state.reviewData.slice()
+        // const data = this.state.reviewData.slice()
         var copyData = []
         Object.assign(copyData, this.state.data)
         copyData.filter((data) => {return (data !== rowData)})
