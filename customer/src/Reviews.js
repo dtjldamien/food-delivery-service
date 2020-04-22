@@ -40,7 +40,7 @@ class Reviews extends React.Component {
         const data = this.state.reviewData.slice()
         var copyData = []
         Object.assign(copyData, data)
-        const index = copyData.findIndex((ele)=>{return ele==rowData})
+        const index = copyData.findIndex((ele)=>{return ele===rowData})
         rowData.foodreview = foodreview
         copyData.splice(index, 1, rowData)
         console.log(copyData)
@@ -95,7 +95,7 @@ class Reviews extends React.Component {
         const data = this.state.reviewData.slice()
         var copyData = []
         Object.assign(copyData, this.state.data)
-        copyData.filter((data) => {return (data != rowData)})
+        copyData.filter((data) => {return (data !== rowData)})
         rowData.rating = rating
         copyData.push(rowData)
         console.log(copyData)

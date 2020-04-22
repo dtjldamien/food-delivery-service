@@ -8,7 +8,7 @@ import 'primeicons/primeicons.css';
 import { Dialog } from 'primereact/dialog'
 import { Button } from 'primereact/button'
 import {Rating} from 'primereact/rating';
-
+import {InputText} from 'primereact/inputtext'
 class Restaurants extends React.Component {
     constructor(props) {
         super(props)
@@ -124,18 +124,24 @@ class Restaurants extends React.Component {
     }
     
     render() {
+        let header = (
+            <div style={{'textAlign':'left'}}>
+                <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
+                <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Global Search" size="50"/>
+            </div>
+        );
         return (
             <div>
                 {this.redirectOnClick()}
                 <h1>{this.state.categoryName}</h1>
-                <DataTable value = {this.state.restaurantData}>
+                <DataTable value = {this.state.restaurantData} header={header} globalFilter={this.state.globalFilter}>
                     <Column field="rid" header = "rid"/>
                     <Column field="rname" header="rname" />
                     <Column field="address" header="address" />
                     <Column field="minimumspending" header="minimumspending" />
                     <Column field="restaurantrating" header="Rating" body={this.restaurantRating}/>
-                    <Column field="rid" body={this.selectRestaurant}/>
-                    <Column field="rid" body={this.viewRestaurantReviewsDialog}/>
+                    <Column field="rid" header="Click To Select Restaurant" body={this.selectRestaurant}/>
+                    <Column field="rid" header="View Restaurant Reviews" body={this.viewRestaurantReviewsDialog}/>
                 </DataTable>
             </div>
         )
