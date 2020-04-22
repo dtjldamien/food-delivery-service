@@ -137,8 +137,8 @@ class Reviews extends React.Component {
         return (
             <div>
                 <DataTable value = {this.state.reviewData} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink">
-                    <Column field="oid" header = "oid"/>
-                    <Column field="orderdatetime" header = "Date/Time" body={this.formatDateTime}/>
+                    <Column field="oid" header = "oid" sortable={true}/>
+                    <Column field="orderdatetime" header="Date/Time" sortable={true} body={this.formatDateTime}/>
                     <Column field="rating" header="Rating" sortable={true} body={this.viewRating}/>
                     <Column field="rname" header="rName" sortable={true}/>
                     <Column field="deliveryfee" header="Delivery Fee" sortable={true}/>

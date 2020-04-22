@@ -238,7 +238,7 @@ class FoodItems extends React.Component {
                 <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Global Search" size="50" />
             </div>
         );
-        return ( //max out input for availability
+        return ( 
             <div>
                 <DataTable value={this.state.foodData} header={header} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink" globalFilter={this.state.globalFilter}>
                     <Column field="fid" header="fid" />

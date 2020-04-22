@@ -11,15 +11,7 @@ class Orders extends React.Component {
         super(props)
         this.state = {
             orderData: [],
-            cart: [
-                {
-                    fid: '1',
-                    fname: 'burger',
-                    description: 'test',
-                    price: '$?',
-                    quantity: '2'
-                }
-            ]
+            cart: []
         }
         this.viewOrder = this.viewOrder.bind(this)
         this.viewOrderDialog = this.viewOrderDialog.bind(this)
