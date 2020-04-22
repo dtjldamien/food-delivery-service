@@ -79,7 +79,17 @@ class Orders extends React.Component {
             </div>
         )
     }
-
+    formatDateTime(rowData) {
+        var dateTime = rowData.orderdatetime
+        var dateArr = dateTime.split('T')
+        var date = dateArr[0]
+        var time = dateArr[1]
+        var timeArr = time.split(':')
+        var hour = timeArr[0]
+        var minutes = timeArr[1]
+        var formattedDateTime = date + " / " + hour + ":" + minutes
+        return formattedDateTime
+    }
     render() {
         let header = (
             <div style={{'textAlign':'left'}}>
@@ -92,7 +102,7 @@ class Orders extends React.Component {
                 <DataTable value = {this.state.orderData} header={header} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink" globalFilter={this.state.globalFilter}>
                     <Column field="oid" header = "oid"/>
                     <Column field="rname" header="Restaurant" sortable={true}/>
-                    <Column field="orderdatetime" header="Date/Time" sortable={true}/>
+                    <Column field="orderdatetime" header="Date/Time" body={this.formatDateTime} sortable={true}/>
                     <Column field="totalcost" header="Cost" sortable={true}/>
                     <Column field="deliveryfee" header="Delivery Fee" sortable={true}/>
                     <Column field="address" header="Address" sortable={true}/>

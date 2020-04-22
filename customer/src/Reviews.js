@@ -122,13 +122,24 @@ class Reviews extends React.Component {
             </div>
         )
     }
+    formatDateTime(rowData) {
+        var dateTime = rowData.orderdatetime
+        var dateArr = dateTime.split('T')
+        var date = dateArr[0]
+        var time = dateArr[1]
+        var timeArr = time.split(':')
+        var hour = timeArr[0]
+        var minutes = timeArr[1]
+        var formattedDateTime = date + " / " + hour + ":" + minutes
+        return formattedDateTime
+    }
     
     render() {
         return (
             <div>
                 <DataTable value = {this.state.reviewData} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink">
                     <Column field="oid" header = "oid"/>
-                    <Column field="orderdatetime" header = "Date/Time"/>
+                    <Column field="orderdatetime" header = "Date/Time" body={this.formatDateTime}/>
                     <Column field="rating" header="Rating" sortable={true} body={this.viewRating}/>
                     <Column field="rname" header="rName" sortable={true}/>
                     <Column field="deliveryfee" header="Delivery Fee" sortable={true}/>
