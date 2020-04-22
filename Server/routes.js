@@ -151,7 +151,7 @@ router.get('/api/get/viewPastOrders', (req, res, next) => {
     const email = req.query.email;
 
     query(
-        `SELECT * FROM Restaurants NATURAL JOIN Orders O NATURAL JOIN Request R WHERE R.email=$1 ORDER BY orderDateTime desc`, [email],
+        `SELECT * FROM Restaurants INNER JOIN Orders ON (Restaurants.rid = Orders.rid) INNER JOIN Request ON (Request.oid = Orders.oid) WHERE Request.email=$1 ORDER BY orderDateTime desc`, [email],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
@@ -693,7 +693,7 @@ router.get('/api/get/viewReviewOfRestaurant', (req, res) => {
     query(
         `
             SELECT rating, foodReview
-            FROM Orders NATURAL JOIN Request
+            FROM Orders INNER JOIN Request ON (Orders.oid = Request.oid)
             WHERE rid = $1
             AND (rating IS NOT NULL AND foodReview IS NOT NULL) 
         `,
@@ -848,8 +848,16 @@ router.get('/api/get/viewFoodItem', (req, res, next) => {
 router.get('/api/get/viewRecentDeliveryLocations', (req, res, next) => {
 
     const email = req.query.email;
-    console.log(req);
-    query(`SELECT o.address FROM Customers C natural join Orders O natural join Request R WHERE c.email = $1 ORDER BY date desc, time desc LIMIT 5`, [email],
+
+    console.log(email)
+
+    query(  `
+                SELECT Orders.address 
+                FROM Customers NATURAL JOIN Request INNER JOIN Orders ON (Request.oid = Orders.oid)
+                WHERE Customers.email = $1
+                ORDER BY orderDateTime DESC
+                LIMIT 5
+            `, [email],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
