@@ -11,6 +11,7 @@ CREATE TABLE Restaurants(
 	rname VARCHAR(100) NOT NULL,
 	address VARCHAR (100) NOT NULL,
 	minimumSpending FLOAT NOT NULL,
+	restaurantrating INTEGER DEFAULT 0,
 	PRIMARY KEY (rid)
 );
 
