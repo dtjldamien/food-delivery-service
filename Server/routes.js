@@ -561,6 +561,27 @@ router.post('/api/post/createOrder', async (req, res) => {
 
             }))
 
+            /* Third, update the availabilities of each food item */
+            await Promise.all(listOfFoods.map((foods) => {
+
+                const { fid, quantity } = foods
+
+                return query(
+                    `
+                        UPDATE Sells
+                        SET availability = availability - ($1)
+                        WHERE fid = ($2)
+                    `,
+                    [quantity, fid],
+                    (q_err, q_res) => {
+                        if (q_err) {
+                            console.log(q_err.stack)
+                        }
+                    }
+                )
+
+            }))
+
             /* Finally create a Request Tuple */
             await query(
                 `
