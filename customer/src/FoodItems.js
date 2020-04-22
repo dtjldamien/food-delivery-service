@@ -56,11 +56,16 @@ class FoodItems extends React.Component {
     }
 
     handleCartAdd(newCart, rowData) {
-
-        if (parseInt(rowData.quantity) > 0) {
-            this.setState((prevState) => { return ({ cart: newCart }) })
+        console.log(rowData)
+        var qty = parseInt(rowData.quantity)
+        if((qty > 0) && (rowData.availability >= qty)) {
+            this.setState((prevState) => {return ({cart: newCart})})
             alert("Added To Cart")
-        } else {
+        } 
+        else if (qty > 0) {
+            alert("The restaurant only has " + rowData.availability.toString() + " left")
+        } 
+        else {
             alert("Quantity Must Be Above 0")
         }
 
@@ -234,7 +239,7 @@ class FoodItems extends React.Component {
                 <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Global Search" size="50" />
             </div>
         );
-        return (
+        return ( //max out input for availability
             <div>
                 <DataTable value={this.state.foodData} header={header} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink" globalFilter={this.state.globalFilter}>
                     <Column field="fid" header="fid" />
