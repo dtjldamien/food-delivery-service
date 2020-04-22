@@ -164,6 +164,25 @@ router.get('/api/get/viewPastOrders', (req, res, next) => {
     )
 })
 
+/* View Restaurant Past Orders */
+router.get('/api/get/viewRestaurantOrders', (req, res, next) => {
+
+    const rid = req.query.rid;
+
+    query(
+        `SELECT * FROM Restaurants INNER JOIN Orders ON (Restaurants.rid = Orders.rid) INNER JOIN Request ON (Request.oid = Orders.oid) WHERE Restaurants.rid=$1 ORDER BY orderDateTime desc`, [rid],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+})
+
 /* View Cart from Order */
 router.get('/api/get/viewCartFromOrder', (req, res, next) => {
 
