@@ -31,7 +31,6 @@ class Reviews extends React.Component {
         const data = {
             email: this.props.customer.email
         }
-        console.log(data)
         axios.get('/api/get/viewPastOrders', {params: data})
             .then(rsp => rsp.data.map(reviews => {
                 reviews.visbility = false
@@ -46,7 +45,6 @@ class Reviews extends React.Component {
         var copyData = []
         Object.assign(copyData, data)
         const index = copyData.findIndex((ele)=>{return ele===rowData})
-        console.log(index)
         rowData.foodreview = foodreview
         copyData.splice(index, 1, rowData)
         this.setState({reviewData: copyData})
@@ -138,8 +136,8 @@ class Reviews extends React.Component {
         return (
             <div>
                 <DataTable value = {this.state.reviewData} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink">
-                    <Column field="oid" header = "oid"/>
-                    <Column field="orderdatetime" header = "Date/Time" body={this.formatDateTime}/>
+                    <Column field="oid" header = "oid" sortable={true}/>
+                    <Column field="orderdatetime" header="Date/Time" sortable={true} body={this.formatDateTime}/>
                     <Column field="rating" header="Rating" sortable={true} body={this.viewRating}/>
                     <Column field="rname" header="rName" sortable={true}/>
                     <Column field="deliveryfee" header="Delivery Fee" sortable={true}/>
