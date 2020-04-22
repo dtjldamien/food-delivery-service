@@ -5,6 +5,7 @@ import {DataTable} from 'primereact/datatable'
 import {Column} from 'primereact/column'
 import {Button} from 'primereact/button'
 import {Dialog} from 'primereact/dialog'
+import {InputText} from 'primereact/inputtext'
 class Orders extends React.Component {
     constructor(props) {
         super(props)
@@ -80,11 +81,17 @@ class Orders extends React.Component {
     }
 
     render() {
+        let header = (
+            <div style={{'textAlign':'left'}}>
+                <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
+                <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Global Search" size="50"/>
+            </div>
+        );
         return (
             <div>
-                <DataTable value = {this.state.orderData}>
+                <DataTable value = {this.state.orderData} header={header} globalFilter={this.state.globalFilter}>
                     <Column field="oid" header = "oid"/>
-                    <Column field="rname" header="Restaurant"/>
+                    <Column field="rname" header="Restaurant" sortable={true}/>
                     <Column field="orderdatetime" header="Date/Time" sortable={true}/>
                     <Column field="totalcost" header="Cost" sortable={true}/>
                     <Column field="deliveryfee" header="Delivery Fee" sortable={true}/>

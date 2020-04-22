@@ -46,10 +46,15 @@ class FoodItems extends React.Component {
         .then(foodItems=>this.setState({foodData:foodItems}))
         this.setState({customer: this.props.customer})
     }
-    handleCartAdd(newCart) {
-        this.setState((prevState) => {return ({cart: newCart})})
-        console.log(newCart)
-        alert("Added To Cart")
+    handleCartAdd(newCart, rowData) {
+        if(parseInt(rowData.quantity) > 0) {
+            this.setState((prevState) => {return ({cart: newCart})})
+            console.log(newCart)
+            alert("Added To Cart")
+        }
+        else {
+            alert("Quantity Must Be Above 0")
+        }
     }
     handleQuantityChange(rowData, quantity) {
         const data = this.state.foodData.slice()
@@ -57,7 +62,7 @@ class FoodItems extends React.Component {
         Object.assign(copyData, data)
         rowData.quantity = quantity
         const index = this.state.foodData.findIndex(function(ele) {
-            return ele.fid == rowData.fid
+            return ele.fid === rowData.fid
         })
         copyData.splice(index, 1, rowData)
         this.setState({foodData: copyData})
@@ -67,7 +72,7 @@ class FoodItems extends React.Component {
         newCart.push(rowData)
         return <div>
             {/* <InputText style={{display:'inline-block', width:'50px'}} value={this.state.value} onChange={(e) => this.handleQuantityChange(rowData, e.target.value)} /> */}
-            <Button style={{display:'inline-block'}} label="Add To Cart" onClick={()=>this.handleCartAdd(newCart)}></Button>
+            <Button style={{display:'inline-block'}} label="Add To Cart" onClick={()=>this.handleCartAdd(newCart, rowData)}></Button>
         </div>
     }
     quantityInput(rowData, column) {
@@ -76,12 +81,18 @@ class FoodItems extends React.Component {
         </div>
     }
     viewCart() {
+        let header = (
+            <div style={{'textAlign':'left'}}>
+                <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
+                <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Global Search" size="50"/>
+            </div>
+        );
         return this.state.cart.length > 0 ?
 
         /* Renders data table if the cart is not empty */
         (
             <div>
-                <DataTable value = {this.state.cart}>
+                <DataTable value = {this.state.cart} header={header} globalFilter={this.state.globalFilter}>
                     <Column field="fid" header = "fid"/>
                     <Column field="fname" header="fname" sortable={true}/>
                     <Column field="description" header= "description" sortable={true}/>
@@ -141,9 +152,15 @@ class FoodItems extends React.Component {
     }
     
     render() {
+        let header = (
+            <div style={{'textAlign':'left'}}>
+                <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
+                <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Global Search" size="50"/>
+            </div>
+        );
         return (
             <div>
-                 <DataTable value = {this.state.foodData}>
+                 <DataTable value = {this.state.foodData} paginator={true} rows={10} header={header} globalFilter={this.state.globalFilter}>
                     <Column field="fid" header = "fid"/>
                     <Column field="fname" header="fname" sortable={true}/>
                     <Column field="description" header= "description" sortable={true}/>
