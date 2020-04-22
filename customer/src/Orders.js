@@ -52,7 +52,7 @@ class Orders extends React.Component {
 
         return (
             <div>
-                <DataTable value = {this.state.cart}>
+                <DataTable value = {this.state.cart} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink">
                     <Column field="fid" header = "fid"/>
                     <Column field="fname" header="fname" sortable={true}/>
                     <Column field="description" header= "description" sortable={true}/>
@@ -82,7 +82,7 @@ class Orders extends React.Component {
     render() {
         return (
             <div>
-                <DataTable value = {this.state.orderData}>
+                <DataTable value = {this.state.orderData} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink">
                     <Column field="oid" header = "oid"/>
                     <Column field="rname" header="Restaurant"/>
                     <Column field="orderdatetime" header="Date/Time" sortable={true}/>

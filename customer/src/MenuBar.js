@@ -47,13 +47,13 @@ class MenuBar extends React.Component {
                     <Button style = {menuStyle} label="Home" />
                 </Link>
                 <Link to={{pathname:`/orders`}}>
-                    <Button style = {menuStyle} label="Orders" />
+                    <Button style = {menuStyle} label="My Orders" />
                 </Link>
                 <Link to={{pathname:`/reviews`}}>
-                    <Button style = {menuStyle} label="Reviews" />
+                    <Button style = {menuStyle} label="My Reviews" />
                 </Link>
                 <Link to={{pathname:`/profile`}}>
-                    <Button style = {menuStyle} label="Profile" />
+                    <Button style = {menuStyle} label="My Profile" />
                 </Link>
             </div>
         )

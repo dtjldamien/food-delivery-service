@@ -48,7 +48,6 @@ class Reviews extends React.Component {
     }
 
     viewReview(rowData, review) {
-        console.log(this.state.reviewData)
         return (
             <div>
                 <InputTextarea style={{width: '700px', height: '400px', fontSize: 'large'}} value={rowData.foodreview} onChange={(e) => {this.setReviewData(e.target.value, rowData)}}/>
@@ -75,11 +74,13 @@ class Reviews extends React.Component {
                 .then(res => alert("Review Successfully Updated!"))
                 .catch(err => alert("An Error Ocurred."))
 
+            this.setState({visible: false})
         }
 
     }
 
     viewReviewDialog(rowData) {
+        console.log(rowData)
         return (
             <div>
                 <Dialog header="View Review" visible={this.state.visible} onHide={() => this.setState({visible: false})}>
@@ -112,14 +113,14 @@ class Reviews extends React.Component {
     render() {
         return (
             <div>
-                <DataTable value = {this.state.reviewData}>
+                <DataTable value = {this.state.reviewData} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink">
                     <Column field="oid" header = "oid"/>
                     <Column field="orderdatetime" header = "Date/Time"/>
                     <Column field="rating" header="Rating" sortable={true} body={this.viewRating}/>
                     <Column field="rname" header="rName" sortable={true}/>
                     <Column field="deliveryfee" header="Delivery Fee" sortable={true}/>
                     <Column field="address" header="Address" sortable={true}/>
-                    <Column field="foodreview" body={this.viewReviewDialog}/>
+                    <Column field="oid" body={this.viewReviewDialog}/>
                 </DataTable>
             </div>
         )

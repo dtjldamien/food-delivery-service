@@ -76,12 +76,16 @@ class FoodItems extends React.Component {
         </div>
     }
     viewCart() {
+
+        const cartCost = this.state.cart.length > 0 ? (this.state.cart.map(cart => parseFloat(cart.price) * parseFloat(cart.quantity)).reduce((total, price) => total + price)).toString() : "0"
+
         return this.state.cart.length > 0 ?
 
         /* Renders data table if the cart is not empty */
         (
             <div>
-                <DataTable value = {this.state.cart}>
+                <h3>Total Cost: ${cartCost}             Minimum Spending: ${this.state.restaurantData.minimumspending}</h3>
+                <DataTable value = {this.state.cart} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink">
                     <Column field="fid" header = "fid"/>
                     <Column field="fname" header="fname" sortable={true}/>
                     <Column field="description" header= "description" sortable={true}/>
@@ -115,9 +119,11 @@ class FoodItems extends React.Component {
 
         event.preventDefault();
 
+        console.log(this.state.cart)
+
         /* Preps Data to pass into API call */
         const orderItem = {
-            totalCost: (this.state.cart.map(cart => parseFloat(cart.price)).reduce((total, price) => total + price)).toString(),
+            totalCost: (this.state.cart.map(cart => parseFloat(cart.price) * parseFloat(cart.quantity)).reduce((total, price) => total + price)).toString(),
             deliveryFee: '5',
             address: this.state.restaurantData.address,
             rid: this.state.restaurantData.rid,
@@ -130,20 +136,26 @@ class FoodItems extends React.Component {
             creditCard: this.state.customer.creditcard
         }
 
-        /* Calls API and prints response */
-        await axios.post('/api/post/createOrder', orderItem)
-            .then(rsp => alert(rsp.data))
-            .catch(err => console.log(err))
+        if (parseFloat(orderItem.totalCost) <  parseFloat(this.state.restaurantData.minimumspending)) {
+            alert("Total Cart Below Minimum Spending of $" + this.state.restaurantData.minimumspending)
+        } else {
 
-        /* Reinitialises carts, values and closes the dialog */
-        this.setState((prevState) => {return ({cart: [], newCart: [], value: '', visible: false})})
+            /* Calls API and prints response */
+            await axios.post('/api/post/createOrder', orderItem)
+                .then(rsp => alert(rsp.data))
+                .catch(err => console.log(err))
+
+            /* Reinitialises carts, values and closes the dialog */
+            this.setState((prevState) => {return ({cart: [], newCart: [], value: '', visible: false})})
+        
+        }
         
     }
     
     render() {
         return (
             <div>
-                 <DataTable value = {this.state.foodData}>
+                 <DataTable value = {this.state.foodData} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink">
                     <Column field="fid" header = "fid"/>
                     <Column field="fname" header="fname" sortable={true}/>
                     <Column field="description" header= "description" sortable={true}/>

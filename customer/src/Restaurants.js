@@ -1,6 +1,6 @@
 import React from "react"
 import axios from 'axios'
-import datatable, { DataTable, Column } from 'primereact/datatable'
+import { DataTable, Column } from 'primereact/datatable'
 import { Link, Redirect } from 'react-router-dom'
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -24,6 +24,7 @@ class Restaurants extends React.Component {
         this.viewRestaurantReviewsDialog = this.viewRestaurantReviewsDialog.bind(this)
         this.viewReviewsDataTable = this.viewReviewsDataTable.bind(this)
         this.viewRating = this.viewRating.bind(this)
+        this.restaurantRating = this.restaurantRating.bind(this)
     }
 
     componentDidMount() {
@@ -108,11 +109,18 @@ class Restaurants extends React.Component {
         
     }
 
-
     selectRestaurant(rowData, column) {
         return <div>
             <Button label="Select" onClick= {() => this.setState({selectedRestaurant: rowData, redirect: `/restaurants/${rowData.catname}/${rowData.rname}`})}/>
         </div>
+    }
+
+    restaurantRating(rowData) {
+        return (
+            <div style={{margin: '0 auto'}}>
+                <Rating value={rowData.restaurantrating} cancel={false}/>
+            </div>
+        )
     }
     
     render() {
@@ -125,6 +133,7 @@ class Restaurants extends React.Component {
                     <Column field="rname" header="rname" />
                     <Column field="address" header="address" />
                     <Column field="minimumspending" header="minimumspending" />
+                    <Column field="restaurantrating" header="Rating" body={this.restaurantRating}/>
                     <Column field="rid" body={this.selectRestaurant}/>
                     <Column field="rid" body={this.viewRestaurantReviewsDialog}/>
                 </DataTable>
