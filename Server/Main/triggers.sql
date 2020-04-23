@@ -26,3 +26,25 @@ CREATE TRIGGER update_restaurant_rating_trigger
     ON Request
     FOR EACH ROW
     EXECUTE FUNCTION update_restaurant_rating();
+
+CREATE OR REPLACE FUNCTION update_fdspromotion_count() RETURNS TRIGGER AS $$
+
+    BEGIN
+
+    RAISE NOTICE 'Promotion ID "%" used.', NEW.pcid;
+
+    UPDATE FDSPromotions
+        SET currentCount = currentCount + 1
+        WHERE pcid = NEW.pcid; 
+
+    RETURN NULL;
+
+END
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS update_fdspromotion_count_trigger on Apply;
+CREATE TRIGGER update_fdspromotion_count_trigger
+    AFTER INSERT
+    ON Apply
+    FOR EACH ROW
+    EXECUTE FUNCTION update_fdspromotion_count();

@@ -1116,6 +1116,7 @@ router.get('/api/get/getFDSPriceDiscount', (req, res) => {
             FROM FDSPromotions P JOIN FDSPriceDiscount D ON (P.pcid = D.pcid)
             WHERE NOW()::date > P.startDate AND NOW()::date < P.endDate
             AND P.pcid = $1
+            AND P.currentCount < P.redeemLimit
         `,
         [pcid],
         (q_err, q_res) => {
@@ -1142,6 +1143,7 @@ router.get('/api/get/getFDSPercentageDiscount', (req, res) => {
             FROM FDSPromotions P JOIN FDSPercentageDiscount D ON (P.pcid = D.pcid)
             WHERE NOW()::date > P.startDate AND NOW()::date < P.endDate
             AND P.pcid = $1
+            AND P.currentCount < P.redeemLimit
         `,
         [pcid],
         (q_err, q_res) => {

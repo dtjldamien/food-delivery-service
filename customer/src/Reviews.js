@@ -97,7 +97,7 @@ class Reviews extends React.Component {
     viewReviewDialog(rowData) {
         return (
             <div>
-                <Dialog header="View Review" visible={rowData.visible} onHide={() => this.setRowDataVisibility(rowData, false)}>
+                <Dialog style={{width: '1000px'}} header="View Review" visible={rowData.visible} onHide={() => this.setRowDataVisibility(rowData, false)}>
                     {this.viewReview(rowData)}
                 </Dialog>
                 <Button label="View Review" onClick={()=> this.setRowDataVisibility(rowData, true)}></Button>
