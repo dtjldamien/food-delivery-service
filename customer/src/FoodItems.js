@@ -153,8 +153,6 @@ class FoodItems extends React.Component {
 
     viewCart() {
 
-        console.log(this.state)
-
         let header = (
             <div style={{ 'textAlign': 'left' }}>
                 <i className="pi pi-search" style={{ margin: '4px 4px 0 0' }}></i>
@@ -362,17 +360,17 @@ class FoodItems extends React.Component {
         let header = (
             <div style={{ 'textAlign': 'left' }}>
                 <i className="pi pi-search" style={{ margin: '4px 4px 0 0' }}></i>
-                <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Global Search" size="50" />
+                <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder={"Search " + this.state.restaurantData.rname} size="50" />
             </div>
         );
         return ( 
             <div>
                 <DataTable value={this.state.foodData} header={header} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink" globalFilter={this.state.globalFilter}>
-                    <Column field="fid" header="fid" />
-                    <Column field="fname" header="fname" sortable={true} />
-                    <Column field="description" header="description" sortable={true} />
-                    <Column field="price" header="price" sortable={true} />
-                    <Column field="fid" header="quantity" body={this.quantityInput} />
+                    <Column field="fid" header="Food ID" />
+                    <Column field="fname" header="Food Name" sortable={true} />
+                    <Column field="description" header="Description" sortable={true} />
+                    <Column field="price" header="Price" sortable={true} />
+                    <Column field="fid" header="Quantity" body={this.quantityInput} />
                     <Column field="fid" body={this.addToCart} />
                 </DataTable>
                 {this.viewCartDialog()}

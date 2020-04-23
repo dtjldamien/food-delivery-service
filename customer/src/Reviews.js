@@ -9,6 +9,7 @@ import { Dialog } from 'primereact/dialog'
 import { Button } from 'primereact/button'
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Rating } from 'primereact/rating';
+import { InputText } from 'primereact/inputtext'
 
 class Reviews extends React.Component {
     constructor(props) {
@@ -134,13 +135,21 @@ class Reviews extends React.Component {
     }
     
     render() {
+
+        let header = (
+            <div style={{ 'textAlign': 'left' }}>
+                <i className="pi pi-search" style={{ margin: '4px 4px 0 0' }}></i>
+                <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Search Reviews" size="50" />
+            </div>
+        );
+
         return (
             <div>
-                <DataTable value = {this.state.reviewData} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink">
-                    <Column field="oid" header = "oid" sortable={true}/>
+                <DataTable header={header} value = {this.state.reviewData} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink">
+                    <Column field="oid" header = "Order ID" sortable={true}/>
                     <Column field="orderdatetime" header="Date/Time" sortable={true} body={this.formatDateTime}/>
                     <Column field="rating" header="Rating" sortable={true} body={this.viewRating}/>
-                    <Column field="rname" header="rName" sortable={true}/>
+                    <Column field="rname" header="Restaurant Name" sortable={true}/>
                     <Column field="deliveryfee" header="Delivery Fee" sortable={true}/>
                     <Column field="address" header="Address" sortable={true}/>
                     <Column field="oid" body={this.viewReviewDialog}/>

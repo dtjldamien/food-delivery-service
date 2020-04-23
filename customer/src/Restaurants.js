@@ -57,7 +57,7 @@ class Restaurants extends React.Component {
         
         return (
             <div>
-                <Dialog header={header} visible={this.state.visible} onHide={() => this.setState({visible: false})}>
+                <Dialog style={{width: '1000px'}} header={header} visible={this.state.visible} onHide={() => this.setState({visible: false})}>
                     {this.viewReviewsDataTable()}
                 </Dialog>
                 <Button label="Reviews" onClick= {() => {
@@ -128,7 +128,7 @@ class Restaurants extends React.Component {
         let header = (
             <div style={{'textAlign':'left'}}>
                 <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
-                <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Global Search" size="50"/>
+                <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder={"Search " + this.state.categoryName + " Restaurants"} size="50"/>
             </div>
         );
         return (
@@ -136,10 +136,10 @@ class Restaurants extends React.Component {
                 {this.redirectOnClick()}
                 <h1>{this.state.categoryName}</h1>
                 <DataTable value = {this.state.restaurantData} header={header} globalFilter={this.state.globalFilter}>
-                    <Column field="rid" header = "rid"/>
-                    <Column field="rname" header="rname" />
-                    <Column field="address" header="address" />
-                    <Column field="minimumspending" header="minimumspending" />
+                    <Column field="rid" header = "Restaurant ID"/>
+                    <Column field="rname" header="Restaurant Name" />
+                    <Column field="address" header="Address" />
+                    <Column field="minimumspending" header="Minimum Spending" />
                     <Column field="restaurantrating" header="Rating" body={this.restaurantRating}/>
                     <Column field="rid" header="Click To Select Restaurant" body={this.selectRestaurant}/>
                     <Column field="rid" header="View Restaurant Reviews" body={this.viewRestaurantReviewsDialog}/>
