@@ -43,11 +43,22 @@ class Reviews extends React.Component {
     }
 
     setReviewData(foodreview, rowData) {
+        console.log(rowData)
         const data = this.state.reviewData.slice()
         var copyData = []
         Object.assign(copyData, data)
         const index = copyData.findIndex((ele)=>{return ele===rowData})
         rowData.foodreview = foodreview
+        copyData.splice(index, 1, rowData)
+        this.setState({reviewData: copyData})
+    }
+
+    setRowDataVisibility(rowData, visible) {
+        const data = this.state.reviewData.slice()
+        var copyData = []
+        Object.assign(copyData, data)
+        rowData.visible = visible
+        const index = this.state.reviewData.findIndex((ele)=>{return ele.oid===rowData.oid})
         copyData.splice(index, 1, rowData)
         this.setState({reviewData: copyData})
     }
@@ -82,17 +93,6 @@ class Reviews extends React.Component {
             this.setState({visible: false})
         }
 
-    }
-    setRowDataVisibility(rowData, visible) {
-        const data = this.state.reviewData.slice()
-        var copyData = []
-        Object.assign(copyData, data)
-        rowData.visible = visible
-        const index = this.state.reviewData.findIndex(function(ele) {
-            return ele.oid === rowData.oid
-        })
-        copyData.splice(index, 1, rowData)
-        this.setState({reviewData: copyData})
     }
     viewReviewDialog(rowData) {
         return (
