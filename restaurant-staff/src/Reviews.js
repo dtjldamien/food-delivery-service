@@ -45,14 +45,20 @@ class Reviews extends React.Component {
     }
 
     setRowDataVisibility(rowData, visible) {
+        //cloning array
         const data = this.state.reviewData.slice()
         var copyData = []
+        //assigning it to new array
         Object.assign(copyData, data)
+        //set property visible in dictionary to visible
         rowData.visible = visible
+        //finding the index in the array of the rowdata
         const index = this.state.reviewData.findIndex(function(ele) {
             return ele.oid === rowData.oid
         })
+        //removing and replacing the dictionary at index with rowData
         copyData.splice(index, 1, rowData)
+        //replace the entire reviewData with new updated visibility rowData
         this.setState({reviewData: copyData})
     }
 
