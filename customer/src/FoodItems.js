@@ -59,6 +59,7 @@ class FoodItems extends React.Component {
                 return food
             }))
             .then(foodItems => this.setState({ foodData: foodItems }))
+            .catch(err => console.log(err))
 
         this.setState({ customer: this.props.customer })
 

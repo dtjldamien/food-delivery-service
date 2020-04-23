@@ -533,8 +533,6 @@ router.post('/api/post/createOrder', async (req, res) => {
 
         await transact(async (query) => {
 
-            console.log(req.body)
-
             const {
                 /* To be inside Orders */
                 totalCost, deliveryFee, address, rid,

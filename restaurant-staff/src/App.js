@@ -98,8 +98,6 @@ class App extends React.Component {
 
   loginPage() {
 
-    console.log(this.state)
-
     /* Inputs for the restaurant staff email and password */
     const inputs = <div>
       <label>Restaurant Staff Email: <input type="text" name="email" onChange={this.handleChange} /></label>
