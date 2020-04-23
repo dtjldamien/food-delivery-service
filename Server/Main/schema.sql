@@ -56,13 +56,13 @@ CREATE TABLE Sells(
 
 CREATE TABLE RestaurantPromotions(
 	rpid SERIAL,
-	email VARCHAR(100) NOT NULL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
 	currentCount INTEGER DEFAULT 0,
 	promotionLimit INTEGER NOT NULL,
-	PRIMARY KEY (rpid),
-	FOREIGN KEY (email) REFERENCES RestaurantStaffs
+	discount NUMERIC NOT NULL,
+	isPercentage BOOLEAN NOT NULL,
+	PRIMARY KEY (rpid)
 );
 
 CREATE TABLE RestaurantPriceDiscount (
@@ -129,21 +129,9 @@ CREATE TABLE FDSPromotions(
 	endDate DATE NOT NULL,
 	currentCount INTEGER DEFAULT 0,
 	redeemLimit INTEGER NOT NULL,
+	discount NUMERIC NOT NULL,
+	isPercentage BOOLEAN NOT NULL,
 	PRIMARY KEY (pcid)
-);
-
-CREATE TABLE FDSPercentageDiscount (
-	pcid INTEGER,
-	percentageDiscount NUMERIC NOT NULL,
-	PRIMARY KEY (pcid),
-	FOREIGN KEY (pcid) REFERENCES FDSPromotions
-);
-
-CREATE TABLE FDSPriceDiscount (
-	pcid INTEGER,
-	priceDiscount NUMERIC NOT NULL,
-	PRIMARY KEY (pcid),
-	FOREIGN KEY (pcid) REFERENCES FDSPromotions
 );
 
 CREATE TABLE FDSManagers(

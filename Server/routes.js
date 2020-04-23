@@ -524,6 +524,109 @@ router.get('/api/get/getRestaurantsByCategory', (req, res, next) => {
 
 })
 
+/* Retrieve PAST RestaurantPricePromotions by Food ID */
+router.get('/api/get/retrievePastRestaurantPricePromotionsByFid', (req, res) => {
+
+        const { fid } = req.query
+        
+        query (
+            `
+                SELECT * 
+                FROM Discounts D JOIN RestaurantPromotions RP ON (RP.rpid = D.rpid) JOIN RestaurantPriceDiscount RPRD on (RP.rpid = RPRD.rpid)  
+                WHERE D.fid = $1
+                AND NOW()::date > RP.endDate 
+            `,
+            [fid],
+            (q_err, q_res) => {
+                if (q_err) {
+                    console.log(q_err.stack)
+                    return res.status(500).send('An error has ocurred')
+                } else {
+                    console.log(q_res.rows);
+                    return res.status(200).json(q_res.rows);
+                }
+            }
+        )
+
+})
+
+/* Retrieve FUTURE RestaurantPricePromotions by Food ID */
+router.get('/api/get/retrieveFutureRestaurantPricePromotionsByFid', (req, res) => {
+
+    const { fid } = req.query
+    
+    query (
+        `
+            SELECT * 
+            FROM Discounts D JOIN RestaurantPromotions RP ON (RP.rpid = D.rpid) JOIN RestaurantPriceDiscount RPRD on (RP.rpid = RPRD.rpid)  
+            WHERE D.fid = $1
+            AND NOW()::date < RP.startDate 
+        `,
+        [fid],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+
+})
+
+/* Retrieve PAST RestaurantPercentagePromotions by Food ID */
+router.get('/api/get/retrievePastRestaurantPercentagePromotionsByFid', (req, res) => {
+
+    const { fid } = req.query
+    
+    query (
+        `
+            SELECT * 
+            FROM Discounts D JOIN RestaurantPromotions RP ON (RP.rpid = D.rpid) JOIN RestaurantPercentageDiscount RPD on (RP.rpid = RPD.rpid)  
+            WHERE D.fid = $1
+            AND NOW()::date > RP.endDate 
+        `,
+        [fid],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+
+})
+
+/* Retrieve FUTURE RestaurantPercentagePromotions by Food ID */
+router.get('/api/get/retrieveFutureRestaurantPercentagePromotionsByFid', (req, res) => {
+
+    const { fid } = req.query
+    
+    query (
+        `
+            SELECT * 
+            FROM Discounts D JOIN RestaurantPromotions RP ON (RP.rpid = D.rpid) JOIN RestaurantPercentageDiscount RPD on (RP.rpid = RPD.rpid)  
+            WHERE D.fid = $1
+            AND NOW()::date < RP.startDate 
+        `,
+        [fid],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+
+})
 
 
 /* Create Food Order */
@@ -1103,15 +1206,15 @@ router.put('/api/put/createReview', (req, res) => {
 
 })
 
-/* Search for FDS Price Discount */
-router.get('/api/get/getFDSPriceDiscount', (req, res) => {
+/* Search for FDS Promotion */
+router.get('/api/get/getFDSPromotion', (req, res) => {
 
     const pcid = req.query.pcid
 
     query(
         `
             SELECT * 
-            FROM FDSPromotions P JOIN FDSPriceDiscount D ON (P.pcid = D.pcid)
+            FROM FDSPromotions P
             WHERE NOW()::date > P.startDate AND NOW()::date < P.endDate
             AND P.pcid = $1
             AND P.currentCount < P.redeemLimit
@@ -1130,31 +1233,5 @@ router.get('/api/get/getFDSPriceDiscount', (req, res) => {
 
 })
 
-/* Search for FDS Price Discount */
-router.get('/api/get/getFDSPercentageDiscount', (req, res) => {
-
-    const pcid = req.query.pcid
-
-    query(
-        `
-            SELECT * 
-            FROM FDSPromotions P JOIN FDSPercentageDiscount D ON (P.pcid = D.pcid)
-            WHERE NOW()::date > P.startDate AND NOW()::date < P.endDate
-            AND P.pcid = $1
-            AND P.currentCount < P.redeemLimit
-        `,
-        [pcid],
-        (q_err, q_res) => {
-            if (q_err) {
-                console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
-            } else {
-                console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
-            }
-        }
-    )
-
-})
 
 module.exports = router

@@ -114,35 +114,17 @@ class FoodItems extends React.Component {
                 pcid: this.state.currentVoucher
             }
 
-            let discountedCartCost = ''
+            await axios.get('/api/get/getFDSPromotion', {params: data})
+                .then(rsp => this.setState({ currentVoucherDetails: rsp.data[0] }))
+                .catch(err => alert("Promotion Not Found or Invalid"))
 
-            if (this.state.priceDiscount) {
-
-                await axios.get('/api/get/getFDSPriceDiscount', {params: data})
-                    .then(rsp => this.setState({ currentVoucherDetails: rsp.data[0] }))
-                    .catch(err => alert("Promotion Not Found or Invalid"))
-
-                if (this.state.currentVoucherDetails === undefined) {
-                    alert("Promotion Not Found")
-                    return
-                }
-
-                discountedCartCost = Math.max(parseFloat(this.state.cartCost) - parseFloat(this.state.currentVoucherDetails.pricediscount), 0)
-
-            } else {
-
-                await axios.get('/api/get/getFDSPercentageDiscount', {params: data})
-                    .then(rsp => this.setState({ currentVoucherDetails: rsp.data[0] }))
-                    .catch(err => alert("Promotion Not Found or Invalid"))
-
-                if (this.state.currentVoucherDetails === undefined) {
-                    alert("Promotion Not Found")
-                    return
-                }
-
-                discountedCartCost = parseFloat(this.state.cartCost) * (1 - parseFloat(this.state.currentVoucherDetails.percentagediscount)/100)
-
+            if (this.state.currentVoucherDetails === undefined) {
+                alert("Promotion Not Found")
+                return
             }
+
+            const discountedCartCost = this.state.currentVoucherDetails.ispercentage ? parseFloat(this.state.cartCost) * (1 - parseFloat(this.state.currentVoucherDetails.discount)/100)
+                : Math.max(parseFloat(this.state.cartCost) - parseFloat(this.state.currentVoucherDetails.discount), 0)
 
             this.setState({ cartCost: discountedCartCost.toFixed(2).toString(), voucherApplied: true })
         
