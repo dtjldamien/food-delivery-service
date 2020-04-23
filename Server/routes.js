@@ -533,6 +533,8 @@ router.post('/api/post/createOrder', async (req, res) => {
 
         await transact(async (query) => {
 
+            console.log(req.body)
+
             const {
                 /* To be inside Orders */
                 totalCost, deliveryFee, address, rid,
@@ -545,7 +547,10 @@ router.post('/api/post/createOrder', async (req, res) => {
                 listOfFoods,
 
                 /* To be inside Request */
-                customerEmail, creditCard
+                customerEmail, creditCard,
+
+                /* Voucher Applied Check */
+                voucherApplied
 
             } = req.body
 
@@ -600,6 +605,19 @@ router.post('/api/post/createOrder', async (req, res) => {
                 )
 
             }))
+
+            /* Fourth, if voucher is applied, create Apply tuples */
+            if (voucherApplied) {
+                const pcid = req.body.pcid
+
+                await query(
+                    `
+                        INSERT INTO Apply (oid, pcid)
+                        VALUES ($1, $2)
+                    `,
+                    [order_id.oid, pcid]
+                )
+            }
 
             /* Finally create a Request Tuple */
             await query(
@@ -1074,6 +1092,58 @@ router.put('/api/put/createReview', (req, res) => {
             WHERE oid=$3
         `,
         [rating, foodReview, oid],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+
+})
+
+/* Search for FDS Price Discount */
+router.get('/api/get/getFDSPriceDiscount', (req, res) => {
+
+    const pcid = req.query.pcid
+
+    query(
+        `
+            SELECT * 
+            FROM FDSPromotions P JOIN FDSPriceDiscount D ON (P.pcid = D.pcid)
+            WHERE NOW()::date > P.startDate AND NOW()::date < P.endDate
+            AND P.pcid = $1
+        `,
+        [pcid],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+
+})
+
+/* Search for FDS Price Discount */
+router.get('/api/get/getFDSPercentageDiscount', (req, res) => {
+
+    const pcid = req.query.pcid
+
+    query(
+        `
+            SELECT * 
+            FROM FDSPromotions P JOIN FDSPercentageDiscount D ON (P.pcid = D.pcid)
+            WHERE NOW()::date > P.startDate AND NOW()::date < P.endDate
+            AND P.pcid = $1
+        `,
+        [pcid],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)

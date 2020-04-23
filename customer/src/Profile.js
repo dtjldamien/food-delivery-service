@@ -59,13 +59,16 @@ class Profile extends React.Component {
 
     render() {
 
-        console.log(this.state.creditcard)
+        const formStyle = {
+            position: 'absolute', left: '50%', top: '50%',
+            transform: 'translate(-50%, -50%)'
+        }
 
         return (
         <div>
             <h4>Profile</h4>
 
-            <div>
+            <div style={formStyle}>
 
                 <span className="p-float-label"> 
                     <InputText id="name" value={this.state.name} onChange={e => e}/>

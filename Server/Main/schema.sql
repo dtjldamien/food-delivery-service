@@ -127,7 +127,7 @@ CREATE TABLE FDSPromotions(
 	pcid SERIAL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
-	currentCount INTEGER NOT NULL,
+	currentCount INTEGER DEFAULT 0,
 	redeemLimit INTEGER NOT NULL,
 	PRIMARY KEY (pcid)
 );

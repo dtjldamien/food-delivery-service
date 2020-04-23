@@ -57,3 +57,19 @@ INSERT INTO Sells (rid, fid, availability, dailyLimit) VALUES
 (4, 12, 40, 40);
 
 COMMIT;
+
+BEGIN;
+
+INSERT INTO FDSPromotions (startDate, endDate, redeemLimit) VALUES
+/* MM/DD/YYYY */
+('01/01/2020', '06/01/2020', 100),
+('01/01/2020', '06/01/2020', 100);
+
+INSERT INTO FDSPercentageDiscount (pcid, percentageDiscount) VALUES
+(1, 20);
+
+INSERT INTO FDSPriceDiscount (pcid, priceDiscount) VALUES
+(2, 20);
+
+COMMIT;
+

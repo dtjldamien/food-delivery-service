@@ -71,6 +71,7 @@ class Orders extends React.Component {
             </div>
         )
     }
+    
     formatDateTime(rowData) {
         var dateTime = rowData.orderdatetime
         var dateArr = dateTime.split('T')
@@ -82,6 +83,7 @@ class Orders extends React.Component {
         var formattedDateTime = date + " / " + hour + ":" + minutes
         return formattedDateTime
     }
+    
     render() {
         let header = (
             <div style={{'textAlign':'left'}}>

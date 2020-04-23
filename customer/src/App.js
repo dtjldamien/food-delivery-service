@@ -73,46 +73,55 @@ class App extends React.Component {
 
     loginPage() {
 
+        const formStyle = {
+            position: 'absolute', left: '50%', top: '50%',
+            transform: 'translate(-50%, -50%)'
+        }
+
         /* Inputs for the customer email and password */
         const inputs =  <div>
-                            <span className="p-float-label"> 
-                                <InputText id="email" value={this.state.email} onChange={e => this.setState({email: e.target.value})}/>
-                                <label htmlFor="email">Customer Email: </label>
-                            </span>
-                            <br></br>
-                            <span className="p-float-label"> 
-                                <Password id="password" value={this.state.password} feedback={false} onChange={e => this.setState({password: e.target.value})}/>
-                                <label htmlFor="password">Password: </label>
-                            </span>
-                            <br></br>
-                            <Button label="Log In" onClick={e => this.handleLogin(e)}/>
-                            {" "}
-                            <Button label="Register" icon="pi pi-info-circle" onClick={(e) => this.setState({visible: true})}/>
+
+                            <h2 style={{position:'absolute', left: '30%', top:'25%'}}>Food Delivery Service: Customer Login</h2>
+
+                            <form onSubmit={this.handleLogin} style={formStyle}>
+                                <span className="p-float-label"> 
+                                    <InputText id="email" value={this.state.email} onChange={e => this.setState({email: e.target.value})}/>                                    
+                                    <label htmlFor="email">Customer Email: </label>
+                                </span>
+                                <br></br>
+                                <span className="p-float-label"> 
+                                    <Password id="password" value={this.state.password} feedback={false} onChange={e => this.setState({password: e.target.value})}/>
+                                    <label htmlFor="password">Password: </label>
+                                </span>
+                                <br></br>
+                                <Button label="Log In" onClick={e => this.handleLogin(e)}/>
+                                {" "}
+                                <Button label="Register" type="button" icon="pi pi-info-circle" onClick={(e) => this.setState({visible: true})}/>
+                            </form>
                         </div>;
 
-        const header = <h3>Food Delivery Service: Customer Login</h3>
-
         const loginCardStyle = {
-            display: 'inline-block',
-            width: '360px',
-            padding: '5px',
-            margin: '10px',
+            // display: 'inline-block',
+            // width: '360px',
+            // padding: '5px',
+            // margin: '10px',
+            // alignItems: 'center'
+            position: 'absolute', left: '50%', top: '50%',
+            transform: 'translate(-50%, -50%)', height:'700px', width:'1000px'
         }
 
         return (
-        <div>
-            
-            {/* Login Form Handling Login */}
-            <form onSubmit={this.handleLogin}>
-                <Card header={header} footer={inputs} style={loginCardStyle}></Card>
-            </form>
+            <div>
+                
+                {/* Login Form Handling Login */}
+                <Card footer={inputs} style={loginCardStyle}></Card>
 
-            {/* Dialog of the register card */}
-            <Dialog header="Register" visible={this.state.visible} onHide={() => this.setState({visible: false})}>
-                <Register/>
-            </Dialog>
+                {/* Dialog of the register card */}
+                <Dialog header="Register" style={{width: '50vw'}} visible={this.state.visible} onHide={() => this.setState({visible: false})}>
+                    <Register/>
+                </Dialog>
 
-        </div>
+            </div>
         )
     }
 

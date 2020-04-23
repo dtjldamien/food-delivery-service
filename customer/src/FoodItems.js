@@ -9,6 +9,7 @@ import { Dialog } from 'primereact/dialog'
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext';
 import { RadioButton } from 'primereact/radiobutton'
+import { Panel } from 'primereact/panel'
 
 
 class FoodItems extends React.Component {
@@ -23,7 +24,12 @@ class FoodItems extends React.Component {
             value: '',
             customer: {},
             customerPreviousAddresses: [],
-            selectedDeliveryLocation: ""
+            selectedDeliveryLocation: "",
+            currentVoucher: "",
+            currentVoucherDetails: [],
+            priceDiscount: false,
+            cartCost: '',
+            voucherApplied: false
         }
         this.viewCart = this.viewCart.bind(this)
         this.viewCartDialog = this.viewCartDialog.bind(this)
@@ -34,6 +40,7 @@ class FoodItems extends React.Component {
         this.checkout = this.checkout.bind(this)
         this.getLatestLocations = this.getLatestLocations.bind(this)
         this.viewDeliveryLocations = this.viewDeliveryLocations.bind(this)
+        this.checkPromotionalVoucher = this.checkPromotionalVoucher.bind(this)
     }
 
     componentDidMount() {
@@ -45,9 +52,10 @@ class FoodItems extends React.Component {
         }
 
         axios.get('/api/get/getFoodItemsByRestaurantID', { params: restaurantID })
-            .then(data => data.data.map(foodItems => foodItems))
+            .then(rsp => rsp.data.map(foodItems => foodItems))
             .then(foodItems => foodItems.map(food => {
                 food.quantity = 0
+                food.price = parseFloat(food.price).toFixed(2).toString()
                 return food
             }))
             .then(foodItems => this.setState({ foodData: foodItems }))
@@ -97,9 +105,55 @@ class FoodItems extends React.Component {
         </div>
     }
 
+    checkPromotionalVoucher = async (event) => {
+
+        if (this.state.currentVoucher !== '') {
+
+            const data = {
+                pcid: this.state.currentVoucher
+            }
+
+            let discountedCartCost = ''
+
+            if (this.state.priceDiscount) {
+
+                await axios.get('/api/get/getFDSPriceDiscount', {params: data})
+                    .then(rsp => this.setState({ currentVoucherDetails: rsp.data[0] }))
+                    .catch(err => alert("Promotion Not Found or Invalid"))
+
+                if (this.state.currentVoucherDetails === undefined) {
+                    alert("Promotion Not Found")
+                    return
+                }
+
+                discountedCartCost = Math.max(parseFloat(this.state.cartCost) - parseFloat(this.state.currentVoucherDetails.pricediscount), 0)
+
+            } else {
+
+                await axios.get('/api/get/getFDSPercentageDiscount', {params: data})
+                    .then(rsp => this.setState({ currentVoucherDetails: rsp.data[0] }))
+                    .catch(err => alert("Promotion Not Found or Invalid"))
+
+                if (this.state.currentVoucherDetails === undefined) {
+                    alert("Promotion Not Found")
+                    return
+                }
+
+                discountedCartCost = parseFloat(this.state.cartCost) * (1 - parseFloat(this.state.currentVoucherDetails.percentagediscount)/100)
+
+            }
+
+            this.setState({ cartCost: discountedCartCost.toFixed(2).toString(), voucherApplied: true })
+        
+        } else {
+            alert("Please Enter A Promotional Code.")
+        }
+
+    }
+
     viewCart() {
 
-        const cartCost = this.state.cart.length > 0 ? (this.state.cart.map(cart => parseFloat(cart.price) * parseFloat(cart.quantity)).reduce((total, price) => total + price)).toString() : "0"
+        console.log(this.state)
 
         let header = (
             <div style={{ 'textAlign': 'left' }}>
@@ -112,18 +166,82 @@ class FoodItems extends React.Component {
             /* Renders data table if the cart is not empty */
             (
                 <div>
-                    <h3>Total Cost: ${cartCost}             Minimum Spending: ${this.state.restaurantData.minimumspending}</h3>
-                    <h3>Deliver To: {this.state.selectedDeliveryLocation}</h3>
-                    <div>
-                        <RadioButton inputId={this.state.customer.address} name={this.state.customer.address} value={this.state.customer.address} onChange={(e) => this.setState({selectedDeliveryLocation: e.value})} checked={this.state.selectedDeliveryLocation === this.state.customer.address}/>
-                        <label htmlFor={this.state.customer.address}> Use Current Address: {this.state.customer.address}</label>
+                    <h3>Total Cost: ${this.state.cartCost}             Minimum Spending: ${this.state.restaurantData.minimumspending}</h3>
+                        
+                    <div style={{display: 'flex', flexDirection:'row'}}>    
+                        <Panel style={{width: '500px'}}>    
+                            <h3>Deliver To: {this.state.selectedDeliveryLocation}</h3>
+                            
+                            <div>
+                                <RadioButton inputId={this.state.customer.address} name={this.state.customer.address} value={this.state.customer.address} onChange={(e) => this.setState({selectedDeliveryLocation: e.value})} checked={this.state.selectedDeliveryLocation === this.state.customer.address}/>
+                                <label htmlFor={this.state.customer.address}> Use Current Address: {this.state.customer.address}</label>
+                            </div>
+                            
+                            { this.state.customerPreviousAddresses.length > 0 && 
+                                <div>
+                                    <h3>Previous Delivery Locations</h3>
+                                    {this.viewDeliveryLocations()}
+                                </div>
+                            }
+
+                            <br></br>
+                            <br></br>
+
+                            <span className="p-float-label"> 
+                                <InputText id="newDeliveryLocation" style={{width: '280px'}} value={this.state.selectedDeliveryLocation} onChange={(e) => this.setState({selectedDeliveryLocation: e.target.value})}/>
+                                <label htmlFor="newDeliveryLocation">Enter Delivery Address:</label>
+                            </span>
+
+                        </Panel>
+
+                        <Panel style={{width: '500px'}}>
+                            <h3>Vouchers</h3> 
+
+                            {this.state.voucherApplied ? 
+
+                                (                                
+                                    <div>
+                                        Voucher Applied!
+                                    </div>
+
+                                )    
+
+                                :
+
+                                (
+
+                                    <div>
+
+                                        <RadioButton inputId="percentageDiscount" name="percentageDiscount" value={this.state.priceDiscount} onChange={(e) => this.setState({priceDiscount: false})} checked={this.state.priceDiscount !== true}/>
+                                        <label htmlFor="percentageDiscount"> Percentage Discount </label>
+                                        <RadioButton inputId="priceDiscount" name="priceDiscount" value={this.state.priceDiscount} onChange={(e) => this.setState({priceDiscount: true})} checked={this.state.priceDiscount === true}/>
+                                        <label htmlFor="percentageDiscount"> Price Discount</label>
+                                        <br></br>
+
+                                        <br></br>
+                                        <br></br>
+
+                                        <div style={{display: 'flex', flexDirection:'row'}}> 
+                                            
+                                            <span className="p-float-label"> 
+                                                <InputText id="voucher" style={{width: '280px'}} value={this.state.currentVoucher} onChange={e => this.setState({currentVoucher: e.target.value})}/>
+                                                <label htmlFor="voucher">Enter Promotional Voucher:</label>
+                                            </span>
+
+                                            <Button label="Apply" onClick={this.checkPromotionalVoucher}/>
+
+                                        </div>
+
+                                    </div>   
+
+                                )
+                            }       
+
+                        </Panel>
+
                     </div>
-                    <div>
-                        <h3>Previous Delivery Locations</h3>
-                        {this.viewDeliveryLocations()}
-                        <h3>Enter New Delivery Location:</h3>
-                        <InputText value={this.state.selectedDeliveryLocation} onChange={(e) => this.setState({selectedDeliveryLocation: e.target.value})}/>
-                    </div>
+
+                    <br></br>
                     <DataTable value={this.state.cart} header={header} globalFilter={this.state.globalFilter} paginator={true} rows={10} paginatorTemplate="RowsPerPageDropdown PageLinks FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink">
                         <Column field="fid" header="fid" />
                         <Column field="fname" header="fname" sortable={true} />
@@ -131,6 +249,7 @@ class FoodItems extends React.Component {
                         <Column field="price" header="price" sortable={true} />
                         <Column field="quantity" header="quantity" sortable={true} />
                     </DataTable>
+                    <br></br>
                     <Button label="Checkout" onClick={this.checkout}></Button>
                 </div>
             )
@@ -164,12 +283,19 @@ class FoodItems extends React.Component {
     viewCartDialog() {
         return (
             <div>
-                <Dialog header="View Cart" visible={this.state.visible} onHide={() => this.setState({ visible: false })}>
+                <Dialog header="View Cart" style={{ width: '1000px' }}visible={this.state.visible} 
+                    onHide={() => 
+                        {
+                            this.setState({ visible: false, currentVoucher: "", currentVoucherDetails: [], voucherApplied: false })
+                        }}>
                     {this.viewCart()}
                 </Dialog>
+
                 <Button label=" View Cart" onClick={(e) => { 
                     this.setState({ visible: true })
-                    this.getLatestLocations(e)}}></Button>
+                    this.getLatestLocations(e)
+                    this.setState({ cartCost: this.state.cart.length > 0 ? (this.state.cart.map(cart => parseFloat(cart.price) * parseFloat(cart.quantity)).reduce((total, price) => total + price)).toFixed(2).toString() : "0"})}
+                    }></Button>
             </div>
         )
     }
@@ -191,7 +317,6 @@ class FoodItems extends React.Component {
 
         this.setState({ customerPreviousAddresses: Array.from(deliveryLocations) })
 
-        console.log(this.state.customerPreviousAddresses)
     }
 
     checkout = async (event) => {
@@ -200,7 +325,7 @@ class FoodItems extends React.Component {
 
         /* Preps Data to pass into API call */
         const orderItem = {
-            totalCost: (this.state.cart.map(cart => parseFloat(cart.price) * parseFloat(cart.quantity)).reduce((total, price) => total + price)).toString(),
+            totalCost: parseFloat(this.state.cartCost).toFixed(2).toString(),
             deliveryFee: '5',
             address: this.state.selectedDeliveryLocation,
             rid: this.state.restaurantData.rid,
@@ -210,7 +335,9 @@ class FoodItems extends React.Component {
                 quantity: cart.quantity
             })),
             customerEmail: this.state.customer.email,
-            creditCard: this.state.customer.creditcard
+            creditCard: this.state.customer.creditcard,
+            voucherApplied: this.state.voucherApplied,
+            pcid: this.state.currentVoucherDetails.pcid
         }
 
         if (parseFloat(orderItem.totalCost) < parseFloat(this.state.restaurantData.minimumspending)) {
