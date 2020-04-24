@@ -70,11 +70,13 @@ COMMIT;
 BEGIN;
 
 INSERT INTO RestaurantPromotions (startDate, endDate, promotionLimit, discount, isPercentage) VALUES 
-('01/01/2020', '06/01/2020', 100, 20, false),
-('01/01/2020', '06/01/2020', 100, 20, true);
+('01/01/2019', '06/01/2019', 100, 20, false),
+('01/01/2020', '06/01/2020', 100, 20, true),
+('01/01/2021', '06/01/2021', 100, 20, true);
 
 INSERT INTO Discounts (rpid, fid) VALUES 
 (1, 1),
-(2, 1);
+(2, 1),
+(3, 1);
 
 COMMIT;

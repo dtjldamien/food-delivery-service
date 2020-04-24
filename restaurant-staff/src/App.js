@@ -8,8 +8,6 @@ import Orders from "./Orders";
 import Reviews from "./Reviews";
 import Profile from "./Profile";
 import FoodItems from "./FoodItems";
-import Promotions from "./Promotions";
-import CreateRestaurantPromotion from "./CreateRestaurantPromotion";
 import { Card } from "primereact/card";
 import Register from "./Register";
 import { Dialog } from "primereact/dialog";
@@ -43,8 +41,6 @@ class App extends React.Component {
           <Route path="/foodItems" render={(props) => <FoodItems {...props} {...this.state} />} />
           <Route path="/orders" render={(props) => <Orders {...props} {...this.state} />} />
           <Route path="/reviews" render={(props) => <Reviews {...props} {...this.state} />} />
-          <Route path="/promotions" render={(props) => <Promotions {...props} {...this.state} />} />
-          <Route path="/createRestaurantPromotion" render={(props) => <CreateRestaurantPromotion {...props} {...this.state} />} />
         </Switch>
       </Router>
     )

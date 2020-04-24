@@ -524,17 +524,16 @@ router.get('/api/get/getRestaurantsByCategory', (req, res, next) => {
 
 })
 
-/* Retrieve PAST RestaurantPricePromotions by Food ID */
-router.get('/api/get/retrievePastRestaurantPricePromotionsByFid', (req, res) => {
+/* Retrieve Restaurant Promotions by Food ID */
+router.get('/api/get/retrieveRestaurantPromotionsByFid', (req, res) => {
 
         const { fid } = req.query
         
         query (
             `
                 SELECT * 
-                FROM Discounts D JOIN RestaurantPromotions RP ON (RP.rpid = D.rpid) JOIN RestaurantPriceDiscount RPRD on (RP.rpid = RPRD.rpid)  
+                FROM Discounts D JOIN RestaurantPromotions RP ON (RP.rpid = D.rpid) 
                 WHERE D.fid = $1
-                AND NOW()::date > RP.endDate 
             `,
             [fid],
             (q_err, q_res) => {
@@ -550,84 +549,97 @@ router.get('/api/get/retrievePastRestaurantPricePromotionsByFid', (req, res) => 
 
 })
 
-/* Retrieve FUTURE RestaurantPricePromotions by Food ID */
-router.get('/api/get/retrieveFutureRestaurantPricePromotionsByFid', (req, res) => {
+/* Update Food Item */
+router.put('/api/put/updateFoodItem', async (req, res) => {
 
-    const { fid } = req.query
-    
-    query (
-        `
-            SELECT * 
-            FROM Discounts D JOIN RestaurantPromotions RP ON (RP.rpid = D.rpid) JOIN RestaurantPriceDiscount RPRD on (RP.rpid = RPRD.rpid)  
-            WHERE D.fid = $1
-            AND NOW()::date < RP.startDate 
-        `,
-        [fid],
-        (q_err, q_res) => {
-            if (q_err) {
-                console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
-            } else {
-                console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
-            }
-        }
-    )
+    try {
 
-})
+        await transact( async (query) => {
 
-/* Retrieve PAST RestaurantPercentagePromotions by Food ID */
-router.get('/api/get/retrievePastRestaurantPercentagePromotionsByFid', (req, res) => {
+            const {
 
-    const { fid } = req.query
-    
-    query (
-        `
-            SELECT * 
-            FROM Discounts D JOIN RestaurantPromotions RP ON (RP.rpid = D.rpid) JOIN RestaurantPercentageDiscount RPD on (RP.rpid = RPD.rpid)  
-            WHERE D.fid = $1
-            AND NOW()::date > RP.endDate 
-        `,
-        [fid],
-        (q_err, q_res) => {
-            if (q_err) {
-                console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
-            } else {
-                console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
-            }
-        }
-    )
+                fid, fname, description, price, 
+                
+                availability, dailylimit, rid
+
+            } = req.body.params
+
+            /* Update Food Item */
+            await query (
+                `
+                    UPDATE FoodItems
+                        SET fname=$1, description=$2, price=$3
+                        WHERE fid = $4
+                `,
+                [fname, description, price, fid],
+            )
+
+            /* Update Sells */
+            await query (
+
+                `
+                    UPDATE Sells
+                        SET availability=$1, dailyLimit=$2
+                        WHERE fid = $3 AND rid = $4
+                `,
+                [availability, dailylimit, fid, rid]
+
+            )
+
+            res.status(200).send("Food ID " + fid + " Successfully Successfully Updated.")
+
+        })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send("An Error Occured")
+    }
 
 })
 
-/* Retrieve FUTURE RestaurantPercentagePromotions by Food ID */
-router.get('/api/get/retrieveFutureRestaurantPercentagePromotionsByFid', (req, res) => {
+/* Create Restaurant Promotion */
+router.post('/api/post/createRestaurantPromotion', async (req, res) => {
 
-    const { fid } = req.query
-    
-    query (
-        `
-            SELECT * 
-            FROM Discounts D JOIN RestaurantPromotions RP ON (RP.rpid = D.rpid) JOIN RestaurantPercentageDiscount RPD on (RP.rpid = RPD.rpid)  
-            WHERE D.fid = $1
-            AND NOW()::date < RP.startDate 
-        `,
-        [fid],
-        (q_err, q_res) => {
-            if (q_err) {
-                console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
-            } else {
-                console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
-            }
-        }
-    )
+    try {
+
+        await transact(async (query) => {
+
+            console.log(req.body)
+
+            const {
+
+                fid, startdate, enddate, promotionlimit, discount, ispercentage
+
+            } = req.body.params
+
+            const rpid = (
+                await query(
+                    `
+                        INSERT INTO RestaurantPromotions (startdate, enddate, promotionlimit, discount, ispercentage)
+                        VALUES ($1, $2, $3, $4, $5)
+                        RETURNING rpid
+                    `,
+                    [startdate, enddate, promotionlimit, discount, ispercentage],
+                )).rows[0];
+
+            query(
+                `
+                    INSERT INTO Discounts (rpid, fid)
+                    VALUES ($1, $2)
+                `,
+                [rpid.rpid, fid]
+            )
+
+            res.status(200).send("Restaurant Promotion " + rpid.rpid + " Successfully Created.")
+
+        })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send("An Error Occured")
+    }
 
 })
-
 
 /* Create Food Order */
 router.post('/api/post/createOrder', async (req, res) => {
@@ -799,32 +811,6 @@ router.delete('/api/delete/deleteFoodItem', (req, res, next) => {
             }
         }
     )
-})
-
-/* Update Food Item */
-router.put('/api/put/updateFoodItem', (req, res, next) => {
-
-    const values = [
-        req.body.params.fid,
-        req.body.params.fname,
-        req.body.params.description,
-        req.body.params.price,
-    ]
-
-    query(
-        `UPDATE FoodItems SET fname=$2, description=$3, price=$4 WHERE fid=$1`,
-        values,
-        (q_err, q_res) => {
-            if (q_err) {
-                console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
-            } else {
-                console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
-            }
-        }
-    )
-
 })
 
 /* View All Reviews */
@@ -1062,123 +1048,6 @@ router.get('/api/get/viewTotalWorkHours', (req, res, next) => {
         })
 })
 
-/* Create Restaurant Price Discount */
-router.post('/api/post/createRestaurantPriceDiscount', (req, res, next) => {
-
-    const values = [
-        req.body.params.rpid,
-        req.body.params.priceDiscount
-    ]
-
-    query(
-        `INSERT INTO RestaurantPriceDiscount (rpid, priceDiscount) VALUES ($1, $2)`,
-        values,
-        (q_err, q_res) => {
-            if (q_err) {
-                console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
-            } else {
-                console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
-            }
-        }
-    )
-})
-
-/* Create Restaurant Percentage Discount */
-router.post('/api/post/createRestaurantPercentageDiscount', (req, res, next) => {
-
-    const values = [
-        req.body.params.rpid,
-        req.body.params.percentageDiscount
-    ]
-
-    query(
-        `INSERT INTO RestaurantPercentageDiscount (rpid, percentageDiscount) VALUES ($1, $2)`,
-        values,
-        (q_err, q_res) => {
-            if (q_err) {
-                console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
-            } else {
-                console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
-            }
-        }
-    )
-})
-
-/* Get restaurant promotions by restaurant staff */
-router.get('/api/get/viewRestaurantPromotionsByStaff', (req, res, next) => {
-
-    const email = req.query.email;
-
-    query(
-        `SELECT * FROM RestaurantPromotions WHERE email=$1`, [email],
-        (q_err, q_res) => {
-            if (q_err) {
-                console.log(q_err.stack)
-                return res.status(500).send('An error has ocurred')
-            } else {
-                console.log(q_res.rows);
-                return res.status(200).json(q_res.rows);
-            }
-        }
-    )
-})
-
-/* Create Restaurant Promotions */
-router.post('/api/post/createRestaurantPromotion', async (req, res) => {
-
-    try {
-
-        await transact(async (query) => {
-
-            const {
-                email, startDate, endDate, promotionLimit, discountValue, isPriceDiscount
-            } = req.body.params
-
-            const promo_id = (
-                await query(
-                    `
-                        INSERT INTO RestaurantPromotions (email, startDate, endDate, promotionLimit)
-                        VALUES ($1, $2, $3, $4)
-                        RETURNING rpid
-                    `,
-                    [email, startDate, endDate, promotionLimit],
-                )).rows[0];
-
-            if (isPriceDiscount) {
-                await query(
-                    `INSERT INTO RestaurantPriceDiscount (rpid, priceDiscount) VALUES ($1, $2)`,
-                    [promo_id.rpid, discountValue],
-                    (q_err, q_res) => {
-                        if (q_err) {
-                            console.log(q_err.stack)
-                        }
-                    }
-                )
-            } else {
-                await query(
-                    `INSERT INTO RestaurantPercentageDiscount (rpid, percentageDiscount) VALUES ($1, $2)`,
-                    [promo_id.rpid, discountValue],
-                    (q_err, q_res) => {
-                        if (q_err) {
-                            console.log(q_err.stack)
-                        }
-                    }
-                )
-            }
-            
-            res.status(200).send("Restaurant Promo Successfully Completed")
-
-        })
-    } catch (error) {
-        console.log(error)
-        return res.status(500).send("An Error Occured")
-    }
-})
-
 /* Create Review */
 router.put('/api/put/createReview', (req, res) => {
 
@@ -1233,5 +1102,32 @@ router.get('/api/get/getFDSPromotion', (req, res) => {
 
 })
 
+/* Update Restaurant Promotion */
+router.put('/api/put/updateRestaurantPromotion', (req, res) => {
+
+    const {
+
+        rpid, startdate, enddate, promotionlimit, discount, ispercentage
+
+    } = req.body.params
+
+    query(
+        `
+            UPDATE RestaurantPromotions
+                SET startDate=$1, endDate=$2, promotionLimit=$3, discount=$4, ispercentage=$5
+                WHERE rpid = $6
+        `,
+        [startdate, enddate, promotionlimit, discount, ispercentage, rpid],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                res.status(200).send("Promotion " + rpid + " Successfully Updated")
+            }
+        }
+    )
+
+})
 
 module.exports = router

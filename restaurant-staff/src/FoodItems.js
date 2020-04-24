@@ -5,6 +5,7 @@ import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
+import Promotions from "./Promotions"
 
 class FoodItems extends React.Component {
     constructor(props) {
@@ -15,7 +16,6 @@ class FoodItems extends React.Component {
             foodEdit: {}
         }
         this.handleChange = this.handleChange.bind(this)
-        this.handleUpdate = this.handleUpdate.bind(this)
         this.updateFoodItem = this.updateFoodItem.bind(this)
         this.updateFoodItemDialog = this.updateFoodItemDialog.bind(this)
         this.setRowDataVisibility = this.setRowDataVisibility.bind(this)
@@ -32,14 +32,11 @@ class FoodItems extends React.Component {
             .then(foodItems => foodItems.map(food => {
                 food.price = parseFloat(food.price).toFixed(2).toString()
                 food.visible = false
+                food.pvisible = false
                 return food
             }))
             .then(foodItems => this.setState({ foodData: foodItems }))
             .catch(err => console.log(err))
-
-    }
-
-    handleUpdate = async (event, fid) => {
 
     }
 
@@ -83,7 +80,13 @@ class FoodItems extends React.Component {
         //replace the entire foodData with new updated visibility rowData
         this.setState({ foodData: copyData })
     }
-    updateFoodItemToDB() {
+    updateFoodItemToDB= async () => {
+
+        const data = this.state.foodEdit
+
+        await axios.put('/api/put/updateFoodItem', { params: data })
+            .then(rsp => alert(rsp.data))
+            .catch(err => { console.log(err); alert("An Error Has Ocurred.")})
 
     }
     updateFoodItem(rowData) {
@@ -114,7 +117,7 @@ class FoodItems extends React.Component {
                 </span>
                 <br></br>
                 <span className="p-float-label" style={{margin:"10px"}}>
-                    <InputText style={{width:"600px"}} id="price" value={this.state.foodEdit.price} onChange={(e) => {
+                    <InputText keyfilter="pmoney" style={{width:"600px"}} id="price" value={this.state.foodEdit.price} onChange={(e) => {
                         foodEdit.price = e.target.value
                         this.setState({ foodEdit: foodEdit })
                     }} />
@@ -122,7 +125,7 @@ class FoodItems extends React.Component {
                 </span>
                 <br></br>
                 <span className="p-float-label" style={{margin:"10px"}}>
-                    <InputText style={{width:"600px"}} id="availability" value={this.state.foodEdit.availability} onChange={(e) => {
+                    <InputText keyfilter="pint" style={{width:"600px"}} id="availability" value={this.state.foodEdit.availability} onChange={(e) => {
                         foodEdit.availability = e.target.value
                         this.setState({ foodEdit: foodEdit })
                     }} />
@@ -130,7 +133,7 @@ class FoodItems extends React.Component {
                 </span>
                 <br></br>
                 <span className="p-float-label" style={{margin:"10px"}}>
-                    <InputText style={{width:"600px"}} id="dailylimit" value={this.state.foodEdit.dailylimit} onChange={(e) => {
+                    <InputText keyfilter="pint" style={{width:"600px"}} id="dailylimit" value={this.state.foodEdit.dailylimit} onChange={(e) => {
                         foodEdit.dailylimit = e.target.value
                         this.setState({ foodEdit: foodEdit })
                     }} />
@@ -138,10 +141,10 @@ class FoodItems extends React.Component {
                 </span>
                 <br></br>
             <Button label="Confirm Changes" onClick={() => {
+                this.updateFoodItemToDB()
                 this.setRowDataVisibility(rowData, false)
                 this.setFoodItem(this.state.foodEdit)
                 this.setState({foodEdit: {}})
-                this.updateFoodItemToDB()
             }} />
         </div>;
         return inputs;
@@ -165,7 +168,6 @@ class FoodItems extends React.Component {
         )
     }
 
-
     render() {
         let header = (
             <div style={{ 'textAlign': 'left' }}>
@@ -183,6 +185,7 @@ class FoodItems extends React.Component {
                     <Column field="availability" header="Current Availability" sortable={true} />
                     <Column field="dailylimit" header="Daily Limit" sortable={true} />
                     <Column field="fid" body={this.updateFoodItemDialog} />
+                    <Column field="fid" body={(rowData) => <Promotions {...rowData}/>}/>
                 </DataTable>
             </div>
         )
