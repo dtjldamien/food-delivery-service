@@ -527,25 +527,25 @@ router.get('/api/get/getRestaurantsByCategory', (req, res, next) => {
 /* Retrieve Restaurant Promotions by Food ID */
 router.get('/api/get/retrieveRestaurantPromotionsByFid', (req, res) => {
 
-        const { fid } = req.query
-        
-        query (
-            `
+    const { fid } = req.query
+
+    query(
+        `
                 SELECT * 
                 FROM Discounts D JOIN RestaurantPromotions RP ON (RP.rpid = D.rpid) 
                 WHERE D.fid = $1
             `,
-            [fid],
-            (q_err, q_res) => {
-                if (q_err) {
-                    console.log(q_err.stack)
-                    return res.status(500).send('An error has ocurred')
-                } else {
-                    console.log(q_res.rows);
-                    return res.status(200).json(q_res.rows);
-                }
+        [fid],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
             }
-        )
+        }
+    )
 
 })
 
@@ -554,18 +554,18 @@ router.put('/api/put/updateFoodItem', async (req, res) => {
 
     try {
 
-        await transact( async (query) => {
+        await transact(async (query) => {
 
             const {
 
-                fid, fname, description, price, 
-                
+                fid, fname, description, price,
+
                 availability, dailylimit, rid
 
             } = req.body.params
 
             /* Update Food Item */
-            await query (
+            await query(
                 `
                     UPDATE FoodItems
                         SET fname=$1, description=$2, price=$3
@@ -575,7 +575,7 @@ router.put('/api/put/updateFoodItem', async (req, res) => {
             )
 
             /* Update Sells */
-            await query (
+            await query(
 
                 `
                     UPDATE Sells
@@ -677,7 +677,7 @@ router.post('/api/post/createOrder', async (req, res) => {
                     `,
                     [rid, address, deliveryFee, totalCost],
                 )).rows[0];
-            
+
             /* Second, map each food item into its own Contains tuple */
             await Promise.all(listOfFoods.map((foods) => {
 
@@ -996,7 +996,7 @@ router.get('/api/get/viewRecentDeliveryLocations', (req, res, next) => {
 
     console.log(email)
 
-    query(  `
+    query(`
                 SELECT Orders.address 
                 FROM Customers NATURAL JOIN Request INNER JOIN Orders ON (Request.oid = Orders.oid)
                 WHERE Customers.email = $1
@@ -1072,7 +1072,6 @@ router.put('/api/put/createReview', (req, res) => {
             }
         }
     )
-
 })
 
 /* Search for FDS Promotion */
@@ -1099,7 +1098,6 @@ router.get('/api/get/getFDSPromotion', (req, res) => {
             }
         }
     )
-
 })
 
 /* Update Restaurant Promotion */
@@ -1127,7 +1125,6 @@ router.put('/api/put/updateRestaurantPromotion', (req, res) => {
             }
         }
     )
-
 })
 
 /* View Shifts for a rider */
@@ -1147,5 +1144,123 @@ router.get('/api/get/viewRiderShifts', (req, res, next) => {
         })
 })
 
+/* Create work shift */
+router.post('/api/post/createWorkShift', (req, res, next) => {
+
+    const values = [
+        req.body.params.shiftNo,
+        req.body.params.startDate,
+        req.body.params.endDate,
+        req.body.params.startTime,
+        req.body.params.endTime,
+        req.body.params.hours
+    ]
+
+    query(
+        `INSERT INTO Shifts (shiftNo, startDate, endDate, startTime, endTime, hours) VALUES ($1, $2, $3, $4, $5, $6)`,
+        values,
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+})
+
+/* Create schedule */
+router.post('/api/post/createSchedule', (req, res, next) => {
+
+    const values = [
+        req.body.params.email
+    ]
+
+    query(
+        `INSERT INTO Schedules (email) VALUES ($1)`,
+        values,
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+})
+
+/* Create schedule contains, assign shift to schedule */
+router.post('/api/post/createScheduleContains', (req, res, next) => {
+
+    const values = [
+        req.body.params.email,
+        req.body.params.shiftId,
+        req.body.params.workHours
+    ]
+
+    query(
+        `INSERT INTO ScheduleContains (email, shiftId, workHours) VALUES ($1, $2, $3)`,
+        values,
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+})
+
+/* Create part time */
+router.post('/api/post/createPartTime', (req, res, next) => {
+
+    const values = [
+        req.body.params.email,
+        req.body.params.weeklySalary,
+    ]
+
+    query(
+        `INSERT INTO ScheduleContains (email, weeklySalary) VALUES ($1, $2)`,
+        values,
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+})
+
+/* Create full time */
+router.post('/api/post/createFullTime', (req, res, next) => {
+
+    const values = [
+        req.body.params.email,
+        req.body.params.monthlySalary,
+    ]
+
+    query(
+        `INSERT INTO ScheduleContains (email, monthlySalary) VALUES ($1, $2)`,
+        values,
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        }
+    )
+})
 
 module.exports = router
