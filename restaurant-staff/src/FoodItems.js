@@ -15,7 +15,7 @@ class FoodItems extends React.Component {
         // this.handleChange = this.handleChange.bind(this)
         // this.handleUpdate = this.handleUpdate.bind(this)
         // this.updateFoodItem = this.updateFoodItem.bind(this)
-        // this.updateFoodItemDialog = this.viewFoodItemDialog.bind(this)
+        // this.updateFoodItemDialog = this.updateFoodItemDialog.bind(this)
     }
 
     componentDidMount() {
