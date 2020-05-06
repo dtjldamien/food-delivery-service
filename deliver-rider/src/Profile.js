@@ -5,10 +5,11 @@ class Profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            rid: props.restaurantStaff.rid,
-            email: props.restaurantStaff.email,
-            password: props.restaurantStaff.password,
-            name: props.restaurantStaff.name,
+            email: props.rider.email,
+            name: props.rider.name,
+            vehicle: props.rider.vehicle,
+            bankAccount: props.rider.bankAccount,
+            password: props.rider.password,
         };
         this.handleChange = this.handleChange.bind(this)
         this.handleUpdate = this.handleUpdate.bind(this)
@@ -22,16 +23,24 @@ class Profile extends React.Component {
         event.preventDefault();
 
         const data = {
+            email: this.state.email,
+            vehicle: this.state.vehicle,
+            bankAccount: this.state.bankAccount,
             password: this.state.password,
-            email: this.state.email
         }
 
         /* Checks if data has been changed */
-        if (data.password === this.props.restaurantStaff.password) {
+        if (data.email === this.props.rider.email &&
+            data.vehicle === this.props.rider.vehicle &&
+            data.bankAccount === this.props.rider.bankAccount &&
+            data.password === this.props.rider.password) {
             alert("Profile Details Not Changed.")
         } else {
-            console.log(data.password === this.props.restaurantStaff.password)
-            await axios.put('/api/put/restaurantStaff', { params: data })
+            console.log(data.email === this.props.rider.email)
+            console.log(data.vehicle === this.props.rider.vehicle)
+            console.log(data.bankAccount === this.props.rider.bankAccount)
+            console.log(data.password === this.props.rider.password)
+            await axios.put('/api/put/updateDeliveryRider', { params: data })
                 .catch(err => {
                     console.log(err)
                     alert("Error Ocurred During Update")
@@ -56,6 +65,10 @@ class Profile extends React.Component {
                     <label>Name:         {this.state.name}</label>
                     <br></br>
                     <label>Email:         {this.state.email}</label>
+                    <br></br>
+                    <label>Vehicle:     <input type="text" value={this.state.vehicle} name="vehicle" onChange={this.handleChange}></input></label>
+                    <br></br>
+                    <label>Bank Account Number:     <input type="number" value={this.state.bankAccount} name="bankAccount" onChange={this.handleChange}></input></label>
                     <br></br>
                     <label>Password:     <input type="text" value={this.state.password} name="password" onChange={this.handleChange}></input></label>
                     <br></br>

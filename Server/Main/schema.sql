@@ -11,6 +11,7 @@ CREATE TABLE Restaurants(
 	rname VARCHAR(100) NOT NULL,
 	address VARCHAR (100) NOT NULL,
 	minimumSpending FLOAT NOT NULL,
+	restaurantrating INTEGER DEFAULT 0,
 	PRIMARY KEY (rid)
 );
 
@@ -42,7 +43,9 @@ CREATE TABLE FoodItems(
 CREATE TABLE Sells(
 	rid INTEGER,
 	fid INTEGER,
+	/* Availability is availability at the current time */
 	availability INTEGER NOT NULL,
+	/* Will need a trigger to set daily limit to availability everyday */
 	dailyLimit INTEGER NOT NULL,
 	PRIMARY KEY (rid, fid),
 	FOREIGN KEY (rid) REFERENCES Restaurants,
@@ -53,13 +56,13 @@ CREATE TABLE Sells(
 
 CREATE TABLE RestaurantPromotions(
 	rpid SERIAL,
-	email VARCHAR(100) NOT NULL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
-	currentCount INTEGER NOT NULL,
+	currentCount INTEGER DEFAULT 0,
 	promotionLimit INTEGER NOT NULL,
-	PRIMARY KEY (rpid),
-	FOREIGN KEY (email) REFERENCES RestaurantStaffs
+	discount NUMERIC NOT NULL,
+	isPercentage BOOLEAN NOT NULL,
+	PRIMARY KEY (rpid)
 );
 
 CREATE TABLE RestaurantPriceDiscount (
@@ -70,7 +73,7 @@ CREATE TABLE RestaurantPriceDiscount (
 
 CREATE TABLE RestaurantPercentageDiscount (
 	rpid INTEGER,
-	PercentageDiscount NUMERIC NOT NULL,
+	percentageDiscount NUMERIC NOT NULL,
 	FOREIGN KEY (rpid) REFERENCES RestaurantPromotions
 );
 
@@ -124,23 +127,11 @@ CREATE TABLE FDSPromotions(
 	pcid SERIAL,
 	startDate DATE NOT NULL,
 	endDate DATE NOT NULL,
-	currentCount INTEGER NOT NULL,
+	currentCount INTEGER DEFAULT 0,
 	redeemLimit INTEGER NOT NULL,
+	discount NUMERIC NOT NULL,
+	isPercentage BOOLEAN NOT NULL,
 	PRIMARY KEY (pcid)
-);
-
-CREATE TABLE FDSPercentageDiscount (
-	pcid INTEGER,
-	percentageDiscount NUMERIC NOT NULL,
-	PRIMARY KEY (pcid),
-	FOREIGN KEY (pcid) REFERENCES FDSPromotions
-);
-
-CREATE TABLE FDSPriceDiscount (
-	pcid INTEGER,
-	priceDiscount NUMERIC NOT NULL,
-	PRIMARY KEY (pcid),
-	FOREIGN KEY (pcid) REFERENCES FDSPromotions
 );
 
 CREATE TABLE FDSManagers(

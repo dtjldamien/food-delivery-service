@@ -1,14 +1,13 @@
 import React from "react"
-import {TabMenu} from "primereact/tabmenu"
-import {Button} from 'primereact/button'
+import { Button } from 'primereact/button'
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-import {Redirect, Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 class MenuBar extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             items: [
                 {label: 'Home', icon: 'pi pi-fw pi-home', command: (event)=> {window.location = "/"}},
@@ -47,14 +46,15 @@ class MenuBar extends React.Component {
                     <Button style = {menuStyle} label="Home" />
                 </Link>
                 <Link to={{pathname:`/orders`}}>
-                    <Button style = {menuStyle} label="Orders" />
+                    <Button style = {menuStyle} label="My Orders" />
                 </Link>
                 <Link to={{pathname:`/reviews`}}>
-                    <Button style = {menuStyle} label="Reviews" />
+                    <Button style = {menuStyle} label="My Reviews" />
                 </Link>
                 <Link to={{pathname:`/profile`}}>
-                    <Button style = {menuStyle} label="Profile" />
+                    <Button style = {menuStyle} label="My Profile" />
                 </Link>
+                <Button style = {menuStyle} label="Log Out" onClick={e => this.props.handleLogout()}/>
             </div>
         )
     }

@@ -1,5 +1,5 @@
-import React from 'react'
-import Categories from './Categories';
+import React from 'react';
+
 class Home extends React.Component {
     constructor(props) {
         super(props)
@@ -7,14 +7,17 @@ class Home extends React.Component {
         }
     }
 
+    componentDidMount() {
+        //console.log(this.props.restaurantStaff.rid)
+    }
+
     render() {
         return (
             <div>
-                <Categories/>
+
             </div>
         )
     }
-
 }
 
 export default Home

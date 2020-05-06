@@ -57,3 +57,26 @@ INSERT INTO Sells (rid, fid, availability, dailyLimit) VALUES
 (4, 12, 40, 40);
 
 COMMIT;
+
+BEGIN;
+
+INSERT INTO FDSPromotions (startDate, endDate, redeemLimit, discount, isPercentage) VALUES
+/* MM/DD/YYYY */
+('01/01/2020', '06/01/2020', 100, 20, false),
+('01/01/2020', '06/01/2020', 100, 20, true);
+
+COMMIT;
+
+BEGIN;
+
+INSERT INTO RestaurantPromotions (startDate, endDate, promotionLimit, discount, isPercentage) VALUES 
+('01/01/2019', '06/01/2019', 100, 20, false),
+('01/01/2020', '06/01/2020', 100, 20, true),
+('01/01/2021', '06/01/2021', 100, 20, true);
+
+INSERT INTO Discounts (rpid, fid) VALUES 
+(1, 1),
+(2, 1),
+(3, 1);
+
+COMMIT;
