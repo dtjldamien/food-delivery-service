@@ -1,4 +1,3 @@
-
 /* For a given restaurant, find the id and amount sold of the top 5 most purchased food
 items in a given time frame */
 SELECT fid,
