@@ -21,7 +21,7 @@ class App extends React.Component {
     constructor() {
         super()
         this.state = {
-            customer: {},
+            fdsManager: {},
             loggedIn: false,
             email: "",
             password: "",
@@ -38,19 +38,19 @@ class App extends React.Component {
         /* Ensuring input boxes are not empty */
         if (this.state.email !== '' && this.state.password !== '') {
                 const data = {
-                    email: this.state.email
+                    username: this.state.email
                 }
 
                 /* API Call to GET customer */
-                await axios.get('/api/get/customerLogin', {params: data})
-                        .then(data => this.setState({customer : data.data[0]}))
+                await axios.get('/api/get/fdsManagerLogin', {params: data})
+                        .then(data => this.setState({fdsManager : data.data[0]}))
                         .catch(err => {
                             alert("Account Doesn't Exist")
                         })
             
                 /* Check if customer is GET from database */
-                if (this.state.customer !== undefined) {
-                    if (this.state.password === this.state.customer.password) { 
+                if (this.state.fdsManager !== undefined) {
+                    if (this.state.password === this.state.fdsManager.password) { 
                     /* Set state if customer passes authentication */
                     this.setState({loggedIn: true})
                     } else {
@@ -66,7 +66,7 @@ class App extends React.Component {
 
     handleLogout() {
         this.setState({loggedIn: false})
-        this.setState({customer: {}})
+        this.setState({fdsManager: {}})
         this.setState({email: ""})
         this.setState({password: ""})
     }
@@ -81,12 +81,12 @@ class App extends React.Component {
         /* Inputs for the customer email and password */
         const inputs =  <div>
 
-                            <h2 style={{position:'absolute', left: '30%', top:'25%'}}>Food Delivery Service: Customer Login</h2>
+                            <h2 style={{position:'absolute', left: '30%', top:'25%'}}>Food Delivery Service: Manager Login</h2>
 
                             <form onSubmit={this.handleLogin} style={formStyle}>
                                 <span className="p-float-label"> 
                                     <InputText id="email" value={this.state.email} onChange={e => this.setState({email: e.target.value})}/>                                    
-                                    <label htmlFor="email">Customer Email: </label>
+                                    <label htmlFor="email">Username: </label>
                                 </span>
                                 <br></br>
                                 <span className="p-float-label"> 
