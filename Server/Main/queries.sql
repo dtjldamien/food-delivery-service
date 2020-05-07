@@ -1,21 +1,22 @@
-SELECT item_id,
-(SELECT item_name
-FROM MenuListings
-WHERE item_id = oi.item_id),
-count(*) AS num_sold
-FROM OrderedItems oi
-NATURAL JOIN (OrderStatus os
-NATURAL JOIN Orders o)
-WHERE oi.restaurant_id = $1
-AND o.time_placed BETWEEN $2 AND $3
-AND payment_completed = true
-GROUP BY oi.item_id
+
+/* For a given restaurant, find the id and amount sold of the top 5 most purchased food
+items in a given time frame */
+SELECT fid,
+    (SELECT fname
+    FROM FoodItems
+    WHERE fid = c.fid),
+    count(*) AS items_sold
+FROM Contains c
+NATURAL JOIN Orders o
+WHERE c.rid = $1
+AND o.orderDateTime BETWEEN $2 AND $3
+GROUP BY c.fid
 ORDER BY count(*) DESC
 LIMIT 5;
--- $1: id of restaurant of interest
--- $2, $3: start and end date of interest
+-- $1: id of given restaurant
+-- $2, $3: start and end date of given time frame
 
-/* View Shifts for a rider */
+/* View average delivery time by a Rider for a certain month */
 with TimeTaken as 
 (select DR.email, DATEDIFF(second, deliveredDateTime, assignedDateTime) as deliveryTime, month(deliveredDateTime) as month
 from Assigned A)
