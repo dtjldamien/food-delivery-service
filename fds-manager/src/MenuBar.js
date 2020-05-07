@@ -43,16 +43,16 @@ class MenuBar extends React.Component {
             <div>
                 <h3 style={{display: 'inline-block', margin: '10px'}}>Food Delivery Service</h3>
                 <Link to={{pathname:`/`}}>
-                    <Button style = {menuStyle} label="Home" />
+                    <Button style = {menuStyle} label="Promotions" />
                 </Link>
-                <Link to={{pathname:`/orders`}}>
-                    <Button style = {menuStyle} label="My Orders" />
-                </Link>
+                {/* <Link to={{pathname:`/promotions`}}>
+                    <Button style = {menuStyle} label="Promotions" />
+                </Link> */}
                 <Link to={{pathname:`/reviews`}}>
-                    <Button style = {menuStyle} label="My Reviews" />
+                    <Button style = {menuStyle} label="Riders" />
                 </Link>
                 <Link to={{pathname:`/profile`}}>
-                    <Button style = {menuStyle} label="My Profile" />
+                    <Button style = {menuStyle} label="Staff Management" />
                 </Link>
                 <Button style = {menuStyle} label="Log Out" onClick={e => this.props.handleLogout()}/>
             </div>
