@@ -1,11 +1,10 @@
--- is there a need for salary? (is still in ER diagram)
--- i think doesnt matter for restaurant staff, will remove
-
+-- BCNF
 CREATE TABLE Category (
 	catName VARCHAR(100),
 	PRIMARY KEY (catName)
 );
 
+-- BCNF
 CREATE TABLE Restaurants(
 	rid SERIAL,
 	rname VARCHAR(100) NOT NULL,
@@ -15,6 +14,7 @@ CREATE TABLE Restaurants(
 	PRIMARY KEY (rid)
 );
 
+-- BCNF
 CREATE TABLE Belongs(
 	catName VARCHAR(100),
 	rid INTEGER,
@@ -23,6 +23,7 @@ CREATE TABLE Belongs(
 	FOREIGN KEY (rid) REFERENCES Restaurants
 );
 
+-- BCNF
 CREATE TABLE RestaurantStaffs(
 	rid INTEGER NOT NULL,
 	email VARCHAR(100) NOT NULL,
@@ -32,6 +33,7 @@ CREATE TABLE RestaurantStaffs(
 	FOREIGN KEY (rid) REFERENCES Restaurants
 );
 
+-- BCNF
 CREATE TABLE FoodItems(
 	fid SERIAL,
 	fname VARCHAR(100) NOT NULL,
@@ -40,12 +42,11 @@ CREATE TABLE FoodItems(
 	PRIMARY KEY (fid)
 );
 
+-- BCNF
 CREATE TABLE Sells(
 	rid INTEGER,
 	fid INTEGER,
-	/* Availability is availability at the current time */
 	availability INTEGER NOT NULL,
-	/* Will need a trigger to set daily limit to availability everyday */
 	dailyLimit INTEGER NOT NULL,
 	PRIMARY KEY (rid, fid),
 	FOREIGN KEY (rid) REFERENCES Restaurants,
@@ -54,6 +55,7 @@ CREATE TABLE Sells(
         on update cascade
 );
 
+-- BCNF
 CREATE TABLE RestaurantPromotions(
 	rpid SERIAL,
 	startDate DATE NOT NULL,
@@ -65,28 +67,28 @@ CREATE TABLE RestaurantPromotions(
 	PRIMARY KEY (rpid)
 );
 
+-- BCNF
 CREATE TABLE RestaurantPriceDiscount (
 	rpid INTEGER,
 	priceDiscount NUMERIC NOT NULL,
 	FOREIGN KEY (rpid) REFERENCES RestaurantPromotions
 );
 
+-- BCNF
 CREATE TABLE RestaurantPercentageDiscount (
 	rpid INTEGER,
 	percentageDiscount NUMERIC NOT NULL,
 	FOREIGN KEY (rpid) REFERENCES RestaurantPromotions
 );
 
+-- BCNF
 CREATE TABLE Discounts (
 	rpid INTEGER,
 	fid INTEGER,
 	PRIMARY KEY (rpid, fid)
 );
 
--- what to store type as?
--- store type as integers
--- added time 
-
+-- 3NF
 CREATE TABLE Orders(
 	oid SERIAL,
 	rid INTEGER,
@@ -98,8 +100,7 @@ CREATE TABLE Orders(
 	FOREIGN KEY (rid) REFERENCES Restaurants
 );
 
--- oid not included in ER diagram
-
+-- BCNF
 CREATE TABLE Customers(
 	name VARCHAR(100) NOT NULL,
 	email VARCHAR(100) NOT NULL,
@@ -111,6 +112,7 @@ CREATE TABLE Customers(
 	PRIMARY KEY (email)
 );
 
+-- BCNF
 CREATE TABLE Contains(
 	oid INTEGER,
 	fid INTEGER,
@@ -123,6 +125,7 @@ CREATE TABLE Contains(
         on update cascade
 );
 
+-- BCNF
 CREATE TABLE FDSPromotions(
 	pcid SERIAL,
 	startDate DATE NOT NULL,
@@ -134,12 +137,14 @@ CREATE TABLE FDSPromotions(
 	PRIMARY KEY (pcid)
 );
 
+-- BCNF
 CREATE TABLE FDSManagers(
 	username VARCHAR(100) NOT NULL,
 	password VARCHAR(100) NOT NULL,
 	PRIMARY KEY (username)
 );
 
+-- BCNF
 CREATE TABLE FDSLaunch(
 	pcid INTEGER,
 	username VARCHAR(100),
@@ -150,6 +155,7 @@ CREATE TABLE FDSLaunch(
         on update cascade
 );
 
+-- 3NF
 CREATE TABLE Shifts (
 	shiftId SERIAL,
 	shiftNo INTEGER NOT NULL,
@@ -161,6 +167,7 @@ CREATE TABLE Shifts (
 	PRIMARY KEY(shiftId)
 );
 
+-- BCNF
 CREATE TABLE DeliveryRiders (
 	email VARCHAR(100),
 	name VARCHAR(100) NOT NULL,
@@ -170,6 +177,7 @@ CREATE TABLE DeliveryRiders (
 	PRIMARY KEY (email)
 );
 
+-- BCNF
 CREATE TABLE Schedules (
 	email VARCHAR(100),
 	PRIMARY KEY (email),
@@ -178,6 +186,7 @@ CREATE TABLE Schedules (
         on update cascade
 );
 
+-- 3NF
 CREATE TABLE ScheduleContains (
 	email VARCHAR(100),
 	shiftId INTEGER,
@@ -187,6 +196,7 @@ CREATE TABLE ScheduleContains (
 	FOREIGN KEY	(shiftId) REFERENCES Shifts
 );
 
+-- BCNF
 CREATE TABLE PartTime (
 	email VARCHAR(100),
 	weeklySalary NUMERIC NOT NULL,
@@ -195,6 +205,7 @@ CREATE TABLE PartTime (
 		on update cascade
 );
 
+-- BCNF
 CREATE TABLE FullTime (
 	email VARCHAR(100),
 	monthlySalary NUMERIC NOT NULL,
@@ -203,6 +214,7 @@ CREATE TABLE FullTime (
 		on update cascade
 );
 
+-- BCNF
 CREATE TABLE Assigned (
 	oid INTEGER,
 	email VARCHAR(100),
@@ -216,6 +228,7 @@ CREATE TABLE Assigned (
 		on update cascade
 );
 
+-- BCNF
 CREATE TABLE Apply (
 	oid INTEGER,
 	pcid INTEGER,
@@ -224,6 +237,7 @@ CREATE TABLE Apply (
 	FOREIGN KEY (pcid) REFERENCES FDSPromotions
 );
 
+-- BCNF
 CREATE TABLE Request (
 	oid INTEGER,
 	email VARCHAR(100),
