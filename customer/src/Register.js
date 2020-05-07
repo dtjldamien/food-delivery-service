@@ -77,7 +77,7 @@ class Register extends React.Component {
                         <label htmlFor="creditCard">Credit Card: </label>
                     </span>
                     <br></br>
-                    <Button label="Update Profile" onClick={e => this.handleUpdate(e)}/>
+                    <Button label="Register" onClick={e => this.handleRegister(e)}/>
                 </div>
             </div>
         )
