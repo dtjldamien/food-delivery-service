@@ -11,6 +11,7 @@ import { Button } from 'primereact/button';
 import 'primereact/resources/themes/nova-light/theme.css';
 import Home from './Home';
 import WorkSchedule from './WorkSchedule';
+import Assignments from './Assignments';
 
 class App extends React.Component {
 
@@ -37,6 +38,7 @@ class App extends React.Component {
           <Route exact path="/" render={(props) => <Home {...props} {...this.state} />} />
           <Route path="/profile" render={(props) => <Profile {...props} {...this.state} />} />
           <Route path="/workSchedule" render={(props) => <WorkSchedule {...props} {...this.state} />} />
+          <Route path="/assignments" render={(props) => <Assignments {...props} {...this.state} />} />
         </Switch>
       </Router>
     )

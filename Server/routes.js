@@ -972,6 +972,57 @@ router.post('/api/post/createAssignment', (req, res, next) => {
     )
 })
 
+/* View All Rider Assignments */
+router.get('/api/get/viewAllAssignments', (req, res, next) => {
+
+    const email = req.query.fid;
+    console.log(req);
+    query(`SELECT * FROM Assigned A LEFT JOIN Orders O WHERE A.email=$1`, [email],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        })
+})
+
+/* View Rider Completed Assignments */
+router.get('/api/get/viewCompletedAssignments', (req, res, next) => {
+
+    const email = req.query.fid;
+    console.log(req);
+    query(`SELECT * FROM Assigned A LEFT JOIN Orders O WHERE A.email=$1 AND A.deliveredDateTime IS NOT NULL`, [email],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        })
+})
+
+/* View All Rider Uncompleted Assignments */
+router.get('/api/get/viewUncompletedAssignments', (req, res, next) => {
+
+    const email = req.query.fid;
+    console.log(req);
+    query(`SELECT * FROM Assigned A LEFT JOIN Orders O WHERE A.email=$1 AND A.deliveredDateTime IS NULL`, [email],
+        (q_err, q_res) => {
+            if (q_err) {
+                console.log(q_err.stack)
+                return res.status(500).send('An error has ocurred')
+            } else {
+                console.log(q_res.rows);
+                return res.status(200).json(q_res.rows);
+            }
+        })
+})
+
 /* View Food Items */
 router.get('/api/get/viewFoodItem', (req, res, next) => {
 
