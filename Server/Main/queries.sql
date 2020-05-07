@@ -19,9 +19,16 @@ LIMIT 5;
 with TimeTaken as 
 (select DR.email, DATEDIFF(second, deliveredDateTime, assignedDateTime) as deliveryTime, month(deliveredDateTime) as month
 from Assigned A)
-
-
 select avg(deliveryTime)
 From TimeTaken
 where timetaken.email = $1
 And timetaken.month = $2;
+
+/* View delivery rider statistics by month, year and restaurant */
+SELECT dr.email, COUNT(*) as num_deliveries, SUM(deliveredDateTime - assignedDateTime) as total_travel_time, AVG(serviceReview) as avg_rating
+FROM DeliveryRiders dr LEFT JOIN ASSIGNED a ON (dr.email = a.email) LEFT JOIN Orders o ON (a.oid = o.oid)
+WHERE $1 = (SELECT EXTRACT(MONTH FROM deliveredDateTime))
+AND $2 = (SELECT EXTRACT(YEAR FROM deliveredDateTime))
+AND $3 = (o.rid)
+GROUP BY (dr.email)
+ORDER BY num_deliveries desc, AVG(serviceReview) desc, total_travel_time
