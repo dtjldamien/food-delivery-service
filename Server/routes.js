@@ -859,17 +859,18 @@ router.get('/api/get/viewReviewOfRestaurant', (req, res) => {
 /* Create FDS Promotions */
 router.post('/api/post/createFdsPromotion', (req, res, next) => {
 
-    const values = [
-        req.body.params.startDate,
-        req.body.params.endDate,
-        req.body.params.currentCount,
-        req.body.params.redeemLimit,
-        req.body.params.type
-    ]
+    const {
+
+        startdate, enddate, redeemLimit, discount, ispercentage
+
+    } = req.body.params
+
+    console.log(req.body.params)
 
     query(
-        `INSERT INTO FDSPromotions VALUES ($1, $2, $3, $4, $5, $6)`,
-        values,
+        `INSERT INTO FDSPromotions (startDate, endDate, redeemLimit, discount, isPercentage) 
+        VALUES ($1, $2, $3, $4, $5)`,
+        [startdate, enddate, discount, redeemLimit, ispercentage],
         (q_err, q_res) => {
             if (q_err) {
                 console.log(q_err.stack)
