@@ -28,6 +28,60 @@ CREATE TRIGGER update_restaurant_rating_trigger
     FOR EACH ROW
     EXECUTE FUNCTION update_restaurant_rating();
 
+/* Updates FDSPromotion Usage */
+CREATE OR REPLACE FUNCTION update_fdspromotion_count() RETURNS TRIGGER AS $$
+
+    BEGIN
+
+    RAISE NOTICE 'Promotion ID "%" used.', NEW.pcid;
+
+    UPDATE FDSPromotions
+        SET currentCount = currentCount + 1
+        WHERE pcid = NEW.pcid; 
+
+    RETURN NULL;
+
+END
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS update_fdspromotion_count_trigger on Apply;
+CREATE TRIGGER update_fdspromotion_count_trigger
+    AFTER INSERT
+    ON Apply
+    FOR EACH ROW
+    EXECUTE FUNCTION update_fdspromotion_count();
+
+/* Ensure that there is an hour break between consecutive 4 hour work shifts */
+CREATE OR REPLACE FUNCTION check_break_between_intervals() RETURNS TRIGGER AS $$
+DECLARE  
+sTime TIME;  
+eTime TIME; 
+
+    BEGIN  
+        SELECT endTime INTO etime 
+        FROM Shifts 
+        WHERE startDate = NEW.startDate;  
+        SELECT startTime 
+        INTO sTime 
+        FROM Shifts 
+        WHERE startDate = NEW.startDate;     
+    IF NEW.startTime <= eTime AND NEW.endTime > eTime THEN
+        RAISE exception 'At least an hour break in between';
+    END IF;
+        IF NEW.endTime >= sTime AND NEW.startTime < sTime THEN
+        RAISE exception 'At least an hour break in between';
+    END IF;     
+    RETURN NEW; 
+END
+$$ LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS break_trigger ON Shifts;
+CREATE TRIGGER break_trigger
+    BEFORE UPDATE OR INSERT      
+    ON Shifts     
+    FOR EACH ROW      
+    EXECUTE FUNCTION check_break_between_intervals(); 
+
 /* Checks dates of promotions to ensure no clash */
 -- CREATE OR REPLACE FUNCTION check_restaurant_promotions() RETURNS TRIGGER AS $$
 
@@ -62,26 +116,3 @@ CREATE TRIGGER update_restaurant_rating_trigger
 --     ON RestaurantPromotions
 --     FOR EACH ROW
 --     EXECUTE FUNCTION check_restaurant_promotions();
-
-/* Updates FDSPromotion Usage */
-CREATE OR REPLACE FUNCTION update_fdspromotion_count() RETURNS TRIGGER AS $$
-
-    BEGIN
-
-    RAISE NOTICE 'Promotion ID "%" used.', NEW.pcid;
-
-    UPDATE FDSPromotions
-        SET currentCount = currentCount + 1
-        WHERE pcid = NEW.pcid; 
-
-    RETURN NULL;
-
-END
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS update_fdspromotion_count_trigger on Apply;
-CREATE TRIGGER update_fdspromotion_count_trigger
-    AFTER INSERT
-    ON Apply
-    FOR EACH ROW
-    EXECUTE FUNCTION update_fdspromotion_count();
