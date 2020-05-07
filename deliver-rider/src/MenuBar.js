@@ -45,6 +45,9 @@ class MenuBar extends React.Component {
               <Link to={{pathname:`/workSchedule`}}>
                   <Button style = {menuStyle} label="Work Schedule" />
               </Link>
+              <Link to={{pathname:`/assignments`}}>
+                  <Button style = {menuStyle} label="Rider Assignments" />
+              </Link>
           </div>
       )
   }
