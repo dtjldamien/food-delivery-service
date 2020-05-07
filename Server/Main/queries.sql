@@ -25,10 +25,32 @@ where timetaken.email = $1
 And timetaken.month = $2;
 
 /* View delivery rider statistics by month, year and restaurant */
-SELECT dr.email, COUNT(*) as num_deliveries, SUM(deliveredDateTime - assignedDateTime) as total_travel_time, AVG(serviceReview) as avg_rating
+SELECT dr.email, COUNT(*) as num_deliveries, 
+SUM(deliveredDateTime - assignedDateTime) as total_travel_time, AVG(serviceReview) as avg_rating
 FROM DeliveryRiders dr LEFT JOIN ASSIGNED a ON (dr.email = a.email) LEFT JOIN Orders o ON (a.oid = o.oid)
 WHERE $1 = (SELECT EXTRACT(MONTH FROM deliveredDateTime))
 AND $2 = (SELECT EXTRACT(YEAR FROM deliveredDateTime))
 AND $3 = (o.rid)
 GROUP BY (dr.email)
 ORDER BY num_deliveries desc, AVG(serviceReview) desc, total_travel_time
+
+-- Order
+BEGIN;                    
+INSERT INTO Orders (rid, address, deliveryFee, totalCost)
+VALUES ($1, $2, $3, $4)
+RETURNING oid
+
+INSERT INTO Contains (oid, fid, price, quantity)
+VALUES ($1, $2, $3, $4)
+-- 
+
+UPDATE Sells
+SET availability = availability - ($1)
+WHERE fid = ($2)
+
+INSERT INTO Apply (oid, pcid)
+VALUES ($1, $2)
+
+INSERT INTO Request (oid, email, payment)
+VALUES ($1, $2, $3)
+COMMIT;
