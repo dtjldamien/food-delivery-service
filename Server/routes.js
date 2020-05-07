@@ -975,7 +975,7 @@ router.post('/api/post/createAssignment', (req, res, next) => {
 /* View All Rider Assignments */
 router.get('/api/get/viewAllAssignments', (req, res, next) => {
 
-    const email = req.query.fid;
+    const email = req.query.email;
     console.log(req);
     query(`SELECT * FROM Assigned A LEFT JOIN Orders O WHERE A.email=$1`, [email],
         (q_err, q_res) => {
@@ -992,7 +992,7 @@ router.get('/api/get/viewAllAssignments', (req, res, next) => {
 /* View Rider Completed Assignments */
 router.get('/api/get/viewCompletedAssignments', (req, res, next) => {
 
-    const email = req.query.fid;
+    const email = req.query.email;
     console.log(req);
     query(`SELECT * FROM Assigned A LEFT JOIN Orders O WHERE A.email=$1 AND A.deliveredDateTime IS NOT NULL`, [email],
         (q_err, q_res) => {
@@ -1009,7 +1009,7 @@ router.get('/api/get/viewCompletedAssignments', (req, res, next) => {
 /* View All Rider Uncompleted Assignments */
 router.get('/api/get/viewUncompletedAssignments', (req, res, next) => {
 
-    const email = req.query.fid;
+    const email = req.query.email;
     console.log(req);
     query(`SELECT * FROM Assigned A LEFT JOIN Orders O WHERE A.email=$1 AND A.deliveredDateTime IS NULL`, [email],
         (q_err, q_res) => {
